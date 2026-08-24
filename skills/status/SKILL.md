@@ -50,9 +50,23 @@ Walk the chain in order and stop at the first gap:
 **Two traps, both silent when you get them wrong:**
 
 1. **An artifact existing is not enough — check its `status`.** `IMPLEMENTATION.md` with
-   `status: changes-requested` means the task is in rework at implement, *not* `implemented`.
-2. **A failing artifact does not advance the stage.** `QA.md` with `result: failed` leaves the task at
-   `implemented`, in rework. Same for `REVIEW.md` with `verdict: changes-requested`.
+   `status: changes-requested` means the task is in rework, *not* `implemented` — the chain stops
+   *before* that artifact, so the stage is whatever preceded it (`designed`).
+2. **A failing artifact does not advance the stage, but everything before it still counts.** `QA.md`
+   with `result: failed` leaves the task at `implemented`. `REVIEW.md` with
+   `verdict: changes-requested` leaves it at `verified` — qa genuinely passed, and pretending otherwise
+   loses real information.
+
+**Name the step that will re-run, never the step that failed.** The rework loop always returns to
+**implement**, whatever failed (§8) — a qa failure does not re-run qa, and a rejected review does not
+re-run review. Reporting "rework at review" tells a reader the wrong thing about what happens next.
+Report both facts and keep them distinct:
+
+```
+✗ TASK-010  app   implemented    qa failed → rework at implement (attempt 2 of 3)
+✗ TASK-011  app   verified       review: changes-requested → rework at implement (attempt 2 of 3)
+✗ TASK-009  app   designed       implement: changes-requested → rework at implement
+```
 
 Any artifact with `status: blocked` overrides everything: the task is `blocked`, and its
 `blocked_reason` is the headline.
