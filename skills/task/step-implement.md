@@ -45,7 +45,7 @@ READ:
   .orqestra/modules.md
   .orqestra/decisions/INDEX.md
 
-TEMPLATE:  templates/IMPLEMENTATION.md
+TEMPLATE:  ${CLAUDE_PLUGIN_ROOT}/templates/IMPLEMENTATION.md
 WRITE:     .orqestra/phases/PHASE-1/tasks/TASK-041/IMPLEMENTATION.md
 RETURN:    at most 10 lines, per the skill's Return contract.
 ```

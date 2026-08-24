@@ -39,7 +39,7 @@ not after. They carry this project's conventions, which you cannot infer from th
 ## Output
 
 - **Writes**: `IMPLEMENTATION.md` in the task directory — exactly one artifact.
-- **Template**: `templates/IMPLEMENTATION.md` — copy it, fill it, change nothing structural.
+- **Template**: `${CLAUDE_PLUGIN_ROOT}/templates/IMPLEMENTATION.md` — copy it, fill it, change nothing structural.
 - Source changes go in the working tree, **inside your module's `paths` only** (§5.2, D3).
   Touching another module is a contract violation, not a convenience.
 - **Do not commit** — `step-push.md` owns git (D1).

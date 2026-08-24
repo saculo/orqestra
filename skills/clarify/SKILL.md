@@ -27,7 +27,7 @@ inherits whatever ambiguity survives this step, and it gets more expensive to fi
 - **Writes**: `.orqestra/CLARIFICATIONS.md`. **Nothing else** (D1, D2) — in particular, **never edit
   `PRD.md`.** The PRD is the human's document; your output records what it left open.
 - **May write**: `decisions/D-NNN-*.md` when an answer settles something that constrains future work.
-- **Template**: `templates/CLARIFICATIONS.md`, copied literally (D15).
+- **Template**: `${CLAUDE_PLUGIN_ROOT}/templates/CLARIFICATIONS.md`, copied literally (D16).
 
 ## Procedure
 

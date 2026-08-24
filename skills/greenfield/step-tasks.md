@@ -19,7 +19,7 @@ READ:
   .orqestra/modules.md
   .orqestra/project/PROJECT.md
   .orqestra/decisions/INDEX.md
-TEMPLATE:  templates/TASKS.md, templates/TASK.md
+TEMPLATE:  ${CLAUDE_PLUGIN_ROOT}/templates/TASKS.md, ${CLAUDE_PLUGIN_ROOT}/templates/TASK.md
 WRITE:     .orqestra/phases/PHASE-1/tasks/
 RETURN:    at most 10 lines.
 ```

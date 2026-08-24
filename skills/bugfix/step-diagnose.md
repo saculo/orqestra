@@ -15,7 +15,7 @@ READ:
   .orqestra/project/PROJECT.md
   .orqestra/modules.md
   .orqestra/decisions/INDEX.md
-TEMPLATE:  templates/DIAGNOSIS.md
+TEMPLATE:  ${CLAUDE_PLUGIN_ROOT}/templates/DIAGNOSIS.md
 WRITE:     .orqestra/work/BUG-003/DIAGNOSIS.md
 RETURN:    at most 10 lines.
 ```

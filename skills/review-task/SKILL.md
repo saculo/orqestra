@@ -55,7 +55,7 @@ Apply only the lenses you were given. A finding outside them goes in `## Notes`,
 ## Output
 
 - **Writes**: `REVIEW.md` in the task directory. **Nothing else.** You hold no `Edit`.
-- **Template**: `templates/REVIEW.md`.
+- **Template**: `${CLAUDE_PLUGIN_ROOT}/templates/REVIEW.md`.
 
 ## Procedure
 

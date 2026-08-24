@@ -32,7 +32,7 @@ broken" costs a whole rework cycle that "AC-3: expired sessions return 200, expe
 - **Writes**: `QA.md` in the task directory.
 - **Also writes**: test code, in the working tree, **inside the module's `paths` only** (§5.2, D2).
   **Do not commit** — `step-push.md` owns git (D1).
-- **Template**: `templates/QA.md`.
+- **Template**: `${CLAUDE_PLUGIN_ROOT}/templates/QA.md`.
 
 ## Procedure
 

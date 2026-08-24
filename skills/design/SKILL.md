@@ -38,7 +38,7 @@ starting point, not a blank page. Change what HEAD invalidated; keep what still 
 - **Writes**: `DESIGN.md` in the task directory.
 - **Also writes**: a `decisions/D-NNN-*.md` file for any choice that constrains **future** tasks
   (§4.7). A choice that only affects this task belongs in `## Decisions`, not in a decision file.
-- **Template**: `templates/DESIGN.md`.
+- **Template**: `${CLAUDE_PLUGIN_ROOT}/templates/DESIGN.md`.
 
 ## Procedure
 

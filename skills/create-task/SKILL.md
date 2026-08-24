@@ -34,7 +34,7 @@ cases, not to hold different rules.
 ## Output
 
 - **Writes**: one `TASK-NNN/TASK.md`, and updates `TASKS.md`. In split mode, two task files.
-- **Template**: `templates/TASK.md`, copied literally (D15).
+- **Template**: `${CLAUDE_PLUGIN_ROOT}/templates/TASK.md`, copied literally (D16).
 
 Ids: `max(existing across all phases) + 1`, never reset, never reused (D8).
 

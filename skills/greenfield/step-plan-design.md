@@ -19,7 +19,7 @@ READ:
   .orqestra/phases/PHASE-1/tasks/TASK-007/TASK.md
   .orqestra/project/PROJECT.md
   .orqestra/decisions/INDEX.md
-TEMPLATE:  templates/PLAN.md
+TEMPLATE:  ${CLAUDE_PLUGIN_ROOT}/templates/PLAN.md
 WRITE:     .orqestra/phases/PHASE-1/tasks/TASK-007/PLAN.md
 RETURN:    at most 10 lines.
 ```
@@ -42,7 +42,7 @@ READ:
   .orqestra/phases/PHASE-1/tasks/TASK-007/PLAN.md
   .orqestra/project/PROJECT.md
   .orqestra/decisions/INDEX.md
-TEMPLATE:  templates/DESIGN.md
+TEMPLATE:  ${CLAUDE_PLUGIN_ROOT}/templates/DESIGN.md
 WRITE:     .orqestra/phases/PHASE-1/tasks/TASK-007/DESIGN.md
 RETURN:    at most 10 lines.
 ```

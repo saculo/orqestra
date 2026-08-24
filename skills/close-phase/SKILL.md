@@ -44,7 +44,7 @@ READ:
   .orqestra/phases/PHASE-1/tasks/*/QA.md
   .orqestra/phases/PHASE-1/tasks/*/REVIEW.md
   .orqestra/decisions/INDEX.md
-TEMPLATE:  templates/PHASE_SUMMARY.md
+TEMPLATE:  ${CLAUDE_PLUGIN_ROOT}/templates/PHASE_SUMMARY.md
 WRITE:     .orqestra/phases/PHASE-1/PHASE_SUMMARY.md
 RETURN:    at most 10 lines.
 ```

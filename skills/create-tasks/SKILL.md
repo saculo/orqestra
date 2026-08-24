@@ -25,7 +25,7 @@ at once.**
 ## Output
 
 - **Writes**: `TASKS.md` (index) and `TASK-NNN/TASK.md` per task.
-- **Templates**: `templates/TASKS.md`, `templates/TASK.md`.
+- **Templates**: `${CLAUDE_PLUGIN_ROOT}/templates/TASKS.md`, `${CLAUDE_PLUGIN_ROOT}/templates/TASK.md`.
 
 Task numbering is **continuous across phases** — `TASK-014` follows the last task of PHASE-1. It never
 resets to `TASK-001`.

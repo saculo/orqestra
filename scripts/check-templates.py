@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
-"""Conformance check: templates/ against the §4.8.1 catalogue in REQUIREMENTS.md.
+"""Conformance check against the §4.8.1 catalogue in REQUIREMENTS.md.
+
+Two modes:
+  (default)          check templates/ — the schemas themselves
+  --target <dir>     check a real .orqestra/ workspace — the artifacts a workflow produced
+
+The second mode is what catches a skill that composed a file from scratch instead of copying
+its template (D16). Such a file reads correctly to a human and is invisible to `status`,
+which derives every task stage from frontmatter — so nothing else would report it.
 
 The catalogue is the single source of truth (D-003). This script parses it and proves
 every artifact template matches — frontmatter keys, headings, and heading ORDER.
 
 Dev-only. Not shipped behaviour: the plugin has no runtime dependency on it (D-001, D-015).
 
-Usage:  python3 scripts/check-templates.py [--verbose]
+Usage:  python3 scripts/check-templates.py [--verbose] [--target <workspace-dir>]
 Exit:   0 clean · 1 conformance failure · 2 the catalogue itself could not be read
 """
 import re, sys, pathlib
@@ -44,10 +52,14 @@ def parse_catalogue():
         if len(cells) < 4:
             continue
         name = re.sub(r"`", "", cells[0])
-        extra = [] if cells[2].lower() == "none" else re.findall(r"`([a-z_]+)`", cells[2])
+        # A key written `name?` is CONDITIONAL — present only when some other field makes it
+        # meaningful (e.g. `bug?` only when `origin: bug`). Required on the template, optional
+        # on an instance: the template documents the field, an artifact need not carry it.
+        extra = [] if cells[2].lower() == "none" else re.findall(r"`([a-z_]+)\??`", cells[2])
+        optional = set(re.findall(r"`([a-z_]+)\?`", cells[2]))
         base = [] if EXEMPT_MARKER in cells[2].lower() else COMMON
         heads = re.findall(r"`(##[^`]+)`", cells[3])
-        rows.append({"name": name, "frontmatter": base + extra, "headings": heads})
+        rows.append({"name": name, "frontmatter": base + extra, "optional": optional, "headings": heads})
     return rows
 
 
@@ -72,9 +84,79 @@ def read_template(path):
     return fm_keys, headings, bool(m)
 
 
+# Where each catalogue row lands inside a real .orqestra/ workspace
+INSTANCE_PATHS = {
+    "config.md": "config.md",
+    "modules.md": "modules.md",
+    "PROJECT.md": "project/PROJECT.md",
+    "PRD.md": "PRD.md",
+    "CLARIFICATIONS.md": "CLARIFICATIONS.md",
+    "decisions/INDEX.md": "decisions/INDEX.md",
+    "PHASES.md": "phases/PHASES.md",
+}
+
+
+def check_instance(target, rows, verbose):
+    """Check the artifacts a real workspace contains. Absent artifacts are not failures —
+    a workspace legitimately has only what its workflows have produced so far."""
+    ws = pathlib.Path(target)
+    if not ws.exists():
+        print(f"✘ no workspace at {ws}", file=sys.stderr)
+        return 2
+    by_name = {r["name"]: r for r in rows}
+    failures, checked = [], 0
+
+    targets = [(n, ws / p) for n, p in INSTANCE_PATHS.items()]
+    targets += [(f"decisions/D-NNN-*.md", f) for f in sorted(ws.glob("decisions/D-*.md"))]
+    for pat, sub in (("PHASE.md", "phases/*/PHASE.md"), ("TASKS.md", "phases/*/tasks/TASKS.md"),
+                     ("TASK.md", "phases/*/tasks/*/TASK.md"), ("PLAN.md", "phases/*/tasks/*/PLAN.md"),
+                     ("DESIGN.md", "phases/*/tasks/*/DESIGN.md"),
+                     ("IMPLEMENTATION.md", "phases/*/tasks/*/IMPLEMENTATION.md"),
+                     ("QA.md", "phases/*/tasks/*/QA.md"), ("REVIEW.md", "phases/*/tasks/*/REVIEW.md"),
+                     ("PR.md", "phases/*/tasks/*/PR.md"),
+                     ("PHASE_SUMMARY.md", "phases/*/PHASE_SUMMARY.md")):
+        targets += [(pat, f) for f in sorted(ws.glob(sub))]
+
+    for name, path in targets:
+        row = by_name.get(name)
+        if row is None or not path.exists() or name in FREEFORM or not row["headings"]:
+            continue
+        checked += 1
+        fm_keys, headings, has_fm = read_template(path)
+        problems = []
+        if not has_fm:
+            problems.append("no YAML frontmatter — file was composed rather than copied from its template (D16)")
+        else:
+            missing = [k for k in row["frontmatter"]
+                       if k not in fm_keys and k not in row.get("optional", ())]
+            if missing:
+                problems.append(f"frontmatter missing: {', '.join(missing)}")
+        missing_h = [h for h in row["headings"] if h not in headings]
+        if missing_h:
+            problems.append(f"headings missing: {', '.join(missing_h)}")
+        if problems:
+            failures.append((str(path.relative_to(ws)), problems))
+        elif verbose:
+            print(f"  ✓ {path.relative_to(ws)}")
+
+    print(f"\nchecked {checked} artifacts in {ws} against §4.8.1")
+    if failures:
+        print(f"\n✘ {len(failures)} artifact(s) do not conform:\n")
+        for name, problems in failures:
+            print(f"  {name}")
+            for p in problems:
+                print(f"      {p}")
+        print()
+        return 1
+    print("✔ all artifacts conform\n")
+    return 0
+
+
 def main():
     verbose = "--verbose" in sys.argv
     rows = parse_catalogue()
+    if "--target" in sys.argv:
+        return check_instance(sys.argv[sys.argv.index("--target") + 1], rows, verbose)
     failures, checked = [], 0
 
     for row in rows:

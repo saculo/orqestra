@@ -31,7 +31,7 @@ notice.
 ## Output
 
 - **Writes**: `PHASE-N/PHASE_SUMMARY.md`. **Nothing else** (D1, D2).
-- **Template**: `templates/PHASE_SUMMARY.md`, copied literally (D15).
+- **Template**: `${CLAUDE_PLUGIN_ROOT}/templates/PHASE_SUMMARY.md`, copied literally (D16).
 
 ## Procedure
 

@@ -37,7 +37,12 @@ Run in order (D6):
    | `git remote -v` | Warn. Planning works; delivery needs a remote |
    | `gh auth status` | Warn. Planning works; the delivery pipeline needs `gh` |
 
-4. **Write the tree:**
+4. **Write the tree** — every file **copied from its template in `templates/`** and filled in, never
+   composed from scratch (D16).
+
+   **Keep the YAML frontmatter.** It is not decoration: `status` (§7.10) derives every task's stage from
+   it, and the conformance check (§4.4) verifies it. A file written without frontmatter looks correct to
+   a reader and is invisible to the tool. Prose may be improved; **structure may not be changed.**
 
 ```
 .orqestra/
@@ -52,7 +57,7 @@ Run in order (D6):
 └── work/                      # empty
 ```
 
-5. **Populate `config.md`** from `templates/config.md` (D15) with the confirmed stack, the default gate
+5. **Populate `config.md`** from `${CLAUDE_PLUGIN_ROOT}/templates/config.md` (D16) with the confirmed stack, the default gate
    modes, and the step→agent table. Fill `test_command` and `branch_pattern` from what you detected;
    leave a detected-but-unverified command marked as such rather than presenting a guess as fact.
 
@@ -63,12 +68,16 @@ Run in order (D6):
    | module | paths | agent | stack | expertise |
    |--------|-------|-------|-------|-----------|
    | app    | src/  | backend-engineer | java | java-expertise |
+
+   **Write the agent name bare — `backend-engineer`, not `orqestra:backend-engineer`** (D-014). The
+   registry stores the plain name; the plugin namespace is added at dispatch, in one place. Writing it
+   namespaced here puts the prefix in two places and breaks the moment the plugin is renamed.
    ```
 
    **Every task is routed by its module row** (§5.1) — the row names the agent directly, so a docs
    module can be handled by `architect` while a service is handled by `backend-engineer`. A project with
    a Spring service, a Celery worker, a Vue app, and Argo manifests needs four rows and four sets of
-   conventions — see `templates/EXPERTISE.template.md`. Tell the user this at init, not when routing first fails:
+   conventions — see `${CLAUDE_PLUGIN_ROOT}/templates/EXPERTISE.template.md`. Tell the user this at init, not when routing first fails:
    `create-tasks` blocks on a module that is not registered, and the fix is a two-line edit they should
    already know about.
 
@@ -107,6 +116,9 @@ conventions section is worse than an empty one, because every downstream agent w
 2. **Never overwrite an existing `PRD.md`.** It is the human's document.
 3. **Never scan the codebase** to fill `PROJECT.md` (v1 scope).
 4. **Always confirm the stack.** Detection suggests; the human decides.
-5. Copy templates literally (D15).
-6. **Explain the module registry** in the report. It is the one thing a user must edit before real work,
+5. **When `AskUserQuestion` is unavailable** (a non-interactive session), do not silently assume:
+   proceed with the detected values, mark them unconfirmed in the report, and say which ones need
+   checking. A guess presented as a decision is the failure; a guess labelled as a guess is fine.
+6. Copy templates literally (D16) — frontmatter included, always.
+7. **Explain the module registry** in the report. It is the one thing a user must edit before real work,
    and the one whose absence blocks `create-tasks` (§5.1).

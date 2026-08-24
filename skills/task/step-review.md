@@ -23,7 +23,7 @@ READ:
   .orqestra/phases/PHASE-1/tasks/TASK-007/QA.md
   .orqestra/decisions/INDEX.md
 
-TEMPLATE:  templates/REVIEW.md
+TEMPLATE:  ${CLAUDE_PLUGIN_ROOT}/templates/REVIEW.md
 WRITE:     .orqestra/phases/PHASE-1/tasks/TASK-007/REVIEW.md
 RETURN:    at most 10 lines, per the skill's Return contract.
 ```

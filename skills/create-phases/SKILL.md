@@ -24,7 +24,7 @@ you could stop after and still have shipped something real.
 ## Output
 
 - **Writes**: `phases/PHASES.md` (index) and `phases/PHASE-N/PHASE.md` per phase. **Nothing else** (D1, D2).
-- **Templates**: `templates/PHASES.md`, `templates/PHASE.md` — copied literally (D15).
+- **Templates**: `${CLAUDE_PLUGIN_ROOT}/templates/PHASES.md`, `${CLAUDE_PLUGIN_ROOT}/templates/PHASE.md` — copied literally (D16).
 
 ## Procedure
 

@@ -29,7 +29,7 @@ possible: where the work lands, what it touches, what is risky, and what nobody 
 ## Output
 
 - **Writes**: `PLAN.md` in the task directory.
-- **Template**: `templates/PLAN.md` — copy it, fill it, change nothing structural.
+- **Template**: `${CLAUDE_PLUGIN_ROOT}/templates/PLAN.md` — copy it, fill it, change nothing structural.
 
 ## Procedure
 
