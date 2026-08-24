@@ -10,7 +10,7 @@ module_count: 2
 
 | module | paths | agent | stack | expertise |
 |---|---|---|---|---|
-| plugin | skills/, agents/, templates/, .claude-plugin/ | agentic-engineer | markdown | claude-expert, orqestra-conventions |
+| plugin | skills/, agents/, templates/, scripts/, .claude-plugin/ | agentic-engineer | markdown | claude-expert, orqestra-conventions |
 | docs | REQUIREMENTS.md, README.md | architect | markdown | orqestra-conventions |
 
 <!-- WHY `docs` IS HANDLED BY `architect`, NOT AN ENGINEER
@@ -37,4 +37,12 @@ module_count: 2
      Modules are things that CO-CHANGE. Split only where a change to one genuinely does not
      imply a change to the other. Here, docs changes independently; nothing else does.
      Adding a CLI (§12) would justify a third module — it would change on its own schedule.
+
+     REGISTRY CORRECTION, PHASE-1 / TASK-001: `scripts/` was added because the task that
+     built the conformance checker had nowhere to put it — every module boundary excluded
+     it, so the work was literally outside D14. Found by doing the work, not by reading.
+
+     `.orqestra/` deliberately belongs to NO module: it is workspace state that workflows
+     write as they run, not source that a task edits. A task never "changes .orqestra/"
+     as its deliverable; it produces artifacts there as a side effect of its steps.
 -->

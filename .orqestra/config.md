@@ -26,7 +26,7 @@ branch_pattern: feat/{task_id}-{slug}
 commit_style: conventional
 pr_draft: false
 auto_merge: false
-test_command: (none yet — see PHASE-1 SC-5, the eval harness)
+test_command: python3 scripts/check-templates.py
 
 ## Version control
 
