@@ -12,7 +12,7 @@ For each task whose stage is below `designed`:
 ### 1. Plan
 
 ```
-ROLE:      analyst
+ROLE:      orqestra:analyst
 STEP:      plan
 TASK:      PHASE-1/TASK-007
 READ:
@@ -34,7 +34,7 @@ yourself.
 ### 2. Design
 
 ```
-ROLE:      architect
+ROLE:      orqestra:architect
 STEP:      design
 TASK:      PHASE-1/TASK-007
 READ:

@@ -11,7 +11,7 @@ From `config.md`, default `correctness,design`. Add `regression-risk` automatica
 ## Dispatch
 
 ```
-ROLE:      reviewer
+ROLE:      orqestra:reviewer
 STEP:      review
 TASK:      PHASE-1/TASK-007
 LENSES:    correctness, design

@@ -11,7 +11,7 @@ The phase already has `TASK-*/TASK.md` → skip to plan-design.
 ## Dispatch
 
 ```
-ROLE:      analyst
+ROLE:      orqestra:analyst
 STEP:      create-tasks
 PHASE:     PHASE-1
 READ:

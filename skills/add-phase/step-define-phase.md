@@ -13,7 +13,7 @@ rereads the PRD, and a phase invented at this point looks exactly like a planned
 ## Dispatch
 
 ```
-ROLE:      analyst
+ROLE:      orqestra:analyst
 STEP:      create-phase
 READ:
   .orqestra/PRD.md

@@ -10,7 +10,7 @@ directories hang off those ids (D8).
 ## Dispatch
 
 ```
-ROLE:      analyst
+ROLE:      orqestra:analyst
 STEP:      create-phases
 READ:
   .orqestra/PRD.md

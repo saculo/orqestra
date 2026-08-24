@@ -12,6 +12,12 @@ allowed-tools: Read, Write, Glob, Grep, Bash, AskUserQuestion
 
 Scaffold `.orqestra/`. Runs once per project.
 
+## Arguments
+
+`$ARGUMENTS` may contain `--force`.
+
+**When empty**: Anything else is ignored. Without `--force`, an existing `.orqestra/` is refused.
+
 ## Procedure
 
 Run in order (D6):

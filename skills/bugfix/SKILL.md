@@ -15,6 +15,12 @@ You investigate a bug and hand back a designed fix. **You do not fix it.**
 Like every planning workflow, you stop at design (§1.1). The fix is delivered by
 `/orqestra:task <ID>` — the same pipeline as a feature, with qa, review, PR, and PR comments.
 
+## Arguments
+
+`$ARGUMENTS` is an optional bug description.
+
+**When empty**: gather the report interactively at intake.
+
 ## Steps
 
 | step | file | dispatches | gate |

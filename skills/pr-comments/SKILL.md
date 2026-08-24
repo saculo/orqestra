@@ -18,6 +18,12 @@ The rule that shapes this skill: **never silently ignore a comment.** Every thre
 verdict, and a recorded outcome. A reviewer who cannot see what happened to their feedback stops giving
 it.
 
+## Arguments
+
+`$ARGUMENTS` is a PR number, optionally followed by `--task PHASE-N/TASK-NNN`.
+
+**When empty**: block. There is no safe default PR; guessing one would triage the wrong review (D11).
+
 ## Steps
 
 | step | file | gate |

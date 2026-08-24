@@ -13,6 +13,12 @@ allowed-tools: Read, Glob, Grep, Skill, Task, AskUserQuestion
 Plan the next phase of a project orqestra already manages. Identical to greenfield from the phase
 boundary onward — it joins the machine at a different point, it is not a different machine.
 
+## Arguments
+
+`$ARGUMENTS` is an optional goal for the new phase.
+
+**When empty**: ask for it interactively via `AskUserQuestion` before anything else.
+
 ## Steps
 
 | step | file | dispatches | gate |

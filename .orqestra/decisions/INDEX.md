@@ -3,8 +3,8 @@ id: DECISIONS
 type: decisions-index
 status: done
 updated: 2026-08-24
-count: 13
-next_id: 14
+count: 14
+next_id: 15
 ---
 
 ## Decisions
@@ -24,3 +24,4 @@ next_id: 14
 | D-011 | `task_type` is removed | routing | active | No consumer once the row names the agent; `stack` stays advisory only |
 | D-012 | Skills are the commands | structure | active | No `commands/` dir — the skill folder name is the invocation name |
 | D-013 | `--plugin-dir` for dogfooding | runtime | active | Loads the working tree live; marketplace packaging deferred to PHASE-5 |
+| D-014 | Agents dispatch namespaced | routing | active | Registry stores `backend-engineer`; dispatch uses `orqestra:backend-engineer` |

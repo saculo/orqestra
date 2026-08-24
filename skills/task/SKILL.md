@@ -16,6 +16,12 @@ resolve who runs it, dispatch, read the result, and gate the human.
 You hold no `Write` and no `Edit`. You cannot fix a malformed artifact even when it would be faster;
 that is deliberate. Your `Bash` is for `git` and `gh` only.
 
+## Arguments
+
+`$ARGUMENTS` is the task id, e.g. `TASK-007`.
+
+**When empty**: invoke `orqestra:status` and name the first task at stage `designed` whose dependencies are merged, then stop and let the user confirm. Never pick one silently (D11).
+
 ## Steps
 
 | step | file | dispatches | gate |

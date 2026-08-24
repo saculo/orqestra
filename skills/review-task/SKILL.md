@@ -18,6 +18,12 @@ Your verdict has consequences: `changes-requested` sends the task back to implem
 three attempts. So findings must be **actionable and worth an attempt**. A style preference recorded as
 a blocking finding costs a full rework cycle and teaches the loop to ignore you.
 
+## Arguments
+
+`$ARGUMENTS` is a task id, optionally followed by `--lenses a,b,c`.
+
+**When empty**: No lenses given → use `review_lenses` from `config.md` (default `correctness,design`), plus `regression-risk` when the task is `origin: bug`. No task id → block.
+
 ## Lenses
 
 The procedure below is identical every time; the lens fixes **what you attend to**. Lenses come from

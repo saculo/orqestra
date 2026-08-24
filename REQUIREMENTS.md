@@ -744,7 +744,7 @@ subagent an `input.json` because its CLI wrote one; orqestra dispatches with a p
 is a fixed block of text — same fields, same order, every dispatch, every workflow.
 
 ```
-ROLE:      backend-engineer
+ROLE:      orqestra:backend-engineer
 STEP:      implement
 TASK:      PHASE-1/TASK-007
 STACK:     java
@@ -763,6 +763,11 @@ WRITE:     .orqestra/phases/PHASE-1/tasks/TASK-007/IMPLEMENTATION.md
 REWORK:    REVIEW.md — address findings F-2, F-5 only.     # present only on a re-dispatch
 RETURN:    at most 10 lines, per the skill's Return contract.
 ```
+
+**`ROLE` is the module's `agent`, dispatched under the plugin namespace.** Plugin agents are namespaced
+exactly as skills are, so the row's `backend-engineer` is dispatched as the subagent type
+`orqestra:backend-engineer`. The registry stores the bare name; the envelope and the dispatch use the
+namespaced one. An `agent` value with no matching file in `agents/` is a config error, not a fallback.
 
 **Paths, never contents.** The orchestrator names the files; the agent reads them itself, in its own
 context. Inlining an artifact into the envelope would move it through the orchestrator's context —

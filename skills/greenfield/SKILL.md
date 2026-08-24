@@ -19,6 +19,12 @@ That boundary is the design. You produce designed work units and hand them off.
 
 You hold no `Write` and no `Edit`.
 
+## Arguments
+
+`$ARGUMENTS` is an optional PRD path.
+
+**When empty**: read `prd_path` from `config.md`, falling back to `PRD.md` at the repo root. Neither present → block.
+
 ## Steps
 
 | step | file | dispatches | gate |

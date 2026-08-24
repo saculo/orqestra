@@ -15,7 +15,7 @@ TASK-041  module: worker
   | worker | services/worker | backend-engineer | python | python-expertise, celery-conventions |
   ↓
   skill      implement
-  subagent   backend-engineer          (named by the row — no enum in between)
+  subagent   orqestra:backend-engineer (the row names it; the plugin namespace is added)
   expertise  python-expertise, celery-conventions
   paths      services/worker           (the boundary the agent may not cross)
 ```
@@ -29,7 +29,7 @@ gap is visible.
 ## Dispatch
 
 ```
-ROLE:      backend-engineer
+ROLE:      orqestra:backend-engineer
 STEP:      implement
 TASK:      PHASE-1/TASK-041
 MODULE:    worker

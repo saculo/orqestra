@@ -5,7 +5,7 @@ Dispatch `analyst` to find the **root cause with evidence**, then **gate**.
 ## Dispatch
 
 ```
-ROLE:      analyst
+ROLE:      orqestra:analyst
 STEP:      diagnose
 BUG:       BUG-003
 MODULE:    api

@@ -12,6 +12,12 @@ allowed-tools: Read, Glob, Grep, Skill, Task, AskUserQuestion, Bash
 
 Decide whether a phase reached its milestone, and record it.
 
+## Arguments
+
+`$ARGUMENTS` is the phase number, e.g. `1`.
+
+**When empty**: invoke `orqestra:status` and use the lowest-numbered phase whose status is not `done`; state which one you chose.
+
 ## Procedure
 
 Run in order (D6):
@@ -28,7 +34,7 @@ does not exist.
 ### 2. Dispatch review-phase
 
 ```
-ROLE:      reviewer
+ROLE:      orqestra:reviewer
 STEP:      review-phase
 PHASE:     PHASE-1
 READ:

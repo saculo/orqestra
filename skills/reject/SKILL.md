@@ -1,6 +1,6 @@
 ---
 name: reject
-argument-hint: ""<why>""
+argument-hint: "<why>"
 description: "Rejects the orqestra step currently parked at a gate, records the reason, and re-dispatches that step with the feedback as rework input. Use when the user says '/orqestra:reject', or rejects a gate in a session later than the one that parked it."
 allowed-tools: Read, Write, Edit, Glob, Grep, Skill, Task, Bash
 ---
