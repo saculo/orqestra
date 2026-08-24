@@ -23,7 +23,30 @@ Scaffold `.orqestra/`. Runs once per project.
 Run in order (D6):
 
 1. **Refuse if `.orqestra/` exists**, unless `--force`. An existing workspace holds real planning state;
-   overwriting it silently is unrecoverable in a way nothing else in orqestra is.
+   overwriting it silently is unrecoverable in a way nothing else in orqestra is. Name `--force` as the
+   override and stop — do not offer to do it anyway.
+
+   **With `--force`, announce before you write, never after.** List what will be replaced and what will
+   be kept, then act:
+
+   ```
+   ⚠ --force will REPLACE:
+       .orqestra/config.md            (modified since init)
+       .orqestra/modules.md           2 modules registered
+       .orqestra/project/PROJECT.md
+       .orqestra/decisions/INDEX.md   4 decisions — the files in decisions/ are NOT removed
+     and will KEEP:
+       .orqestra/PRD.md               your document, never overwritten
+       .orqestra/phases/              3 phases, 14 tasks — untouched
+   ```
+
+   A report written *after* the write is not a warning, it is a receipt. Where `AskUserQuestion` is
+   available, confirm at this point; where it is not, print the list first anyway so the record shows
+   what was replaced.
+
+   **Never delete planning state.** `--force` re-scaffolds the generated files; it does not remove
+   `phases/`, `work/`, or the individual files in `decisions/`. A user asking to re-scaffold config is
+   not asking to discard a project.
 
 2. **Detect and confirm.** Suggest the stack from repo contents — `pom.xml`/`build.gradle` → java,
    `package.json` → typescript, `pyproject.toml` → python, `go.mod` → go. **Always confirm via
