@@ -1,0 +1,4 @@
+# scratch fixtures and local noise
+*.pyc
+__pycache__/
+.DS_Store
