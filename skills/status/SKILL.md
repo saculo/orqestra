@@ -66,7 +66,12 @@ Report both facts and keep them distinct:
 ✗ TASK-010  app   implemented    qa failed → rework at implement (attempt 2 of 3)
 ✗ TASK-011  app   verified       review: changes-requested → rework at implement (attempt 2 of 3)
 ✗ TASK-009  app   designed       implement: changes-requested → rework at implement
+← TASK-014  app   verified       review FAILED → needs your decision (re-review or revisit design)
 ```
+
+**A `failed` review is not rework** (§8.1). It does not loop and it is not blocked — it is waiting on a
+human, so report it with `←` alongside the gates, never with `✗` alongside the rework loop. Getting this
+wrong tells a reader the pipeline is working on it when nothing is happening.
 
 Any artifact with `status: blocked` overrides everything: the task is `blocked`, and its
 `blocked_reason` is the headline.

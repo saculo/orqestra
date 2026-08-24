@@ -4,7 +4,7 @@ type: qa
 status: done
 updated: 2026-08-25
 task: TASK-005
-result: failed
+result: passed
 test_command: python3 scripts/check-templates.py --target /tmp/status-fx/.orqestra
 ---
 
@@ -43,13 +43,16 @@ Unprompted, `status` also caught a flaw in the fixture itself (TASK-007 and TASK
 |---|---|---|
 | AC-1 | TASK-001..008, one per stage | passed |
 | AC-2 | TASK-009 — reported `designed`, in rework at implement, never `implemented` | passed |
-| AC-3 | TASK-010 and TASK-011 | **failed as written** — see Issues |
+| AC-3 | TASK-010 (`implemented`) and TASK-011 (`verified`), both reporting rework at implement | passed (against amended AC-3) |
 | AC-4 | TASK-012 — blocked, `design-invalid` as headline, ranked above everything | passed |
 | AC-5 | TASK-013 — `unknown`, both parse errors named, no guessed stage | passed |
 
 ## Issues
 
-**AC-3 is wrong, and `status` is right.** It says a `QA.md` with `result: failed` **or** a `REVIEW.md`
+**AC-3 was amended at this gate**, by human decision, and the rework semantics behind it were
+tightened at the same time (D-015). The finding that prompted both is kept below.
+
+**AC-3 as written was wrong, and `status` was right.** It says a `QA.md` with `result: passed` **or** a `REVIEW.md`
 with `verdict: changes-requested` "does not advance the stage past `implemented`". The first half holds.
 The second does not: when a review is rejected, qa has already passed, so the task genuinely *is*
 `verified`, and §4.3's stage table says so. Reporting it as `implemented` would discard a fact the
@@ -58,9 +61,11 @@ workspace records.
 The criterion conflates two traps that behave differently. `status` follows §4.3; the AC was written
 from it loosely.
 
-**Recommended amendment**: split AC-3 so each trap states its own resulting stage — `result: failed`
+**Recommended amendment**: split AC-3 so each trap states its own resulting stage — `result: passed`
 leaves the task at `implemented`, `verdict: changes-requested` leaves it at `verified`, and neither
 advances. That is what the tool does and what §4.3 requires.
 
-Marked `failed` rather than quietly passing, because a criterion is not met until it is amended — and
-amending a criterion is a human decision (§8.1), not QA's.
+**Resolved**: AC-3 amended to state each trap's resulting stage separately. The human also settled a
+larger question the finding exposed — that `changes-requested` and `failed` were being collapsed — now
+recorded as D-015 and specified in §8.1: `changes-requested` loops to `implement`; `failed` gates a
+human and may be re-reviewed once.

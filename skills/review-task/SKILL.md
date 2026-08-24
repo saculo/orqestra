@@ -73,8 +73,18 @@ Apply only the lenses you were given. A finding outside them goes in `## Notes`,
 7. Set the verdict:
    - `passed` — no `required: yes` findings. Minor ones may still be recorded.
    - `changes-requested` — at least one `required: yes` finding, all of them fixable by rework.
-   - `failed` — the approach is wrong; rework cannot save it. Rare, and it means the **design** needs
-     revisiting, not the implementation.
+   - `failed` — the approach is wrong; **rework cannot save it.** Rare, and it means the **design**
+     needs revisiting, not the implementation.
+
+   **The line between the last two is the one that matters** (§8.1). They route differently:
+   `changes-requested` loops straight back to implement and costs one attempt; `failed` stops the
+   pipeline and asks a human. Ask yourself one question — *could a competent engineer fix this without
+   changing the design?* Yes → `changes-requested`. No → `failed`. Marking something `failed` that was
+   merely hard stops a pipeline that would have converged; marking something `changes-requested` that
+   is genuinely unbuildable burns all three attempts proving it.
+
+   A `failed` verdict may be disputed and you may be asked to review again — so **say what would change
+   your mind**, not just what is wrong.
 8. Write `REVIEW.md` from the template.
 9. Verify against the schema before returning, and declare `SCHEMA: ok` (D12).
 

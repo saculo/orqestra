@@ -1211,6 +1211,12 @@ Lenses, selectable by argument or config, default `correctness,design`:
 
 Verdict, in frontmatter: `passed` · `changes-requested` · `failed`.
 
+**Choose between the last two deliberately** — they route differently (§8.1). `changes-requested` means
+*fixable by implement*; it loops. `failed` means *rework cannot save this*; it stops and asks a human,
+who may also order a re-review if the verdict itself looks mistaken. Marking something `failed` that is
+merely hard to fix stops a pipeline that would have converged; marking something `changes-requested`
+that is genuinely unbuildable burns all three attempts proving it.
+
 ### 7.9 `close-phase`
 
 `/orqestra:close-phase <N>` — runs `review-phase` once every task in the phase is `done` (merged).
@@ -1329,11 +1335,45 @@ The single rework rule, replacing nit's repair/rework/escalate protocol:
 1. A step's output fails its **contract check** (§4.4) → re-dispatch once with the missing pieces named.
 2. **qa fails** → back to `implement` with `QA.md` as input; `attempts++`.
 3. A **review** returns `changes-requested` → back to `implement` with `REVIEW.md` as input; `attempts++`.
-4. A **human rejects** at a gate → re-run that step with the rejection comment as input; `attempts++`.
-5. `attempts` exceeds `max_attempts` (default 3) → set `blocked`, present everything tried, **stop**.
+4. A **review** returns `failed` → **not a loop and not an automatic block.** See §8.1.
+5. A **human rejects** at a gate → re-run that step with the rejection comment as input; `attempts++`.
+6. `attempts` exceeds `max_attempts` (default 3) → set `blocked`, present everything tried, **stop**.
    Do not retry. A blocked task re-dispatched unchanged blocks again on the same step — fix the cause.
 
-### 8.1 Recovery — un-wedging a run
+**Everything that loops, loops back to `implement`.** Not to the step that failed. qa failing does not
+re-run qa; a rejected review does not re-run review. There is exactly one place work is redone, and
+naming any other step as the rework target tells a reader the wrong thing about what happens next.
+
+### 8.1 `changes-requested` versus `failed`
+
+These are different failures and the workflow must not collapse them.
+
+**`changes-requested` — the loop.** The work is fixable where it stands: named findings, a return to
+`implement` with exactly those findings in `REWORK`, `attempts++`. This is the ordinary path and it
+runs without asking anyone.
+
+**`failed` — not the loop.** The reviewer is saying rework cannot save this: the approach is wrong, the
+design does not hold, the task is not buildable as specified. Sending that back to `implement` burns
+attempts on a problem implement cannot solve, and it is the single most wasteful thing the pipeline can
+do.
+
+But a `failed` verdict may also simply be **wrong** — a reviewer reading a stale design, missing
+context, or applying a lens the task never claimed. So `failed` neither loops nor blocks. It offers two
+routes, and a human chooses:
+
+| route | when | effect |
+|---|---|---|
+| **Re-review** | The verdict looks mistaken — stale context, misread design, wrong lens | Re-dispatch `review-task` with why the first verdict is disputed. **Does not increment `attempts`** — no implementation work is being redone. Allowed **once**; a second `failed` goes to the human |
+| **Ask the human** | The verdict looks right | Present the finding and stop. The decision is theirs: revisit the design, split the task, accept it as-is, or abandon it |
+
+The budget matters: a re-review is cheap and sometimes correct, but two independent reviews reaching
+`failed` is evidence, not noise. **Never re-review a third time** — at that point the disagreement is
+about the task, not the code, and only a human can settle it.
+
+`blocked` remains the outcome when the human chooses no route, or when they decide the design must be
+revisited (`blocked_reason: design-invalid`). It is where `failed` may *end up*, never where it starts.
+
+### 8.2 Recovery — un-wedging a run
 
 Unblocking is a human act. `/orqestra:unblock <ID>` is the sanctioned path: it shows the recorded
 `blocked_reason`, asks what was addressed, resets `status: in-progress` and `attempts: 0`, and appends

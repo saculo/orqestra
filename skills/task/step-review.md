@@ -37,8 +37,40 @@ Read `REVIEW.md` **frontmatter only** — `verdict`.
 | `verdict` | Do |
 |---|---|
 | `passed` | Gate the human |
-| `changes-requested` | Back to implement. `attempts++`. `REWORK: REVIEW.md — address F-2, F-5 only` |
-| `failed` | `blocked`, `blocked_reason: design-invalid` — rework cannot save it; the design needs revisiting |
+| `changes-requested` | **Loop back to implement.** `attempts++`. `REWORK: REVIEW.md — address F-2, F-5 only` |
+| `failed` | **Neither loop nor block — gate the human with two routes.** See below |
+
+**`changes-requested` always returns to implement**, never to review, never to qa. One place work is
+redone (§8).
+
+### When the verdict is `failed`
+
+`failed` means the reviewer believes rework cannot save this. **Do not send it to implement** — that
+burns attempts on a problem implement cannot solve. **Do not block it automatically either**, because a
+`failed` verdict can itself be wrong: a stale design, missing context, a lens the task never claimed.
+
+Present the reviewer's reasoning and offer two routes:
+
+```
+▸ GATE · review FAILED · TASK-007
+
+  VERDICT  failed
+  The retry wrapper cannot satisfy AC-3: the criterion requires at-least-once
+  delivery, and the design's fire-and-forget publisher cannot provide it
+  whatever the implementation does. This is a design problem, not a code one.
+
+  [ Ask for a re-review ]  [ Revisit the design ]  [ Accept and continue ]  [ Abandon the task ]
+```
+
+| choice | effect |
+|---|---|
+| Ask for a re-review | Re-dispatch `review-task` with why the verdict is disputed. **`attempts` is not incremented** — no implementation work is being redone. **Once only**: a second `failed` goes back to the human with both reviews |
+| Revisit the design | `blocked`, `blocked_reason: design-invalid`. Recovery is a human's (§8.2) |
+| Accept and continue | Findings move to `## Tech Debt`; continue to push. Legitimate, and recorded |
+| Abandon the task | `status: superseded`, with the reason |
+
+**Never re-review a third time.** Two independent `failed` verdicts are evidence, not noise — at that
+point the disagreement is about the task, not the code, and only a human can settle it.
 
 ## The gate
 

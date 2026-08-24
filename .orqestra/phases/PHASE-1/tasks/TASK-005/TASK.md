@@ -27,9 +27,16 @@ than as a clear failure.
 |---|---|
 | AC-1 | Against a fixture tree containing a task at each of the eight stages in §4.3, `status` reports each one correctly |
 | AC-2 | **Trap 1**: an `IMPLEMENTATION.md` with `status: changes-requested` reports the task as in rework at implement — never as `implemented` |
-| AC-3 | **Trap 2**: a `QA.md` with `result: failed` or a `REVIEW.md` with `verdict: changes-requested` does not advance the stage past `implemented` |
+| AC-3 | **Trap 2**: a `QA.md` with `result: failed` leaves the task at `implemented`, and a `REVIEW.md` with `verdict: changes-requested` leaves it at `verified` — neither advances, and both report rework at **implement** |
 | AC-4 | Any artifact with `status: blocked` makes the task report as `blocked`, with its `blocked_reason` as the headline, overriding every other derivation |
 | AC-5 | A task with missing or malformed frontmatter reports as unknown and never as a guessed stage — an invented stage sends an orchestrator to the wrong step silently |
+
+<!-- AC-3 amended 2026-08-25 by human decision at the QA gate. As written it claimed a
+     rejected review leaves a task at `implemented`, conflating two traps that behave
+     differently: when a review is rejected, qa has already passed, so the task genuinely
+     IS `verified` and §4.3's stage table says so. `status` was correct; the criterion was
+     loose. Amended to state each trap's resulting stage separately, and to require that
+     both report rework at implement — the rework target, not the step that failed. -->
 
 ## Out of Scope
 

@@ -3,8 +3,8 @@ id: DECISIONS
 type: decisions-index
 status: done
 updated: 2026-08-24
-count: 14
-next_id: 15
+count: 15
+next_id: 16
 ---
 
 ## Decisions
@@ -25,3 +25,4 @@ next_id: 15
 | D-012 | Skills are the commands | structure | active | No `commands/` dir — the skill folder name is the invocation name |
 | D-013 | `--plugin-dir` for dogfooding | runtime | active | Loads the working tree live; marketplace packaging deferred to PHASE-5 |
 | D-014 | Agents dispatch namespaced | routing | active | Registry stores `backend-engineer`; dispatch uses `orqestra:backend-engineer` |
+| D-015 | A `failed` review is a gate | workflow | active | `changes-requested` loops to implement; `failed` asks a human, re-review allowed once |
