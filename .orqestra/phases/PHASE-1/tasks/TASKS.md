@@ -1,0 +1,64 @@
+---
+id: TASKS-PHASE-1
+type: tasks
+status: in-progress
+updated: 2026-08-24
+phase: PHASE-1
+task_count: 7
+---
+
+## Tasks
+
+| id | title | module | depends_on | serves |
+|---|---|---|---|---|
+| TASK-001 | Artifact templates conform to the schema catalogue | plugin | — | SC-5 |
+| TASK-002 | Plugin manifest and command wiring | plugin | — | SC-1 |
+| TASK-003 | init scaffolds a complete workspace | plugin | TASK-001, TASK-002 | SC-2 |
+| TASK-004 | init refuses to destroy existing work | plugin | TASK-003 | SC-3 |
+| TASK-005 | status derives every task stage correctly | plugin | TASK-001, TASK-002 | SC-4 |
+| TASK-006 | status reports what is next | plugin | TASK-005 | SC-6 |
+| TASK-007 | Reconcile the specification with the shipped tree | docs | TASK-001 | SC-5 |
+
+## Dependency Order
+
+```
+TASK-001  templates + conformance check ─┬─→ TASK-003 init scaffold ──→ TASK-004 init guards
+TASK-002  manifest + commands ───────────┤
+                                         ├─→ TASK-005 status derivation ──→ TASK-006 status reporting
+                                         └─→ TASK-007 spec reconciliation
+```
+
+**Delivery order**: TASK-001, TASK-002, TASK-003, TASK-004, TASK-005, TASK-006, TASK-007.
+
+Seven sequential PRs. TASK-001 and TASK-002 are genuinely independent and TASK-004, TASK-006, and
+TASK-007 sit on separate branches of the graph — but v1 delivers one task at a time (D15), so the graph
+buys ordering safety rather than speed.
+
+**Every dependency here is real**, which matters because each one stalls delivery until the other task
+is *merged* (§7.4.1), not merely done:
+
+- **TASK-003 and TASK-005 both need TASK-001**, because both are verified against templates, and a
+  fixture built from a non-conforming template proves nothing.
+- **Both need TASK-002**, because their criteria are written as `/orqestra:init` and `/orqestra:status` —
+  behaviour through the command, not a skill invoked by hand.
+- **TASK-004 needs TASK-003**: you cannot test refusing to overwrite a workspace before one can be
+  created.
+- **TASK-006 needs TASK-005**: reporting a stage requires deriving it first.
+- **TASK-007 needs TASK-001**: the reconciliation is driven by what the conformance check reports, not
+  by re-reading the catalogue by eye.
+
+## Notes on the decomposition
+
+**TASK-003 and TASK-004 are one skill split in two.** Combining `init`'s happy path with its refusal
+behaviour produced eight acceptance criteria — past the point where a task is two tasks wearing one name
+(§7.6.1). Splitting kept every criterion; shrinking would have dropped the safety ones, which are the
+ones that matter when someone runs `init` twice.
+
+**TASK-007 is the phase's only `docs` task**, and it exists because of D14. TASK-001 makes templates
+conform to the catalogue *as written*; where the catalogue itself is wrong, fixing it touches
+`REQUIREMENTS.md` — a different module, therefore a different task, therefore a different PR reviewed by
+whoever owns the spec. Its agent is `architect`, not an engineer.
+
+**No task writes new skills.** The plugin source for `init`, `status`, the commands, and the templates
+already exists as an untested draft. Every criterion here is written as observable behaviour precisely
+so that existing source does not satisfy it — nothing has been run.

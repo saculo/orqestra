@@ -1,0 +1,15 @@
+{
+  "name": "orqestra",
+  "description": "Stateful, schema-driven development workflows for Claude Code. Plans projects into phases and tasks, then delivers each task to a merged PR through implement, qa, review, and PR-comment resolution. State lives in Markdown artifacts; routing is per-module and extensible with your own convention skills.",
+  "version": "0.1.0",
+  "author": {
+    "name": "lgrula"
+  },
+  "keywords": [
+    "workflow",
+    "orchestration",
+    "planning",
+    "code-review",
+    "agents"
+  ]
+}
