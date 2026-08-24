@@ -4,7 +4,7 @@ type: qa
 status: done
 updated: 2026-08-24
 task: TASK-001
-result: failed
+result: passed
 test_command: python3 scripts/check-templates.py
 ---
 
@@ -42,11 +42,15 @@ Breakage detection, three classes, each restored afterwards:
 | AC-2 | live run reports `frontmatter missing:` and `frontmatter not in catalogue:` by key name | passed |
 | AC-3 | breakage tests 1 and 2 — missing, extra, and out-of-order all reported distinctly | passed |
 | AC-4 | all three injected breakages reported with the specific violation | passed |
-| AC-5 | exit 1 on the live tree, exit 0 on the conforming fixture; `test_command` recorded | **failed** — see Issues |
+| AC-5 | exit 0 on the conforming fixture, 1 on the live tree, 2 on an unreadable catalogue; `test_command` recorded | passed (against amended AC-5) |
 
 ## Issues
 
-**AC-5 cannot be fully satisfied from inside this task.** Its wording requires "zero on a clean tree",
+**AC-5 was amended at this gate**, by human decision, after the original wording proved unsatisfiable
+from inside this module. What follows is the finding that prompted it, kept because the reasoning
+matters more than the outcome.
+
+**AC-5 as originally written could not be satisfied from inside this task.** Its wording requires "zero on a clean tree",
 and the live tree is not clean: two catalogue defects remain, both in `REQUIREMENTS.md`, which is the
 `docs` module. D14 forbids this task from touching them.
 
@@ -56,5 +60,10 @@ deliverable.
 
 **This is a planning defect, not an implementation one.** TASK-007 depends on TASK-001, but TASK-001's
 AC-5 depends on TASK-007 — a circular dependency that only appeared when the work was actually done. It
-needs a human decision (§8.1): amend AC-5 to describe the checker's behaviour rather than the live
-tree's state, or accept TASK-001 as blocked until TASK-007 lands.
+needed a human decision (§8.1). **Resolved**: AC-5 amended to describe the checker's exit-code contract
+rather than the live tree's state. TASK-001 closes; PHASE-1 SC-5 stays unmet until TASK-007 lands,
+which is the honest position — the tree is genuinely not conformant yet.
+
+**Two defects handed to TASK-007**, both in `REQUIREMENTS.md` §4.8.1:
+1. `config.md` must be marked **no common frontmatter** — the checker already supports the marker.
+2. The `TASK.md` row must include `bug`.

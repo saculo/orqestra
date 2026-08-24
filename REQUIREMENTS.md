@@ -67,7 +67,7 @@ merged PR. Phase close (`review-phase`) runs once all tasks in the phase are mer
    `.orqestra/` exists and is populated; `PROJECT.md`, phases, and tasks are readable context. There is
    no brownfield adoption path in v1 (§10).
 7. **Simpler than nit, on purpose.** nit has 21 skills, 8 archetypes, a Bun supervisor state machine,
-   26 JSON schemas, and a repair/rework/escalate protocol. orqestra has ~15 skills, no archetypes, no
+   26 JSON schemas, and a repair/rework/escalate protocol. orqestra has 22 skills, no archetypes, no
    state machine, no schemas, and one rework rule.
 
 ### 1.4 Lineage — what is taken and what is dropped
@@ -451,7 +451,7 @@ The index is a table — id, title, area, status, one-line summary — and nothi
 That is the whole point: **unconditional awareness, conditional detail.** One growing file forces a
 choice between reading everything and reading nothing.
 
-It also solves the growth problem outright (previously open question §11.6): superseding is a status
+It also solves the growth problem outright (previously an open question in §11): superseding is a status
 change in one row, and archiving is moving files — no rewriting, no `DECISIONS_ARCHIVE.md`.
 
 A decision file:
@@ -497,14 +497,18 @@ it, it does not go in.
 
 ### 4.8 Schema catalogue
 
-Twenty artifacts. Common frontmatter (§4.4.4) is implied on every row; the column lists **additions**.
-Headings are required, in the order given.
+Twenty-two artifacts. Common frontmatter (§4.4.4) is implied on every row unless the row says
+**no common frontmatter**; the column otherwise lists **additions**. Headings are required, in the order
+given.
+
+Only `config.md` takes the exemption, and it earns it: it is *configuration*, not project state, so
+`status` and `updated` on it would be fields nothing reads — which Rule B (§4.4.1) forbids.
 
 #### 4.8.1 The catalogue
 
 | Artifact | Written by | Frontmatter additions | Required headings, in order |
 |---|---|---|---|
-| `config.md` | `init` | `project` `stack` `version` | `## Gates` · `## Rework` · `## Delivery` · `## Version control` · `## Routing` · `## Conventions` |
+| `config.md` | `init` | **no common frontmatter** — `project` `stack` `version` | `## Gates` · `## Rework` · `## Delivery` · `## Version control` · `## Routing` · `## Conventions` |
 | `modules.md` | `init`, then the human | `module_count` | `## Modules` |
 | `PROJECT.md` | `design` (first task), appended after | `stack` | `## Stack` · `## Layout` · `## Commands` · `## Conventions` |
 | `PRD.md` | **human** | none | none — the one free-form input; `clarify` imposes structure downstream |
@@ -514,7 +518,7 @@ Headings are required, in the order given.
 | `PHASES.md` | `create-phases` | `phase_count` | `## Phases` · `## Ordering Rationale` |
 | `PHASE.md` | `create-phases` / `create-phase` | `phase` `criteria_count` | `## Goal` · `## Success Criteria` · `## Scope` · `## Out of Scope` |
 | `TASKS.md` | `create-tasks` | `phase` `task_count` | `## Tasks` · `## Dependency Order` |
-| `TASK.md` | `create-tasks` / `create-task` | `phase` `module` `stack` `origin` `depends_on` `serves` `attempts` | `## Goal` · `## Acceptance Criteria` · `## Out of Scope` |
+| `TASK.md` | `create-tasks` / `create-task` | `phase` `module` `stack` `origin` `bug` `depends_on` `serves` `attempts` | `## Goal` · `## Acceptance Criteria` · `## Out of Scope` |
 | `PLAN.md` | `plan` | `task` | `## Approach` · `## Affected Areas` · `## Risks` · `## Open Questions` |
 | `DESIGN.md` | `design` | `task` `decisions` | `## Components` · `## Interfaces` · `## File Plan` · `## Decisions` · `## Test Strategy` |
 | `IMPLEMENTATION.md` | `implement` | `task` `deviation` `files_changed` | `## Changes` · `## Deviations` · `## Tech Debt` |
@@ -585,8 +589,14 @@ and not in this document, and why §4.8.1 stays a catalogue rather than twenty i
 
 #### 4.8.4 Versioning
 
-`config.md` carries `version: 1`. If an artifact schema changes incompatibly, that number increments
-and `init --migrate` is the upgrade path. v1 ships version 1 and additive changes only (§4.4.4).
+`config.md` carries `version: 1`. v1 ships version 1 and **additive changes only** (§4.4.4), so no
+migration path exists and none is implemented.
+
+That is deliberate rather than an omission. A migration mechanism written before any schema has ever
+changed is a guess at a problem nobody has had — the same *build only what this phase needs now* rule
+that governs phases (§7.6). When a schema first changes incompatibly, the version increments and the
+upgrade path gets designed against the actual change. Until then, `init` refuses to touch an existing
+workspace (§3) and that is the whole story.
 
 ---
 
@@ -876,7 +886,7 @@ step re-run. (nit's rule; kept verbatim because it is the one that decays fastes
 
 ### 7.0 Skill anatomy
 
-Fifteen skills have to be written consistently, by different hands, months apart. The authoring
+Twenty-two skills have to be written consistently, by different hands, months apart. The authoring
 contract lives in **`templates/SKILL.template.md`** — copy it, fill the blanks, delete the comments.
 
 Every skill declares a **class** first, and the class fixes everything else:
@@ -1296,16 +1306,19 @@ spec, so a user can look them up.
 ### 7.12 Skill inventory (v1)
 
 ```
-PLANNING ORCHESTRATORS        DELIVERY ORCHESTRATORS      PLANNING SKILLS    STEP SKILLS
-orchestrate-greenfield        orchestrate-task            create-phases      plan
-orchestrate-add-phase         pr-comments                 create-phase       design
-orchestrate-bugfix                                        create-tasks       implement
-                                                          create-task        qa
-UTILITY                                                                      review-task
-close-phase  ·  status                                                       review-phase
+PLANNING ORCHESTRATORS    DELIVERY ORCHESTRATORS    PLANNING SKILLS    STEP SKILLS
+greenfield                task                      create-phases      plan
+add-phase                 pr-comments               create-phase       design
+bugfix                                              create-tasks       implement
+                                                    create-task        qa
+GATE CONTROL              UTILITY                   clarify            review-task
+approve · reject          status · close-phase                         review-phase
+unblock
 ```
 
-15 skills. Plus expertise skills, which are pluggable and not part of the core count.
+22 skills. The folder name is the invocation name (§2), so this table is also the command list.
+Expertise skills are pluggable, live in the project's own `.claude/skills/`, and are not part of the
+core count (§5.3).
 
 ---
 
