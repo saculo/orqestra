@@ -57,9 +57,18 @@ Two consequences that decide how you write:
 
 ## Conventions
 
-- **`allowed-tools` is enforcement, not documentation.** An orchestrator without `Write` *cannot* patch
-  a malformed artifact, however tempting. Prefer a structural constraint over an instruction asking for
-  restraint — the instruction degrades under pressure, the tool list does not.
+- **`allowed-tools` does NOT enforce.** It pre-approves: the listed tools run without a permission
+  prompt, and *every unlisted tool stays callable*. An orchestrator without `Write` in `allowed-tools`
+  can still write — it just gets asked first. The restricting field is **`disallowed-tools`**, and it
+  clears at the user's next message.
+- **Durable enforcement lives in `agents/<name>.md`.** Its `tools:` field is a true allowlist and
+  `disallowedTools:` a true denylist, both for the whole subagent run. Note the casing — the agent
+  fields are camelCase, the skill field is kebab-case, and a camelCase key in a `SKILL.md` is silently
+  ignored. Put a guarantee in the agent when the work is dispatched; a skill can only hold it for a
+  turn.
+- **Still prefer a structural constraint over an instruction asking for restraint** — the instruction
+  degrades under pressure. Just verify the constraint is real before you rely on it, and say plainly
+  which layer holds it (§7.0.1).
 - **Write for a reader with no context you have not given them.** An instruction that reads clearly to
   someone holding this conversation may be genuinely ambiguous to a fresh subagent — and that is the
   only reader it will ever have.

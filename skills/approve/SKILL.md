@@ -2,10 +2,11 @@
 name: approve
 argument-hint: "[comment]"
 description: "Approves the orqestra step currently parked at a gate, records the approval, and resumes the workflow at the next step. Use when the user says '/orqestra:approve', or approves a gate in a session later than the one that parked it."
-allowed-tools: Read, Write, Edit, Glob, Grep, Skill, Task, Bash
+allowed-tools: Read, Write, Edit, Glob, Grep, Skill, Agent, Bash
+disallowed-tools: NotebookEdit
 ---
 
-> **Arguments**: `/orqestra:approve [comment]` · **Class**: orchestrator+
+> **Arguments**: `/orqestra:approve [comment]` · **Class**: control
 
 # orqestra Approve
 

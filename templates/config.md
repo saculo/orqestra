@@ -50,6 +50,7 @@ artifact_commit_scope: .orqestra/
 | pr-comments | pr-comments | **the module's `agent`** |
 
 ## Conventions
-<!-- Project-wide. Module-specific conventions belong in that module's expertise skill. -->
+<!-- Project-wide. Module-specific conventions belong in that module's expertise skills (§5.3) —
+     a module may name several. -->
 
 review_lenses: correctness, design

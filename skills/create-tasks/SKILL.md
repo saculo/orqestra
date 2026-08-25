@@ -2,6 +2,7 @@
 name: create-tasks
 description: "Breaks one orqestra phase into single-PR tasks, each with a type, stack, dependencies, and acceptance criteria tracing to a phase success criterion. Writes TASKS.md and a TASK.md per task. Use when a planning workflow dispatches task creation for a phase, or when the user says '/orqestra:create-tasks <N>'."
 allowed-tools: Read, Write, Glob, Grep, AskUserQuestion
+disallowed-tools: Agent, Edit, NotebookEdit
 ---
 
 > **Invocation**: dispatched by a planning orchestrator, or `/orqestra:create-tasks <N>`. Interactive.

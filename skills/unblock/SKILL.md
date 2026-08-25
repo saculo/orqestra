@@ -2,10 +2,11 @@
 name: unblock
 argument-hint: "<ID>"
 description: "Clears a blocked orqestra artifact after its cause has been addressed, resetting it to in-progress and recording the human intervention. Use when the user says '/orqestra:unblock', or after fixing whatever caused a task to block."
-allowed-tools: Read, Write, Edit, Glob, Grep, Skill, Task, Bash
+allowed-tools: Read, Write, Edit, Glob, Grep, Skill, Agent, Bash
+disallowed-tools: NotebookEdit
 ---
 
-> **Arguments**: `/orqestra:unblock <ID>` · **Class**: orchestrator+
+> **Arguments**: `/orqestra:unblock <ID>` · **Class**: control
 
 # orqestra Unblock
 

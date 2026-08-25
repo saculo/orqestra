@@ -15,6 +15,7 @@ ROLE:      orqestra:reviewer
 STEP:      review
 TASK:      PHASE-1/TASK-007
 LENSES:    correctness, design
+ROUND:     1
 
 READ:
   .orqestra/phases/PHASE-1/tasks/TASK-007/TASK.md
@@ -30,15 +31,25 @@ RETURN:    at most 10 lines, per the skill's Return contract.
 
 The reviewer reads the diff itself via `git diff`. Do not pass it.
 
+`ROUND` is `1` for a first review and `2` only when re-dispatching a disputed `failed` (§8.1). The
+reviewer writes it to `REVIEW.md.review_round`, which is what makes the once-only budget survive a
+session boundary rather than living in this orchestrator's memory.
+
 ## On return
 
-Read `REVIEW.md` **frontmatter only** — `verdict`.
+Read `REVIEW.md` **frontmatter only** — `verdict`, `required`, `review_round`.
+
+`required` is the list of `F-N` ids the rework loop must address (§7.8.3). It is in frontmatter
+precisely so this step never has to open the body to build a `REWORK` line.
 
 | `verdict` | Do |
 |---|---|
 | `passed` | Gate the human |
-| `changes-requested` | **Loop back to implement.** `attempts++`. `REWORK: REVIEW.md — address F-2, F-5 only` |
+| `changes-requested` | **Loop back to implement.** `attempts++`. `REWORK: REVIEW.md — address <required> only`, naming the ids verbatim from the frontmatter list |
 | `failed` | **Neither loop nor block — gate the human with two routes.** See below |
+
+A `changes-requested` verdict with an empty `required` is a contract failure, not an empty rework:
+**block** rather than dispatching an implement step with nothing to fix.
 
 **`changes-requested` always returns to implement**, never to review, never to qa. One place work is
 redone (§8).
@@ -64,13 +75,19 @@ Present the reviewer's reasoning and offer two routes:
 
 | choice | effect |
 |---|---|
-| Ask for a re-review | Re-dispatch `review-task` with why the verdict is disputed. **`attempts` is not incremented** — no implementation work is being redone. **Once only**: a second `failed` goes back to the human with both reviews |
+| Ask for a re-review | Re-dispatch `review-task` with why the verdict is disputed, and `ROUND: 2` in the envelope. **`attempts` is not incremented** — no implementation work is being redone. **Offer this choice only when `review_round: 1`** |
 | Revisit the design | `blocked`, `blocked_reason: design-invalid`. Recovery is a human's (§8.2) |
 | Accept and continue | Findings move to `## Tech Debt`; continue to push. Legitimate, and recorded |
 | Abandon the task | `status: superseded`, with the reason |
 
 **Never re-review a third time.** Two independent `failed` verdicts are evidence, not noise — at that
 point the disagreement is about the task, not the code, and only a human can settle it.
+
+**The budget is `review_round`, not your memory** (§8.1). When the returning `REVIEW.md` already reads
+`review_round: 2`, do not offer the re-review choice at all — present both verdicts and the remaining
+three routes. `attempts` deliberately does not move here, and the re-review overwrote the same path, so
+this field is the only thing that survives a session boundary and tells you which round you are in. The
+superseded first review is recoverable from its artifact commit (§4.6).
 
 ## The gate
 

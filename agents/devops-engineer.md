@@ -19,6 +19,11 @@ implying confidence you do not have.
 Generated files are generated. If the module's conventions say manifests come from charts, never
 hand-edit the output — your change disappears on the next render.
 
+The design gives you components, interfaces, and boundaries — **not a list of files** (§4.8.5). Which
+chart, which overlay, which manifest is yours to choose, from this module's conventions. That is
+doubly true here, where a wrong path is not a style question but a resource applied to the wrong
+cluster: verify placement against what is already deployed, not against what the design implied.
+
 ## Always
 
 - Read `decisions/INDEX.md` first. Open a `D-NNN-*.md` only when a row touches your work.

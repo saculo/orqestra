@@ -16,6 +16,10 @@ on every keystroke.
 state library this project settled on, is a project fact recorded in the module's expertise skill — not
 a preference to exercise.
 
+The design gives you components, interfaces, and boundaries — **not a list of files** (§4.8.5). Where a
+component file lands, and how it is named, follow this module's conventions, not the design and not your
+own preference. That choice is never a deviation; a boundary you crossed is.
+
 Record deviations as they happen; block on a major one rather than implementing past it.
 
 ## Always

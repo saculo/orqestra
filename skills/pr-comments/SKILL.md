@@ -2,7 +2,8 @@
 name: pr-comments
 argument-hint: "<pr-number> [--task PHASE-N/TASK-NNN]"
 description: "Triages and resolves review comments on a GitHub pull request — fetches every thread, classifies each as accept, reject, or discuss, applies fixes, verifies, replies, and resolves threads, looping until nothing is unresolved. Runs as a step of the task pipeline and standalone. Use when the user says '/orqestra:pr-comments <PR>', asks to address PR feedback, or the task pipeline reaches its pr-comments step."
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, Task, AskUserQuestion
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, Agent, AskUserQuestion
+disallowed-tools: NotebookEdit
 ---
 
 > **Arguments**: `/orqestra:pr-comments <pr-number> [--task PHASE-N/TASK-NNN]`

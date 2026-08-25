@@ -40,8 +40,7 @@ orqestra cannot recreate.
 `DESIGN.md` was written during planning, possibly before several tasks merged. Check whether it still
 holds against current HEAD:
 
-1. Do the files in `## File Plan` exist as the plan expects — `create` targets absent, `modify` targets
-   present?
+1. Do the areas and boundaries in `## Structure` still exist as the design describes them?
 2. Do the interfaces in `## Interfaces` still match the real code?
 3. Has a merged task since changed something the design assumes?
 4. Do any `decisions/` rows added since the design was written contradict it?

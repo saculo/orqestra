@@ -2,6 +2,7 @@
 name: implement
 description: "Implement step for the orqestra delivery pipeline, shared by every engineer role (backend, frontend, devops, agentic). Reads the task, plan, and design; writes the code; produces IMPLEMENTATION.md recording changes, deviations, and tech debt. Use when the task pipeline dispatches the implement step, when rework returns after a qa failure or a changes-requested review, or when the user says '/orqestra:implement'."
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+disallowed-tools: Agent
 ---
 
 > **Invocation**: dispatched by `orqestra:task` at the implement step, to the engineer
@@ -23,8 +24,8 @@ already exists, plus an honest record of every place you departed from it.
 |---|---|
 | `TASK.md` | Acceptance criteria (`AC-N`) — the definition of done |
 | `PLAN.md` | Approach and known risks |
-| `DESIGN.md` | Components, interfaces, file plan, test strategy. **This is your specification.** |
-| `PROJECT.md` | Stack, build and test commands, conventions |
+| `DESIGN.md` | Components, interfaces, structure, test strategy. **This is your specification.** |
+| `PROJECT.md` | Stack, layout, build and test commands, conventions, testing, git rules, traps |
 | `modules.md` | Your task's module row — its `paths` bound what you may touch |
 | `decisions/INDEX.md` | Settled decisions. **Always read.** Open a `D-NNN-*.md` only when a row touches your work. **Never re-litigate.** |
 
@@ -47,11 +48,15 @@ not after. They carry this project's conventions, which you cannot infer from th
 ## Procedure
 
 1. Read the design. If it is missing, or contradicts the acceptance criteria, **block** — do not guess.
-2. Derive an ordered build sequence from the design's `## File Plan` and `## Components`, in dependency
-   order, tests included. Keep it in working memory; it is not an artifact.
+2. Derive an ordered build sequence from the design's `## Components` and `## Structure`, in dependency
+   order, tests included. **The design names areas and boundaries, not files — choosing the paths is
+   yours** (§4.8.5), and they follow `PROJECT.md`'s layout, not your own convention. Keep the sequence
+   in working memory; it is not an artifact.
 3. Implement, following `PROJECT.md` conventions and the loaded expertise skills.
 4. Record each departure from the design **as it happens**, classified:
-   - **minor** — naming, file placement. Proceed, record it.
+   - **minor** — naming, or a boundary drawn slightly differently. Proceed, record it.
+     **Where you put a file is not a deviation** — the design does not specify paths (§4.8.5), so
+     placement that follows `PROJECT.md`'s layout is you doing your job, not departing from anything.
    - **moderate** — different approach, an extra component. Proceed, record it.
    - **major** — the design is wrong, or scope must change. **Stop. Block. Do not implement past it.**
 5. Run the test command from `PROJECT.md`. Capture the command and its outcome.

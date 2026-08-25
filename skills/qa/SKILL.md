@@ -2,6 +2,7 @@
 name: qa
 description: "QA step for the orqestra delivery pipeline. Writes and extends tests, runs the suite, and verifies every acceptance criterion against actual behaviour, producing QA.md with a pass or fail result. Use when the task pipeline dispatches the qa step after implement, or when the user says '/orqestra:qa'."
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+disallowed-tools: Agent
 ---
 
 > **Invocation**: dispatched by `orqestra:task` at the qa step, to `qa-engineer` with the
@@ -23,7 +24,7 @@ broken" costs a whole rework cycle that "AC-3: expired sessions return 200, expe
 | `TASK.md` | The `AC-N` list — every one must be covered and checked |
 | `DESIGN.md` | `## Test Strategy` — what the design says proves each criterion |
 | `IMPLEMENTATION.md` | What was built, and every recorded deviation |
-| `PROJECT.md` | The test command and test conventions |
+| `PROJECT.md` | `## Commands` for the test command, `## Testing` for how this project tests |
 | `modules.md` | The module's row — its expertise skills carry how *this* module is tested |
 | `decisions/INDEX.md` | **Always read.** Open a `D-NNN-*.md` only when a row touches this work. |
 

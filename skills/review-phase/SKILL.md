@@ -1,7 +1,8 @@
 ---
 name: review-phase
 description: "Verifies a completed orqestra phase criterion by criterion against actual behaviour and aggregates deviations, tech debt, and review findings across its tasks into PHASE_SUMMARY.md with a criteria-met verdict. Use when close-phase runs, or when the user says '/orqestra:review-phase <N>'."
-allowed-tools: Read, Write, Glob, Grep, Bash
+allowed-tools: Read, Write, Glob, Grep, Bash(git diff:*), Bash(git log:*)
+disallowed-tools: Agent, Edit, NotebookEdit
 ---
 
 > **Invocation**: dispatched by `orqestra:close-phase`, or `/orqestra:review-phase <N>`. Runs as the

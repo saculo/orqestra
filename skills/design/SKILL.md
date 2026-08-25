@@ -1,7 +1,8 @@
 ---
 name: design
-description: "Design step for orqestra. Turns a task and its plan into an implementable architecture — components, interfaces, file plan, decisions, test strategy — written to DESIGN.md. Records durable choices as decision files. Use when a planning workflow dispatches the design step, when a stale design must be refreshed at pipeline preflight, or when the user says '/orqestra:design'."
+description: "Design step for orqestra. Turns a task and its plan into an implementable architecture — components, interfaces, structure, decisions, test strategy — written to DESIGN.md. Records durable choices as decision files. Use when a planning workflow dispatches the design step, when a stale design must be refreshed at pipeline preflight, or when the user says '/orqestra:design'."
 allowed-tools: Read, Write, Glob, Grep
+disallowed-tools: Agent, Edit, NotebookEdit, Bash
 ---
 
 > **Invocation**: dispatched by a planning orchestrator, or by `orqestra:task` at preflight
@@ -23,8 +24,8 @@ engineer must build, a reviewer must review, and someone must maintain.
 |---|---|
 | `TASK.md` | Acceptance criteria — your design must satisfy every one |
 | `PLAN.md` | Approach, affected areas, risks, open questions |
-| `PROJECT.md` | Stack, layout, conventions to fit into |
-| `modules.md` | The task's module row — its `paths` bound the file plan |
+| `PROJECT.md` | Stack, layout, conventions, testing, and traps to fit into |
+| `modules.md` | The task's module row — its `paths` bound where the change may land |
 | `decisions/INDEX.md` | Settled decisions. **Always read.** Open a `D-NNN-*.md` when a row touches this work. **Never re-litigate a settled decision — cite it.** |
 | The codebase | The real interfaces you are extending. Read them |
 
@@ -48,8 +49,10 @@ starting point, not a blank page. Change what HEAD invalidated; keep what still 
    most common cause of a `design-invalid` block at implement.
 3. Design the smallest thing that satisfies every `AC-N`. For each component, be able to name the
    criterion it serves. **A component serving none is scope you invented** — delete it.
-4. Write the file plan concretely: `path`, `action` (`create`/`modify`/`delete`), `purpose`. An
-   engineer should be able to work through it in order.
+4. Write `## Structure` as architectural advice, not a work order: which areas and layers each
+   component belongs to, what must not reach into what, and the order the pieces have to come
+   together. **Do not list files to create** (§4.8.5) — the engineer chooses placement inside the
+   boundaries you set, and a path list goes stale the moment another task merges.
 5. Specify the test strategy — what proves each criterion. Not "add unit tests"; which behaviour,
    verified how.
 6. For each durable choice, decide where it belongs:
@@ -66,7 +69,7 @@ At most 10 lines:
 STATUS:     done | blocked
 OUTCOME:    <the design in one line — the shape, not the detail>
 COMPONENTS: <count>, <the significant ones named>
-FILES:      <n> create, <n> modify
+STRUCTURE:  <the areas the change lands in>
 DECISIONS:  <D-NNN ids recorded, or none>
 SCHEMA:     ok
 RISK:       <the thing most likely to go wrong at implement>
@@ -92,10 +95,10 @@ alone, without opening the artifact.
 2. **Every component traces to an `AC-N`.** If it does not, cut it.
 3. **Never re-litigate a `D-NNN`.** If a settled decision is genuinely wrong, block and say so — do not
    quietly design around it.
-4. **Do not write code.** A file plan and interface signatures are the boundary; implementations are
-   not. You hold no `Edit`.
-5. **Every path in the file plan is inside the task's module** (§5.2, D2). A design needing another
-   module is two tasks — block with `needs-splitting`.
-6. Fit the module's conventions from its expertise skills. A design that is locally elegant and
-   foreign to the module is a bad design (D4).
+4. **Do not write code, and do not write a file list.** Interface signatures and boundaries are your
+   altitude; implementations and paths are the engineer's (§4.8.5). You hold no `Edit`.
+5. **The whole change lands inside the task's module** (§5.2, D2). A design needing another module is
+   two tasks — block with `needs-splitting`.
+6. Fit the module's conventions from its expertise skills — a module may name several, and all of them
+   load (§5.3). A design that is locally elegant and foreign to the module is a bad design (D4).
 7. Block rather than guess (D11).

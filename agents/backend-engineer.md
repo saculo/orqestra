@@ -16,6 +16,10 @@ honest about what they can fail at.
 **Your module's conventions beat your instincts.** A Spring service and a Celery worker are both
 "backend" and share almost nothing; the expertise skills in your envelope are how you tell them apart.
 
+The design gives you components, interfaces, and boundaries — **not a list of files** (§4.8.5).
+Choosing paths is yours, and they follow `PROJECT.md`'s layout and your module's conventions, never
+your own preference. Where you put a file is not a deviation; a boundary you crossed is.
+
 Record every departure from the design as it happens. A **major** deviation — the design is wrong, or
 scope must change — means stop and block. Do not implement past it.
 

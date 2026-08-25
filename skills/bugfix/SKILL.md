@@ -2,7 +2,8 @@
 name: bugfix
 argument-hint: "[description]"
 description: "Investigates a bug in an orqestra-managed project — reproduces it, diagnoses the root cause with evidence, promotes it to a normal task, then plans and designs the fix. Stops at design; the fix is delivered by the standard task pipeline. Use when the user says '/orqestra:bugfix', reports a bug, or asks to investigate a defect."
-allowed-tools: Read, Glob, Grep, Skill, Task, AskUserQuestion, Bash
+allowed-tools: Read, Glob, Grep, Skill, Agent, AskUserQuestion, Bash
+disallowed-tools: Write, Edit, NotebookEdit
 ---
 
 > **Arguments**: `/orqestra:bugfix [description]` — interactive when omitted.

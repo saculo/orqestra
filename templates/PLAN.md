@@ -10,9 +10,14 @@ task:
 <!-- The chosen approach, and why it beat the alternatives you considered. -->
 
 ## Affected Areas
-<!-- Files and modules this lands in. VERIFY by reading them — an unverified guess
-     presented as a finding is worse than an admitted unknown. All inside the task's
-     module paths (D14); anything outside means this is two tasks. -->
+<!-- The EXISTING code this lands in or near — areas, and the files you actually opened.
+     VERIFY by reading them; an unverified guess presented as a finding is worse than an
+     admitted unknown.
+
+     This is reconnaissance, not a work order. You are recording what is there, not
+     prescribing what will be created — the design sets boundaries (§4.8.5) and the
+     engineer picks paths. All inside the task's module paths (D14); anything outside
+     means this is two tasks. -->
 
 ## Risks
 <!-- Concrete. "Might break auth" is not a risk; "the session store is read by three
