@@ -132,18 +132,51 @@ to drift. Skills take their arguments from `$ARGUMENTS` and declare `argument-hi
 
 ### 2.1 Development and installation
 
-**During development — and for dogfooding — load the plugin from the directory:**
+**orqestra loads itself in its own repository, with no flag and no install.** `.claude/skills/orqestra/`
+holds a `.claude-plugin/` manifest, so Claude Code loads it as a **skills-directory plugin** —
+`orqestra@skills-dir` — on the next session in this repo. Its component directories are **symlinks to
+the plugin at the repo root**, so there is exactly one copy of every skill, agent, and template:
+
+```
+.claude/skills/orqestra/
+├── .claude-plugin  →  ../../../.claude-plugin      the manifest, and the `orqestra:` namespace
+├── skills          →  ../../../skills
+├── agents          →  ../../../agents
+├── templates       →  ../../../templates
+└── scripts         →  ../../../scripts
+```
+
+Three conditions, all of them project-scope rules rather than anything orqestra chose:
+
+| Condition | Why |
+|---|---|
+| **Trust the workspace** | A project-scope skills-dir plugin ships in the repo and reaches everyone who clones it, so it loads only behind the trust gate. Trusting a parent folder does not count, and `-p` does not either |
+| **Launch from the repo root** | Project-scope skills-dir plugins do **not** walk up to the repository root the way plain skills do. From a subdirectory, orqestra is simply absent — `/reload-plugins` after `cd` recovers it |
+| **Do not also pass `--plugin-dir .`** | Two copies of the same plugin under different names |
+
+Editing a `SKILL.md` takes effect immediately. Editing anything else — `agents/`, `templates/`,
+`hooks/` — needs `/reload-plugins`.
 
 ```bash
-claude --plugin-dir .          # loads orqestra from this repo, no install step
-/reload-plugins                # pick up edits without restarting
-claude plugin validate .       # structural validation
+claude                                          # orqestra is already here
+/reload-plugins                                 # after editing agents/ or templates/
+claude plugin validate .                        # structural validation, on the real directory
 ```
+
+**Validate the repo root, not the symlinked copy.** `claude plugin validate .claude/skills/orqestra`
+passes with a warning that says so: the validator does not follow symlinks, though a session loading
+the plugin does.
 
 This resolves what would otherwise be a bootstrap deadlock. orqestra plans its own delivery from
 PHASE-2 onward (§13), which requires orqestra to be runnable *in its own repository* — and it cannot
-install itself from a marketplace before the marketplace work is done. `--plugin-dir` makes the working
-tree live, so **an edit to a skill is testable in the same session that wrote it.**
+install itself from a marketplace before the marketplace work is done. The skills directory dissolves
+it without one, and `--plugin-dir .` remains available for loading the tree from anywhere else.
+
+**Symlinks are the whole design.** Copying the plugin into `.claude/` would create a second source of
+truth for ~90 files that drift the first time someone edits one and not the other; moving it there
+would repoint every path in this document, `modules.md`, and the conformance checker. Neither buys
+anything the links do not. The cost is that a checkout on a filesystem without symlinks — Windows
+without developer mode — gets broken links and must fall back to `claude --plugin-dir .`.
 
 For distribution, a `.claude-plugin/marketplace.json` lists the plugin and users run
 `/plugin marketplace add <repo>` then `/plugin install orqestra@<marketplace>`. That is packaging work,
