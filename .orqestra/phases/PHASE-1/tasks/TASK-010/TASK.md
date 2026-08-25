@@ -1,7 +1,7 @@
 ---
 id: TASK-010
 type: task
-status: pending
+status: done
 updated: 2026-08-25
 phase: PHASE-1
 module: docs
@@ -40,3 +40,17 @@ The implementation — `skills/` and `templates/config.md` are `plugin` and belo
 
 PHASE-1's own `SC-2`, which pins the literal string `chore(orqestra):`. Amending a success criterion is
 a phase-definition change and a human decision (§8.2), not a task's to make.
+
+<!-- CLOSED BY HAND 2026-08-25, outside the delivery pipeline, at the user's direction.
+
+     Every acceptance criterion above is met and verifiable, but this task produced NO
+     IMPLEMENTATION.md, QA.md, REVIEW.md, or PR — it was not run through `/orqestra:task`.
+     `status: done` here records that the criteria are satisfied, not that the pipeline
+     ran. Do not read this task as evidence the delivery loop works; nothing has exercised
+     it end to end yet.
+
+     Verification actually performed:
+       AC-1..AC-3  §4.6 message-convention block, its four examples, and §3's init step
+                   all show the scoped form.
+       AC-4        `grep -nE '(feat|fix|chore|docs|test)\(' REQUIREMENTS.md` returns only
+                   the line that PROHIBITS those prefixes, not an example of one. -->
