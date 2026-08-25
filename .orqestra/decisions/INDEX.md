@@ -3,8 +3,8 @@ id: DECISIONS
 type: decisions-index
 status: done
 updated: 2026-08-24
-count: 15
-next_id: 16
+count: 17
+next_id: 18
 ---
 
 ## Decisions
@@ -26,3 +26,5 @@ next_id: 16
 | D-013 | `--plugin-dir` for dogfooding | runtime | active | Loads the working tree live; marketplace packaging deferred to PHASE-5 |
 | D-014 | Agents dispatch namespaced | routing | active | Registry stores `backend-engineer`; dispatch uses `orqestra:backend-engineer` |
 | D-015 | A `failed` review is a gate | workflow | active | `changes-requested` loops to implement; `failed` asks a human, re-review allowed once |
+| D-016 | Rework routes to the owner | workflow | active | Findings carry `owner`; rework goes to who fixes it, not who found it. **Due PHASE-3** |
+| D-017 | `failed` states its reversal | schemas | active | `## What Would Change This Verdict`, schema-enforced. **Due PHASE-3** |
