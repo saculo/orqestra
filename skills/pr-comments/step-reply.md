@@ -4,8 +4,11 @@ Commit, push, reply to every thread, resolve the ones you addressed.
 
 ## 1. Commit and push
 
-Use `config.md`'s `commit_style`, onto the **task branch**. **Never force-push** to a branch under
-review — it destroys the reviewers' view of what changed since they looked.
+Use `config.md`'s `commit_style`, onto the **task branch**. Under the default `scoped` that is
+`TASK-NNN: <subject>` — the id of the task this PR belongs to, since it is still in flight (§4.6).
+
+**Never force-push** to a branch under review — it destroys the reviewers' view of what changed since
+they looked.
 
 ## 2. Reply to every thread
 

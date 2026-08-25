@@ -105,7 +105,10 @@ Run in order (D6):
    `create-tasks` blocks on a module that is not registered, and the fix is a two-line edit they should
    already know about.
 
-7. **Commit**: `chore(orqestra): initialize workspace` (§4.6).
+7. **Commit**: `orqestra: initialize workspace` — the scope is `orqestra` because no task and no phase
+   exists yet, which is rung 3 of the ladder in §4.6. **Read the format from `config.md`'s
+   `commit_style`; never hard-code one** — this line did, and that is why the convention had to change
+   in two kinds of place instead of one (D-018).
 
 8. **Report** what was written and exactly one next command.
 

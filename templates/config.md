@@ -25,7 +25,14 @@ require_merged_deps: true    # a dependency must be MERGED, not merely done (§7
 ## Delivery
 
 branch_pattern: feat/{task_id}-{slug}
-commit_style: conventional
+commit_style: scoped         # <scope>: <subject> — no conventional-commit type prefix (§4.6, D-018)
+                             # scope = the most specific one that OWNS the change:
+                             #   1. a task owns it (source or artifact, while in flight) → TASK-NNN
+                             #   2. else a phase's planning owns it                      → PHASE-N
+                             #   3. else — init, workspace config, repo-wide work        → orqestra
+                             # Rule 3 makes the ladder total: every commit has exactly one
+                             # correct scope, so nothing is left to judgement at the moment
+                             # of writing. Subject is free prose; only the prefix is fixed.
 pr_draft: false
 auto_merge: false            # merging is a human decision — the one irreversible action
 test_command:
