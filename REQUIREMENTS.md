@@ -166,7 +166,7 @@ Behaviour:
 3. Verify `git` remote and `gh auth status`. Warn — do not fail — if `gh` is missing; the planning
    layer works without it, only delivery needs it.
 4. Write the tree below.
-5. **Commit it** — `chore(orqestra): initialize workspace` (§4.6).
+5. **Commit it** — `orqestra: initialize workspace` (§4.6).
 6. Print what was written and the suggested next command.
 
 ```
@@ -392,15 +392,31 @@ Rules:
 - Commit **only `.orqestra/`** paths at planning steps. Source changes are committed by the delivery
   pipeline's `implement`/`push` steps, on the task branch, separately.
 - One commit per completed step, immediately after its contract check (§4.4) passes — never before.
-- Message convention:
+- **Message convention** — `<scope>: <subject>`, per `config.md`'s `commit_style: scoped` (D-018). The
+  scope is the **most specific scope that owns the change**, chosen by a ladder that always terminates:
+
+  | | test | scope |
+  |---|---|---|
+  | 1 | A task owns the change — any commit made while that task is in flight, source or artifact | `TASK-NNN` |
+  | 2 | Otherwise, a phase's planning owns it — `create-phases`, `create-tasks`, `clarify` | `PHASE-N` |
+  | 3 | Otherwise — `init` scaffolding, workspace configuration, repo-wide work no task covers | `orqestra` |
 
   ```
-  chore(orqestra): <workflow> <step> — <artifact>
-
-  chore(orqestra): greenfield create-tasks — PHASE-1 TASKS.md + 3 tasks
-  chore(orqestra): task TASK-001 review — REVIEW.md passed
-  docs(orqestra): decisions — D-004 use Flyway for migrations
+  TASK-001: review — REVIEW.md passed
+  PHASE-1: create-tasks — TASKS.md + 3 tasks
+  orqestra: initialize workspace
+  orqestra: record D-004 — use Flyway for migrations
   ```
+
+  **No conventional-commit type prefix.** `feat(`, `fix(`, `chore(`, `docs(`, `test(` appear in no
+  commit this project makes. Nearly every commit here is a `fix` or a `chore` and choosing between them
+  is a coin flip, while the task id leads a reader to `TASK.md`, `DESIGN.md`, `REVIEW.md`, and the
+  success criterion the work serves. One prefix turns `git log --oneline` into an index into the
+  workspace.
+
+  The subject is free prose. Only the prefix is constrained, and rule 3 is what makes the ladder
+  **total**: every commit has exactly one correct scope, so no judgement is left at the moment of
+  writing.
 
 - Planning commits land on the **current branch** (typically the default branch). Delivery-pipeline
   artifact commits land on the **task branch**, so a task's `.orqestra/` record travels with its PR
