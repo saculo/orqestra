@@ -24,7 +24,12 @@ agents/                      8 subagent personas
 templates/                   the artifact schemas in executable form
 scripts/                     conformance checks over templates/
 REQUIREMENTS.md              the specification, and this project's PRD
-.claude/skills/              this project's own expertise skills (§5.3)
+.claude/skills/              claude-expert/ and orqestra-conventions/ — this project's own
+                             expertise skills (§5.3), plain skills with no manifest
+.claude/skills/orqestra/     SYMLINKS ONLY, to the five directories above. Carries the
+                             manifest, so Claude Code auto-loads orqestra in this repo as
+                             `orqestra@skills-dir` — no flag, no install (§2.1, D-013).
+                             Never edit through this path; edit the real one.
 .orqestra/                   this project's own workspace — belongs to no module
 ```
 
@@ -35,10 +40,15 @@ REQUIREMENTS.md              the specification, and this project's PRD
 | build | none |
 | test | **none yet** — PHASE-1 SC-5 establishes the eval harness |
 | lint | `python3 scripts/check-templates.py` — templates against §4.8.1 |
-| run | `claude --plugin-dir .` · `/reload-plugins` after edits |
-| validate | `claude plugin validate .` |
+| run | `claude`, from the repo root, with the workspace trusted — orqestra is already loaded (§2.1) |
+| reload | `/reload-plugins` after editing `agents/` or `templates/`; a `SKILL.md` edit is live immediately |
+| validate | `claude plugin validate .` — the **real** directory, not `.claude/skills/orqestra` |
 
-`--plugin-dir` loads the working tree live (D-013), so an edit is testable without packaging.
+orqestra loads itself here as a skills-directory plugin (D-013 as amended), so an edit is testable in
+the session that wrote it, without packaging and without remembering a flag. Three conditions are easy
+to violate in silence: **trust the workspace**, **launch from the repo root** (skills-dir plugins do not
+walk up — from a subdirectory orqestra is simply absent, with no warning), and **do not also pass
+`--plugin-dir .`**. `claude --plugin-dir .` remains the way to load this tree from anywhere else.
 
 ## Conventions
 
@@ -117,3 +127,8 @@ This repo's own:
 - **Do not** describe orqestra as further along than it is. Nothing has been run end to end yet. The
   honest state is more useful than an encouraging one, and an inflated `PROJECT.md` misleads every
   future dispatch.
+- **Do not** edit anything through `.claude/skills/orqestra/`. Every entry there is a symlink into the
+  `plugin` module; the path resolves, so an edit through it silently succeeds and lands in a file the
+  diff reports under a different path than the one you typed.
+- **Do not** replace those symlinks with copies. A second copy of ~90 files drifts the first time
+  someone edits one side, and nothing in the repo would detect it.

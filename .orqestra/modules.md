@@ -45,4 +45,14 @@ module_count: 2
      `.orqestra/` deliberately belongs to NO module: it is workspace state that workflows
      write as they run, not source that a task edits. A task never "changes .orqestra/"
      as its deliverable; it produces artifacts there as a side effect of its steps.
+
+     `.claude/skills/orqestra/` belongs to no module either, for a different reason: every
+     entry in it is a SYMLINK to a path already inside the `plugin` module (§2.1, D-013).
+     Editing `skills/design/SKILL.md` is a `plugin` change whichever path you reach it by.
+     Listing it as its own module would double-count the same files and let a task claim
+     it had stayed inside one module while editing another's source.
+
+     `.claude/skills/claude-expert/` and `.claude/skills/orqestra-conventions/` are the
+     real, non-symlinked expertise skills (§5.3) — plain skills, no manifest, so they load
+     alongside the plugin rather than inside it.
 -->
