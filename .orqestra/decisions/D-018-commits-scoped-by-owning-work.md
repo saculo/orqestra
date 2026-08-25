@@ -3,6 +3,7 @@ id: D-018
 type: decision
 status: active
 updated: 2026-08-25
+amended: 2026-08-25          # rung 3 broadened — see **Amendment**
 area: version-control
 supersedes: —
 superseded_by: —
@@ -14,11 +15,13 @@ superseded_by: —
 **Decision:** `commit_style: scoped` replaces `commit_style: conventional`. Every commit is
 `<scope>: <subject>`, where the scope is the **most specific scope that owns the change**:
 
-| scope | when | example |
-|---|---|---|
-| `TASK-NNN` | A task owns the change — any commit made while that task is in flight, source or artifact | `TASK-008: add instance-mode heading guard` |
-| `PHASE-N` | Planning work owned by a phase but by no single task — `create-phases`, `create-tasks`, `clarify` | `PHASE-2: plan phases — 5 phases, ordering rationale` |
-| `orqestra` | No phase exists yet — `init` scaffolding, workspace-level configuration | `orqestra: initialize workspace` |
+The scope is chosen by a **ladder**, taken in order, that always terminates:
+
+| | test | scope | example |
+|---|---|---|---|
+| 1 | A task owns the change — any commit made while that task is in flight, source or artifact | `TASK-NNN` | `TASK-008: add instance-mode heading guard` |
+| 2 | Otherwise, a phase's planning owns it — `create-phases`, `create-tasks`, `clarify` | `PHASE-N` | `PHASE-2: plan phases — 5 phases, ordering rationale` |
+| 3 | Otherwise — `init` scaffolding, workspace configuration, or repo-wide work no task covers | `orqestra` | `orqestra: initialize workspace` |
 
 The subject line stays free prose. Only the prefix is constrained.
 
@@ -46,3 +49,19 @@ every commit has exactly one correct scope, so no judgement is left at the momen
 
 **No history rewrite.** The convention applies from adoption forward. Rewriting the ~20 commits that
 predate it would break every SHA already cited in artifacts and decisions.
+
+## Amendment — 2026-08-25
+
+**Rung 3 was too narrow, and the totality claim was false as written.** The original row read *"No phase
+exists yet — `init` scaffolding, workspace-level configuration"*, which is a **precondition**, not a
+fallback. The first commit to test it fell straight through: a repo-wide correction to the specification
+and the plugin, owned by no task, made while PHASE-1 was very much in flight. No row matched, and the
+rule that was advertised as leaving no judgement at the moment of writing required exactly that.
+
+Rung 3 now reads *"otherwise"*. The ladder terminates by construction, which is what "total" has to mean
+— a rule is only total if its last rung is unconditional. The three rungs are unchanged in what they
+select; only the third stopped claiming a precondition it did not need.
+
+Found by applying the decision rather than by reading it, which is the second time in this project a
+plan that looked sound failed on first contact (compare D-019). Both times the defect was invisible
+until someone had to pick.

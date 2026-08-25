@@ -23,7 +23,11 @@ require_merged_deps: true
 ## Delivery
 
 branch_pattern: feat/{task_id}-{slug}
-commit_style: conventional
+commit_style: scoped         # <scope>: <subject> — no conventional-commit type prefix (§4.6, D-018)
+                             # scope = the most specific one that OWNS the change:
+                             #   1. a task owns it (source or artifact, while in flight) → TASK-NNN
+                             #   2. else a phase's planning owns it                      → PHASE-N
+                             #   3. else — init, workspace config, repo-wide work        → orqestra
 pr_draft: false
 auto_merge: false
 test_command: python3 scripts/check-templates.py
