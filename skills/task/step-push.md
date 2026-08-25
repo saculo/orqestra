@@ -18,6 +18,10 @@ The only step in orqestra that touches the remote. Branch, commit, push, open th
 3. **Commit** the source changes and this task's `.orqestra/` artifacts together, using
    `config.md`'s `commit_style`. From here the task's record travels with its PR and merges with it.
 
+   Under the default `scoped`, that is `TASK-NNN: <subject>` — **this task's id, on every commit it
+   makes**, artifact commits included, because a task in flight owns everything committed while it runs
+   (§4.6 rung 1, D-018). Not the id of whatever produced the artifact.
+
 4. **Push**. On rejection (non-fast-forward): rebase onto the base **once**, retry. Fails again →
    **block** `push-rejected`. One retry is the entire automatic recovery budget.
 

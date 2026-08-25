@@ -2,7 +2,8 @@
 name: add-phase
 argument-hint: "[goal]"
 description: "Adds a new phase to an orqestra-managed project — defines the phase and its success criteria, breaks it into tasks, then plans and designs each. Stops at design; delivery is the per-task pipeline. Use when the user says '/orqestra:add-phase', asks to start the next phase, or wants to extend a project orqestra already manages."
-allowed-tools: Read, Glob, Grep, Skill, Task, AskUserQuestion
+allowed-tools: Read, Glob, Grep, Skill, Agent, AskUserQuestion
+disallowed-tools: Write, Edit, NotebookEdit
 ---
 
 > **Arguments**: `/orqestra:add-phase [goal]` — interactive when omitted.

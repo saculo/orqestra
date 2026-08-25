@@ -2,6 +2,7 @@
 name: clarify
 description: "Interactively closes gaps in a PRD before planning — unknowns, ambiguities, risks, and unstated assumptions — and writes CLARIFICATIONS.md with resolved answers, recorded assumptions, and anything still open. Use when a planning workflow reaches the clarify step, or when the user says '/orqestra:clarify'."
 allowed-tools: Read, Write, Glob, Grep, AskUserQuestion
+disallowed-tools: Agent, Edit, NotebookEdit
 ---
 
 > **Invocation**: invoked **directly** by `orqestra:greenfield` — never as a subagent, so

@@ -25,7 +25,7 @@ with the user and committing the result.
 | AC-2 | Every file it writes passes the TASK-001 conformance check against its template |
 | AC-3 | The stack is auto-suggested from repo contents and **always confirmed** with the user via `AskUserQuestion` before being written |
 | AC-4 | `modules.md` is seeded with one row whose `agent` names a real file in `agents/`, and the report explains that the registry is the thing to edit before real work |
-| AC-5 | The whole scaffold lands as exactly one commit, `chore(orqestra): initialize workspace`, containing only `.orqestra/` paths |
+| AC-5 | The whole scaffold lands as exactly one commit, scoped per `config.md`'s `commit_style` — `orqestra: initialize workspace` under the default `scoped` (§4.6 rung 3) — containing only `.orqestra/` paths |
 
 ## Out of Scope
 

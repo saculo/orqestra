@@ -2,6 +2,7 @@
 name: create-task
 description: "Creates or splits a single orqestra task — used to add one task to an existing phase, to promote a diagnosed bug into a deliverable task, and to split an oversized task into ordered dependent parts. Use when the user says '/orqestra:create-task', when a bugfix workflow promotes a bug, or when a task must be split."
 allowed-tools: Read, Write, Glob, Grep, AskUserQuestion
+disallowed-tools: Agent, Edit, NotebookEdit
 ---
 
 > **Invocation**: dispatched by `orqestra:bugfix` (promotion), by `close-phase` (gap tasks),

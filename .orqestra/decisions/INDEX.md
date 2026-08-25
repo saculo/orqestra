@@ -2,9 +2,9 @@
 id: DECISIONS
 type: decisions-index
 status: done
-updated: 2026-08-24
-count: 19
-next_id: 20
+updated: 2026-08-25
+count: 24
+next_id: 25
 ---
 
 ## Decisions
@@ -27,6 +27,11 @@ next_id: 20
 | D-014 | Agents dispatch namespaced | routing | active | Registry stores `backend-engineer`; dispatch uses `orqestra:backend-engineer` |
 | D-015 | A `failed` review is a gate | workflow | active | `changes-requested` loops to implement; `failed` asks a human, re-review allowed once |
 | D-016 | Rework routes to the owner | workflow | active | Findings carry `owner`; rework goes to who fixes it, not who found it. **Due PHASE-3** |
-| D-017 | `failed` states its reversal | schemas | active | `## What Would Change This Verdict`, schema-enforced. **Due PHASE-3** |
+| D-017 | `failed` states its reversal | schemas | active | `## What Would Change This Verdict`, schema-enforced. **Delivered** — heading added to `REVIEW.md` alongside D-022 |
 | D-018 | Commits scoped by owning work | process | active | `TASK-NNN:` / `PHASE-N:` / `orqestra:` — most specific scope that owns the change |
 | D-019 | Spec-first when skills cite it | process | active | Code that *cites* a section inherits it, so docs leads; code that *reads* it may follow |
+| D-020 | Design states structure, not files | schemas | active | `## File Plan` removed; the architect sets boundaries, the engineer picks paths |
+| D-021 | `PROJECT.md` records what is expensive to find | schemas | active | Cost-to-retrieve test; `## Testing`/`## Git and GitHub`/`## Traps` added, git rules ship pre-written |
+| D-022 | Severity is the only grade | schemas | active | `required` column dropped; `required: [F-N]` in frontmatter is what the rework loop reads |
+| D-023 | Review has a floor | workflow | active | Four contract checks run whatever the lenses; fixes qa grading its own coverage |
+| D-024 | Tool fields enforce at two layers | structure | active | `allowed-tools` only pre-approves; `agents/` `tools:` is the durable allowlist; orchestrators bind for one turn |

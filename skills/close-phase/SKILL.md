@@ -2,7 +2,8 @@
 name: close-phase
 argument-hint: "<N>"
 description: "Closes a completed orqestra phase — verifies every task is merged, dispatches review-phase to check the success criteria against actual behaviour, and gates the human on the milestone verdict. Use when the user says '/orqestra:close-phase <N>', asks whether a phase is done, or finishes the last task of a phase."
-allowed-tools: Read, Glob, Grep, Skill, Task, AskUserQuestion, Bash
+allowed-tools: Read, Glob, Grep, Skill, Agent, AskUserQuestion, Bash
+disallowed-tools: Write, Edit, NotebookEdit
 ---
 
 > **Arguments**: `/orqestra:close-phase <N>`

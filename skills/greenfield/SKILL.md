@@ -2,7 +2,8 @@
 name: greenfield
 argument-hint: "[prd-path]"
 description: "Plans a new orqestra project from a PRD — clarifies gaps, breaks the work into phases, decomposes a phase into tasks, then plans and designs each task. Stops at design; delivery is a separate per-task pipeline. Use when the user says '/orqestra:greenfield', asks to start a new project, or resumes planning already in progress."
-allowed-tools: Read, Glob, Grep, Skill, Task, AskUserQuestion
+allowed-tools: Read, Glob, Grep, Skill, Agent, AskUserQuestion
+disallowed-tools: Write, Edit, NotebookEdit
 ---
 
 > **Arguments**: `/orqestra:greenfield [prd-path]` — auto-detected from the repo root when omitted.

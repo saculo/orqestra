@@ -2,7 +2,8 @@
 name: task
 argument-hint: "<TASK-ID>"
 description: "The orqestra delivery pipeline — takes one designed task to a merged PR through preflight, implement, qa, review, push, PR comments, and merge. Resumable at any step. Use when the user says '/orqestra:task <TASK-ID>', asks to build or deliver a task, or resumes a task already in the pipeline."
-allowed-tools: Read, Glob, Grep, Skill, Task, AskUserQuestion, Bash
+allowed-tools: Read, Glob, Grep, Skill, Agent, AskUserQuestion, Bash
+disallowed-tools: Write, Edit, NotebookEdit
 ---
 
 > **Arguments**: `/orqestra:task <TASK-ID>` — the task must be at stage `designed` or later.

@@ -9,36 +9,61 @@
   Add `argument-hint:` to the frontmatter when the skill takes arguments, and read them
   from $ARGUMENTS in the body.
 
-  Pick the skill's CLASS first — it fixes allowed-tools, whether the skill may write,
+  Pick the skill's CLASS first — it fixes both tool fields, whether the skill may write,
   and whether it may dispatch. Everything else follows from the class.
 
-  ┌────────────────┬──────────────────────────────────────────────┬────────────────────────────────────┐
-  │ class          │ examples                                     │ allowed-tools                      │
-  ├────────────────┼──────────────────────────────────────────────┼────────────────────────────────────┤
-  │ orchestrator   │ orchestrate-greenfield, orchestrate-add-phase│ Read, Glob, Grep, Skill, Task,     │
-  │                │ orchestrate-bugfix                           │ AskUserQuestion                    │
-  │ orchestrator+  │ orchestrate-task, pr-comments                │ …the above, plus Bash (git, gh)    │
-  │ planning       │ create-phases, create-phase, create-tasks,    │ Read, Write, Glob, Grep,           │
-  │                │ create-task, clarify                         │ AskUserQuestion                    │
-  │ step           │ plan, design                                 │ Read, Write, Glob, Grep            │
-  │ step+build     │ implement, qa                                │ Read, Write, Edit, Glob, Grep, Bash│
-  │ step+review    │ review-task, review-phase                    │ Read, Write, Glob, Grep, Bash      │
-  │ query          │ status                                       │ Read, Glob, Grep                   │
-  └────────────────┴──────────────────────────────────────────────┴────────────────────────────────────┘
+  ┌───────────────┬──────────────────────────────┬─────────────────────────────┬──────────────────────────────┐
+  │ class         │ examples                     │ allowed-tools (PRE-APPROVE) │ disallowed-tools (REMOVE)    │
+  ├───────────────┼──────────────────────────────┼─────────────────────────────┼──────────────────────────────┤
+  │ orchestrator  │ greenfield, add-phase,       │ Read, Glob, Grep, Skill,    │ Write, Edit, NotebookEdit    │
+  │               │ bugfix, task, close-phase    │ Agent, AskUserQuestion,     │                              │
+  │               │                              │ (+Bash for git/gh)          │                              │
+  │ planning      │ create-phases, create-phase, │ Read, Write, Glob, Grep,    │ Agent, Edit, NotebookEdit    │
+  │               │ create-tasks, create-task,   │ AskUserQuestion             │                              │
+  │               │ clarify                      │                             │                              │
+  │ step          │ plan, design                 │ Read, Write, Glob, Grep     │ Agent, Edit, NotebookEdit,   │
+  │               │                              │                             │ Bash                         │
+  │ step+build    │ implement, qa                │ Read, Write, Edit, Glob,    │ Agent                        │
+  │               │                              │ Grep, Bash                  │                              │
+  │ step+review   │ review-task, review-phase    │ Read, Write, Glob, Grep,    │ Agent, Edit, NotebookEdit    │
+  │               │                              │ Bash                        │                              │
+  │ query         │ status                       │ Read, Glob, Grep            │ Agent, Write, Edit,          │
+  │               │                              │                             │ NotebookEdit, Bash           │
+  │ setup         │ init                         │ Read, Write, Glob, Grep,    │ Agent, Edit, NotebookEdit    │
+  │               │                              │ Bash, AskUserQuestion       │                              │
+  │ control       │ approve, reject, unblock,    │ whatever the job needs      │ NotebookEdit                 │
+  │               │ pr-comments                  │                             │                              │
+  └───────────────┴──────────────────────────────┴─────────────────────────────┴──────────────────────────────┘
 
-  Two hard rules, both structural rather than aspirational:
-    • An orchestrator NEVER holds Write or Edit. It reads state, dispatches, and gates.
-    • A step skill NEVER holds Task. It does its own work; it does not sub-dispatch.
+  WHICH FIELD ACTUALLY BINDS (§7.0.1) — get this wrong and you ship a guarantee you do not have:
+
+    allowed-tools     PRE-APPROVAL ONLY. Lists tools Claude may call WITHOUT PROMPTING.
+                      It does NOT restrict anything — every other tool stays callable.
+                      Omitting Write from it does not stop a Write. It only adds a prompt.
+    disallowed-tools  THE RESTRICTING FIELD. Removes tools from the pool — but only until
+                      the user's next message.
+
+  So a skill's guarantees last one turn. The DURABLE ones live in agents/<name>.md `tools:`,
+  which IS a true allowlist for the whole subagent run. Every step skill runs inside a
+  dispatched subagent, so "a step skill never dispatches" is real — enforced by agents/,
+  not here. Orchestrators run in the main session and have no durable mechanism at all.
+
+  Two hard rules. State them in the body too — for orchestrators the body is the enforcement:
+    • An orchestrator NEVER writes an artifact. It reads state, dispatches, and gates.
+    • A step skill NEVER dispatches. It does its own work; it does not sub-dispatch.
+
+  The tool is named `Agent`, not `Task`. `Task` was its old name and naming it grants nothing.
 -->
 
 ---
 name: ▢skill-name          # the FOLDER name; Claude Code prefixes the plugin namespace → /orqestra:▢skill-name
 description: "▢One sentence: what it does, what it produces, and when to use it. Include the literal trigger phrases a user might type — this string is the only thing the model sees when deciding whether to load the skill."
-allowed-tools: ▢per the class table above
+allowed-tools: ▢per the class table above     # pre-approval — does NOT restrict
+disallowed-tools: ▢per the class table above  # the field that actually removes tools
 ---
 
 > **Invocation**: ▢`/orqestra:<name>` · or: dispatched by ▢<orchestrator> at the ▢<step> step.
-> **Class**: ▢orchestrator | planning | step | query
+> **Class**: ▢orchestrator | planning | step | step+build | step+review | query | setup | control
 
 # ▢Skill Title
 

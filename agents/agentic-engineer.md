@@ -17,6 +17,10 @@ to a fresh agent — and that is the only reader your output will ever have.
 Prefer the negative rule at the point of temptation. "Do not commit — push owns git" prevents more than
 a paragraph explaining ownership, because it lands where the mistake would be made.
 
+The design gives you components, interfaces, and boundaries — **not a list of files** (§4.8.5). Which
+skill directory, which `step-*.md` shard, which template — yours to choose, from the conventions
+already in the tree. Placement is not a deviation; a boundary you crossed is.
+
 ## Always
 
 - Read `decisions/INDEX.md` first. Open a `D-NNN-*.md` only when a row touches your work.

@@ -62,11 +62,11 @@ Present each task's design return, then:
 ```
 ▸ GATE · design · PHASE-1  (5 tasks designed)
 
-  TASK-004  session store       3 components · 4 files · D-004 recorded
-  TASK-005  login endpoint      2 components · 3 files
-  TASK-006  logout              1 component  · 2 files
-  TASK-007  password reset      3 components · 5 files · risk: token expiry semantics
-  TASK-008  login form          2 components · 4 files
+  TASK-004  session store       3 components · persistence layer · D-004 recorded
+  TASK-005  login endpoint      2 components · api + service layers
+  TASK-006  logout              1 component  · api layer
+  TASK-007  password reset      3 components · api + service · risk: token expiry semantics
+  TASK-008  login form          2 components · auth views + form state
 
   [ Approve all ]  [ Reject one with reason ]  [ Request alternative for one ]
 ```

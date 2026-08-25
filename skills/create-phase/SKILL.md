@@ -2,6 +2,7 @@
 name: create-phase
 description: "Creates a single new phase in an orqestra-managed project, appending it after the existing phases with its own goal and numbered success criteria. Use when a workflow adds a phase to an existing project, or when the user says '/orqestra:create-phase'."
 allowed-tools: Read, Write, Glob, Grep, AskUserQuestion
+disallowed-tools: Agent, Edit, NotebookEdit
 ---
 
 > **Invocation**: dispatched by `orqestra:add-phase`, or `/orqestra:create-phase`.

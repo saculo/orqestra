@@ -19,6 +19,10 @@ module_count: 1
      stack     — advisory context only, shown in the envelope and in status.
                  NOT a routing input.
      expertise — YOUR skills, in .claude/skills/. See templates/EXPERTISE.template.md.
+                 A COMMA-SEPARATED LIST — a module usually names several, split by
+                 concern (the language, the framework, this project's testing
+                 patterns). All of them load on every step of every task in the
+                 module, so split rather than grow one file past ~150 lines.
                  A missing one warns and dispatches without it; it never blocks.
 
      Adding a module is two steps and no orqestra changes: add a row, write the skill

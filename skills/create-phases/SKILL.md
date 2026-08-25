@@ -2,6 +2,7 @@
 name: create-phases
 description: "Breaks a clarified PRD into delivery phases, each a milestone with demonstrable value and numbered success criteria. Writes PHASES.md and a PHASE.md per phase. Use when a planning workflow dispatches phase creation, or when the user says '/orqestra:create-phases'."
 allowed-tools: Read, Write, Glob, Grep, AskUserQuestion
+disallowed-tools: Agent, Edit, NotebookEdit
 ---
 
 > **Invocation**: dispatched by `orqestra:greenfield`, or `/orqestra:create-phases`.

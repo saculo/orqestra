@@ -166,7 +166,7 @@ Behaviour:
 3. Verify `git` remote and `gh auth status`. Warn — do not fail — if `gh` is missing; the planning
    layer works without it, only delivery needs it.
 4. Write the tree below.
-5. **Commit it** — `chore(orqestra): initialize workspace` (§4.6).
+5. **Commit it** — `orqestra: initialize workspace` (§4.6).
 6. Print what was written and the suggested next command.
 
 ```
@@ -292,8 +292,9 @@ creative choice.
 | `agent` (in `modules.md`) | `analyst` · `architect` · `backend-engineer` · `frontend-engineer` · `devops-engineer` · `agentic-engineer` · `qa-engineer` · `reviewer` — a name with no file in `agents/` is a config error |
 | `verdict` (review) | `passed` · `changes-requested` · `failed` |
 | `result` (qa) | `passed` · `failed` |
-| `severity` (finding) | `blocker` · `major` · `minor` · `nit` |
-| `deviation` (implement) | `none` · `minor` · `moderate` · `major` |
+| `severity` (review finding) | `blocker` · `major` · `minor` · `nit` |
+| `severity` (bug) | `blocker` · `major` · `minor` — no `nit`; a bug nobody would file is not a bug |
+| `deviation` (implement) | `none` · `minor` · `moderate` · `major` — the frontmatter field **and** the `## Deviations` column, which is named `deviation` for exactly this reason |
 | `comment_verdict` | `accept` · `reject` · `discuss` |
 | `pr_state` | `open` · `merged` · `closed` |
 | `criteria_met` | `true` · `false` |
@@ -323,8 +324,10 @@ optional keys in a later version, never rename or repurpose an existing one.
    artifact against its schema: frontmatter keys present, values within vocabulary, headings present
    in order, no undeclared headings, no blank required section. Fail → re-dispatch **once** with the
    specific violations named. Fail again → `blocked` with `blocked_reason: contract`.
-3. **Never by patching.** The orchestrator does not fix a malformed artifact itself — §7's rule that
-   orchestrators hold no `Write` tool makes this structural rather than aspirational.
+3. **Never by patching.** The orchestrator does not fix a malformed artifact itself. Its
+   `disallowed-tools` removes `Write` and `Edit` for the turn (§7.0.1); across a gate the rule is
+   behavioural, and the `control` skills (`approve`, `reject`, `unblock`) are the named exception —
+   they patch exactly one frontmatter field, on a human's instruction, and nothing else.
 
 This is the deliberate simplification of nit's 26 JSON Schemas: the same determinism where it pays,
 zero code. And because every rule above is mechanically checkable, the deferred hook or CLI (§12) is a
@@ -351,8 +354,8 @@ drop-in — the schemas are written now in the form a 20-line checker would want
 │   │       ├── TASK-001/
 │   │       │   ├── TASK.md                  # what + acceptance criteria + which SC it serves
 │   │       │   │                            # ── planning layer ──
-│   │       │   ├── PLAN.md                  # approach, files, risks, open questions
-│   │       │   ├── DESIGN.md                # components, interfaces, file plan
+│   │       │   ├── PLAN.md                  # approach, affected areas, risks, open questions
+│   │       │   ├── DESIGN.md                # components, interfaces, structure
 │   │       │   │                            # ── delivery layer ──
 │   │       │   ├── IMPLEMENTATION.md        # what was built, deviations, tech debt
 │   │       │   ├── QA.md                    # test strategy, results, coverage of criteria
@@ -389,15 +392,31 @@ Rules:
 - Commit **only `.orqestra/`** paths at planning steps. Source changes are committed by the delivery
   pipeline's `implement`/`push` steps, on the task branch, separately.
 - One commit per completed step, immediately after its contract check (§4.4) passes — never before.
-- Message convention:
+- **Message convention** — `<scope>: <subject>`, per `config.md`'s `commit_style: scoped` (D-018). The
+  scope is the **most specific scope that owns the change**, chosen by a ladder that always terminates:
+
+  | | test | scope |
+  |---|---|---|
+  | 1 | A task owns the change — any commit made while that task is in flight, source or artifact | `TASK-NNN` |
+  | 2 | Otherwise, a phase's planning owns it — `create-phases`, `create-tasks`, `clarify` | `PHASE-N` |
+  | 3 | Otherwise — `init` scaffolding, workspace configuration, repo-wide work no task covers | `orqestra` |
 
   ```
-  chore(orqestra): <workflow> <step> — <artifact>
-
-  chore(orqestra): greenfield create-tasks — PHASE-1 TASKS.md + 3 tasks
-  chore(orqestra): task TASK-001 review — REVIEW.md passed
-  docs(orqestra): decisions — D-004 use Flyway for migrations
+  TASK-001: review — REVIEW.md passed
+  PHASE-1: create-tasks — TASKS.md + 3 tasks
+  orqestra: initialize workspace
+  orqestra: record D-004 — use Flyway for migrations
   ```
+
+  **No conventional-commit type prefix.** `feat(`, `fix(`, `chore(`, `docs(`, `test(` appear in no
+  commit this project makes. Nearly every commit here is a `fix` or a `chore` and choosing between them
+  is a coin flip, while the task id leads a reader to `TASK.md`, `DESIGN.md`, `REVIEW.md`, and the
+  success criterion the work serves. One prefix turns `git log --oneline` into an index into the
+  workspace.
+
+  The subject is free prose. Only the prefix is constrained, and rule 3 is what makes the ladder
+  **total**: every commit has exactly one correct scope, so no judgement is left at the moment of
+  writing.
 
 - Planning commits land on the **current branch** (typically the default branch). Delivery-pipeline
   artifact commits land on the **task branch**, so a task's `.orqestra/` record travels with its PR
@@ -510,7 +529,7 @@ Only `config.md` takes the exemption, and it earns it: it is *configuration*, no
 |---|---|---|---|
 | `config.md` | `init` | **no common frontmatter** — `project` `stack` `version` | `## Gates` · `## Rework` · `## Delivery` · `## Version control` · `## Routing` · `## Conventions` |
 | `modules.md` | `init`, then the human | `module_count` | `## Modules` |
-| `PROJECT.md` | `design` (first task), appended after | `stack` | `## Stack` · `## Layout` · `## Commands` · `## Conventions` |
+| `PROJECT.md` | `design` (first task), appended after | `stack` | `## Stack` · `## Layout` · `## Commands` · `## Conventions` · `## Testing` · `## Git and GitHub` · `## Traps` |
 | `PRD.md` | **human** | none | none — the one free-form input; `clarify` imposes structure downstream |
 | `CLARIFICATIONS.md` | `clarify` | `source_prd` `open_count` | `## Resolved` · `## Assumptions` · `## Open` |
 | `decisions/INDEX.md` | regenerated from the files (§4.7) | `count` `next_id` | `## Decisions` |
@@ -520,10 +539,10 @@ Only `config.md` takes the exemption, and it earns it: it is *configuration*, no
 | `TASKS.md` | `create-tasks` | `phase` `task_count` | `## Tasks` · `## Dependency Order` |
 | `TASK.md` | `create-tasks` / `create-task` | `phase` `module` `stack` `origin` `bug` `depends_on` `serves` `attempts` | `## Goal` · `## Acceptance Criteria` · `## Out of Scope` |
 | `PLAN.md` | `plan` | `task` | `## Approach` · `## Affected Areas` · `## Risks` · `## Open Questions` |
-| `DESIGN.md` | `design` | `task` `decisions` | `## Components` · `## Interfaces` · `## File Plan` · `## Decisions` · `## Test Strategy` |
+| `DESIGN.md` | `design` | `task` `decisions` | `## Components` · `## Interfaces` · `## Structure` · `## Decisions` · `## Test Strategy` |
 | `IMPLEMENTATION.md` | `implement` | `task` `deviation` `files_changed` | `## Changes` · `## Deviations` · `## Tech Debt` |
 | `QA.md` | `qa` | `task` `result` `test_command` | `## Test Strategy` · `## Results` · `## Criteria Coverage` · `## Issues` |
-| `REVIEW.md` | `review-task` | `task` `verdict` `lenses` | `## Verdict` · `## Findings` · `## Notes` |
+| `REVIEW.md` | `review-task` | `task` `verdict` `lenses` `required` `review_round` | `## Verdict` · `## Findings` · `## What Would Change This Verdict` · `## Notes` |
 | `PR.md` | `push` (task pipeline) | `task` `branch` `pr_number` `pr_url` `pr_state` | `## Summary` · `## Commits` · `## CI` |
 | `COMMENTS.md` | `pr-comments` triage | `pr_number` `comment_count` `unresolved` | `## Comments` |
 | `RESOLUTION.md` | `pr-comments` reply | `pr_number` `accepted` `rejected` `discussing` | `## Resolutions` · `## Replies Sent` |
@@ -543,10 +562,9 @@ lets a downstream step read a row by position instead of interpreting prose.
 | `PHASES.md` · `## Phases` | `id` · `goal` · `criteria` · `status` |
 | `TASKS.md` · `## Tasks` | `id` · `title` · `module` · `depends_on` · `serves` |
 | `TASK.md` · `## Acceptance Criteria` | `id` (`AC-N`) · `criterion` |
-| `DESIGN.md` · `## File Plan` | `path` · `action` (`create`\|`modify`\|`delete`) · `purpose` |
-| `IMPLEMENTATION.md` · `## Deviations` | `severity` · `from design` · `what` · `why` |
+| `IMPLEMENTATION.md` · `## Deviations` | `deviation` · `from design` · `what` · `why` |
 | `QA.md` · `## Criteria Coverage` | `criterion` (`AC-N`) · `covered by` · `result` |
-| `REVIEW.md` · `## Findings` | `id` (`F-N`) · `severity` · `file:line` · `finding` · `required` |
+| `REVIEW.md` · `## Findings` | `id` (`F-N`) · `severity` · `file:line` · `finding` |
 | `COMMENTS.md` · `## Comments` | `#` · `thread` · `file:line` · `summary` · `verdict` · `action` |
 | `RESOLUTION.md` · `## Resolutions` | `#` · `verdict` · `action taken` · `commit` · `thread resolved` |
 | `PHASE_SUMMARY.md` · `## Criteria` | `id` · `criterion` · `met` · `evidence` |
@@ -570,14 +588,20 @@ updated:
 task:
 verdict:          # passed | changes-requested | failed
 lenses: []
+required: []      # F-N ids the rework loop must address
+review_round: 1   # 1 = first review · 2 = re-review of a disputed `failed`
 ---
 
 ## Verdict
 <!-- One paragraph. State the verdict and the single reason for it. -->
 
 ## Findings
-<!-- Table: id | severity | file:line | finding | required
-     `required: yes` means the rework loop must address it. `_none_` if clean. -->
+<!-- Table: id | severity | file:line | finding
+     Severity is the only grade. Every blocker and major goes in frontmatter
+     `required`; no minor or nit may. `_none_` if clean. -->
+
+## What Would Change This Verdict
+<!-- Required when `verdict: failed`. `_n/a_` otherwise. -->
 
 ## Notes
 <!-- Non-blocking observations. `_none_` if none. -->
@@ -597,6 +621,44 @@ changed is a guess at a problem nobody has had — the same *build only what thi
 that governs phases (§7.6). When a schema first changes incompatibly, the version increments and the
 upgrade path gets designed against the actual change. Until then, `init` refuses to touch an existing
 workspace (§3) and that is the whole story.
+
+#### 4.8.5 Altitude — the two artifacts that are deliberately not lists
+
+Most artifacts in the catalogue are enumerable, and their schemas say so: tables with fixed columns,
+ids that chain. Two are not, and both were made worse by being treated as if they were.
+
+**`DESIGN.md` states structure, not files** (D-020). The design's `## Structure` names the areas,
+layers, and boundaries the work lands in — it never lists paths to create. Two reasons, and the
+second is the larger one. A path list goes stale the moment another task merges, so preflight's
+freshness check (§7.4) spent its attention on filenames rather than on whether the design still
+held. And an engineer handed a checklist satisfies the checklist: the file plan quietly replaced
+the acceptance criteria as the definition of done, which is exactly backwards, since the criteria
+are what `qa` measures. The architect reads the code once; the engineer reads it while typing, and
+is better placed to choose placement inside the boundaries the design sets.
+
+The boundary is unchanged: the whole change stays inside the task's module `paths` (§5.2, D2), and
+`review-task` still checks the diff against them. What moved is who picks the filename, not who owns
+the constraint.
+
+**`PROJECT.md` records what is expensive to find, not what is true** (D-021). Every fact in it faces
+one test: *what does this cost to retrieve at the moment an agent needs it?* Cheap — readable from
+the code, the build file, or the framework's own docs — it stays out. Expensive, or learned only
+by getting it wrong once, it goes in. The file loads on every dispatch in every workflow, so a line
+restating what a competent engineer already assumes is not merely redundant; it displaces the line
+that would have saved a rework cycle.
+
+Its `## Git and GitHub` section ships with a fixed set of rules rather than a blank heading, because
+these are the mistakes that cost the most and are recoverable the least — a discarded dirty tree, a
+force-push under an open review, a second PR for a task that already had one. §7.4.2 tells the
+orchestrator how to *detect* those conditions; `PROJECT.md` states them where every agent already
+reads, in the project's own copy, so the rule is present at the moment the temptation is. The template
+carries them as body text, not guidance, precisely so `init` and `design` copy them through (D16).
+
+Both changes were made **before v1 shipped and before any pipeline ran end to end**, which is the only
+window in which they are cheap — §4.8.4's *additive changes only* rule governs released schemas, and
+the nine `DESIGN.md` files already written under this project's own PHASE-1 are frozen (D5) rather than
+migrated. The schema is read forward. A tenth design written against the old headings would be the
+signal that the window has closed.
 
 ---
 
@@ -643,6 +705,12 @@ So the routing key is the **module**, and the module row names the agent **direc
 Every task carries `module:` in its frontmatter, and **the agent, stack, and expertise all come from
 that one row** — never set independently. One key instead of three that can disagree is a determinism
 win (D7, D9): there is no state in which a task claims one language while its module is another.
+
+**The `expertise` cell is a list, not a slot.** A module names as many skills as it has distinct
+concerns — `python-expertise, celery-conventions, worker-testing` — and every one of them loads on
+every step of every task in that module. Splitting by concern is the preferred shape once a single
+skill grows past what fits in one reader's head, because the alternative is one file that every step
+pays for in full to reach the paragraph it needed (§5.3).
 
 The triple resolves in **one lookup, with nothing in between**:
 
@@ -722,7 +790,12 @@ that stack would not know without being told. See `templates/EXPERTISE.template.
 - ✅ "Vue components are `<script setup>` with the Composition API. No Options API in new code."
 - ❌ "Java is a statically typed language." — the model knows.
 
-**Adding a module** is two steps and no orqestra changes: add a row to `modules.md`, write the skill it
+**One module, several skills.** The `expertise` cell is a comma-separated list, and the natural split
+is by concern: the language, the framework, the project's testing patterns. `EXPERTISE.template.md`
+caps a single skill at roughly 150 lines for this reason — past that, split it and name both in the row
+rather than growing one file every step must load whole.
+
+**Adding a module** is two steps and no orqestra changes: add a row to `modules.md`, write the skills it
 names. That is the whole extension story.
 
 **Missing skills**: if a named expertise skill is not installed, the orchestrator **warns once and
@@ -736,7 +809,7 @@ stops delivery. The warning names the module and the skill so the gap is visible
 | Agent | Role |
 |---|---|
 | `analyst` | Understands the task, surfaces risks and unknowns. Owns `plan`. |
-| `architect` | Designs components, interfaces, file plan. Owns `design`. |
+| `architect` | Designs components, interfaces, structure. Owns `design`. |
 | `backend-engineer` | Server-side implementation. |
 | `frontend-engineer` | UI implementation. |
 | `devops-engineer` | Infra, CI, deploy, containers. |
@@ -891,22 +964,80 @@ contract lives in **`templates/SKILL.template.md`** — copy it, fill the blanks
 
 Every skill declares a **class** first, and the class fixes everything else:
 
-| Class | Skills | `allowed-tools` |
-|---|---|---|
-| orchestrator | `greenfield`, `-add-phase`, `-bugfix` | Read, Glob, Grep, Skill, Task, AskUserQuestion |
-| orchestrator+ | `task`, `pr-comments` | …plus Bash (git, gh) |
-| planning | `create-phases`, `create-phase`, `create-tasks`, `create-task`, `clarify` | Read, Write, Glob, Grep, AskUserQuestion |
-| step | `plan`, `design` | Read, Write, Glob, Grep |
-| step+build | `implement`, `qa` | Read, Write, Edit, Glob, Grep, Bash |
-| step+review | `review-task`, `review-phase` | Read, Write, Glob, Grep, Bash |
-| query | `status` | Read, Glob, Grep |
+| Class | Skills | `allowed-tools` (pre-approved) | `disallowed-tools` (removed) |
+|---|---|---|---|
+| orchestrator | `greenfield`, `add-phase`, `bugfix`, `task`, `close-phase` | Read, Glob, Grep, Skill, Agent, AskUserQuestion (+Bash for `task`, `bugfix`, `close-phase`) | Write, Edit, NotebookEdit |
+| planning | `create-phases`, `create-phase`, `create-tasks`, `create-task`, `clarify` | Read, Write, Glob, Grep, AskUserQuestion | Agent, Edit, NotebookEdit |
+| step | `plan`, `design` | Read, Write, Glob, Grep | Agent, Edit, NotebookEdit, Bash |
+| step+build | `implement`, `qa` | Read, Write, Edit, Glob, Grep, Bash | Agent |
+| step+review | `review-task`, `review-phase` | Read, Write, Glob, Grep, Bash | Agent, Edit, NotebookEdit |
+| query | `status` | Read, Glob, Grep | Agent, Write, Edit, NotebookEdit, Bash |
+| setup | `init` | Read, Write, Glob, Grep, Bash, AskUserQuestion | Agent, Edit, NotebookEdit |
+| control | `approve`, `reject`, `unblock`, `pr-comments` | …whatever the job needs | NotebookEdit |
 
-Two rules are enforced by the tool list rather than by instruction, which is the point:
+Two rules matter more than the rest:
 
-- **An orchestrator never holds `Write` or `Edit`.** It cannot patch a malformed artifact even if
-  tempted (§4.4.5).
-- **A step skill never holds `Task`.** It does its own work; it does not sub-dispatch. Nesting
-  dispatches makes the routing triple unauditable.
+- **An orchestrator never writes an artifact.** It cannot patch a malformed one even when tempted
+  (§4.4.5).
+- **A step skill never dispatches.** It does its own work. Nesting dispatches makes the routing triple
+  unauditable.
+
+**How much of that the frontmatter actually enforces is not what this document said until §7.0.1**, and
+the correction matters enough to have its own subsection.
+
+#### 7.0.1 What the tool fields actually enforce
+
+This document previously said the two rules above were *"enforced by the tool list rather than by
+instruction, which is the point."* **That was wrong**, and it was wrong in the direction that matters:
+it claimed a guarantee the plugin did not have, so nobody looked for one.
+
+`allowed-tools` in a `SKILL.md` is a **pre-approval grant, not an allowlist.** Claude Code's own
+documentation is explicit — the field lists "tools Claude can use without asking permission during the
+turn that invokes this skill", and *"it does not restrict which tools are available: every tool remains
+callable."* An orchestrator whose `allowed-tools` omits `Write` can still call `Write`; it merely
+prompts first. Every "cannot" in this document that rested on that field was a "would be asked to".
+
+Four layers exist, and only two of them bind:
+
+| Layer | Field | Binds? | For how long |
+|---|---|---|---|
+| Dispatched subagent | `agents/*.md` `tools:` | **Yes** — a true allowlist | The whole subagent run |
+| Dispatched subagent | `agents/*.md` `disallowedTools:` | **Yes** — a denylist | The whole subagent run |
+| Skill | `disallowed-tools:` | **Yes** — removed from the pool | Until the user's next message |
+| Skill | `allowed-tools:` | **No** — pre-approval only | (grants, never restricts) |
+
+Note the casing: the agent field is `disallowedTools`, the skill field is `disallowed-tools`. They are
+different files with different conventions, and a camelCase key in a `SKILL.md` is silently ignored.
+
+**The consequence is a clean split, and it is good news for the part that matters most.** Every step
+skill runs inside a dispatched subagent, and `agents/*.md` `tools:` is a real allowlist — so *"a step
+skill never dispatches"* and *"the reviewer holds no `Edit`"* are genuinely structural on the pipeline
+path, enforced by `agents/`, not by the skill. That is where those guarantees now live and where they
+should be read.
+
+**The orchestrators are the exposed ones.** They run in the main session, not in a subagent, so their
+only mechanism is `disallowed-tools` — which clears at the user's next message, and an orchestrator
+gates for user input by design. Protection therefore lasts a turn, and the rule that most needed
+enforcing is the one least enforceable.
+
+That is stated rather than papered over. Within a turn the field is real and worth having, so every
+orchestrator now carries it. Across a gate the contract is behavioural — backed by the fact that an
+orchestrator is the one component a human is watching at every gate, which is the weakest guarantee in
+the system and is now labelled as such.
+
+**Hardening (optional, not v1)**: a `PreToolUse` deny rule on `Write`/`Edit` for the orchestrator's
+session, or a project `settings.json` deny rule, makes it durable. Same shape as the optional
+`git checkout -b` hook in §7.4.2: enforcement moves from *what the orchestrator was told* to *what the
+harness permits*. Deferred for the same reason — it is worth building once there is a run to test it
+against.
+
+**The `control` class exists because three skills broke the rule and the table hid it.** `approve`,
+`reject`, and `unblock` declared themselves `orchestrator+` while holding `Write` and `Edit` — they
+must set one frontmatter field on a human's behalf and then resume. §4.4.5 cited the orchestrator rule
+as its guarantee that nothing patches an artifact, while these three could patch anything. Their real
+constraint is **scope, not tools**: each edits exactly one frontmatter field of exactly one artifact.
+No tool list can express that, so it is stated as a rule and named as the exception rather than
+smuggled through a class it never fit.
 
 Fixed section order in every `SKILL.md`: Invocation/Class · Inputs · Output · Procedure · Return ·
 When you cannot proceed · Rules. **Shard into `step-<name>.md` when a skill exceeds ~150 lines or four
@@ -921,9 +1052,10 @@ is stable for the life of the skill; only the index table changes when the order
 
 Every orchestrator obeys the same contract:
 
-- **Never writes an artifact itself.** It reads state, dispatches, and gates. Enforced by
-  `allowed-tools: Read, Glob, Grep, Skill, Task` — no `Write`, no `Edit`. The delivery orchestrator
-  additionally gets `Bash` for `gh` and `git`.
+- **Never writes an artifact itself.** It reads state, dispatches, and gates. Declared by
+  `allowed-tools: Read, Glob, Grep, Skill, Agent` and backed for the turn by
+  `disallowed-tools: Write, Edit, NotebookEdit` (§7.0.1). The delivery orchestrator additionally gets
+  `Bash` for `gh` and `git`.
 - **Resumable.** Re-running the command re-derives position from frontmatter (§4.3) and continues.
   Idempotent — an artifact already `done` is skipped, not redone.
 - **Never advances past `blocked`.**
@@ -1198,18 +1330,56 @@ is a `blocked` outcome, not a failed test — the task or its criteria need chan
 **One review skill per scope, many stances — BMAD's "lenses" idea instead of five review skills.**
 `review-task` is invocable standalone: `/orqestra:review-task <TASK-ID>`.
 
-Lenses, selectable by argument or config, default `correctness,design`:
+#### 7.8.1 The floor — always checked, never optional
+
+**Lenses are elective; four checks are not.** They run on every review whatever lenses were given,
+because each one guards a contract the pipeline depends on rather than a quality opinion:
+
+| Floor check | Why it cannot be elective |
+|---|---|
+| **Module boundary** — every file in the diff inside the task's module `paths` (§5.2) | A file outside them is attributed to the wrong PR and reviewed by the wrong people. `major`. |
+| **Unrecorded deviations** — `IMPLEMENTATION.md` accounts for what the diff actually did | An undeclared deviation defeats the whole deviation ladder, and nothing else looks for it. |
+| **Criteria coverage** — every `AC-N` in `QA.md`'s map has a real assertion behind it | `qa` writes the tests and grades its own coverage. This is the only independent check on it, and putting it behind the `tests` lens meant a default run had none at all. |
+| **Settled decisions** — no code contradicts an active `D-NNN` | Re-litigating a decision silently is how shared memory decays (§4.7). |
+
+The distinction was missing before, and the omission was not cosmetic: `review-task`'s procedure ran
+all four unconditionally while its rules said *apply only the lenses you were given*, so the skill
+forbade recording what it had just instructed the reviewer to find.
+
+#### 7.8.2 The lenses — elective attention
+
+Selectable by argument or config, default `correctness,design`:
 
 | lens | Looks for |
 |---|---|
 | `correctness` | Does it do what the acceptance criteria say? Edge cases, error paths. |
-| `design` | Fit with `DESIGN.md`, cohesion, coupling, simplification opportunities. |
+| `design` | Fit with `DESIGN.md`'s components, interfaces, and boundaries; cohesion and coupling. |
 | `security` | Injection, authz, secrets, unsafe defaults. |
 | `performance` | Complexity, N+1, allocation in hot paths. |
 | `regression-risk` | What existing behaviour could this break? (default for bug-derived tasks) |
-| `tests` | Are the tests real assertions or theatre? |
+| `tests` | Beyond the floor's coverage check: are the assertions real, or do they pass regardless? |
+
+**The `design` lens stops at the boundary the design drew.** Cohesion and coupling that violate
+`DESIGN.md`'s stated boundaries are findings. A simpler approach the reviewer would have preferred is
+not — that is the *how I would have written it* judgement the whole skill forbids, and it used to be
+licensed by the phrase "simplification opportunities" sitting in this very table. Such observations go
+in `## Notes`.
+
+#### 7.8.3 Severity carries the weight; `required` lists the ids
 
 Verdict, in frontmatter: `passed` · `changes-requested` · `failed`.
+
+`## Findings` rows carry `severity` (§4.4.3) and nothing else that grades them. The old `required`
+column is gone: two independently-settable fields encoding one decision made `severity: nit,
+required: yes` representable, and the template then spent three lines pleading against a state its own
+schema permitted. One derivation rule replaces the plea:
+
+> **Every `blocker` and `major` finding goes in frontmatter `required`. No `minor` or `nit` may.**
+
+`required: [F-2, F-5]` is therefore an index, not a second opinion — mechanically derivable, and
+checkable. It exists in frontmatter because **the orchestrator reads frontmatter only** (§4.4.1
+Rule A) and must build `REWORK: address F-2, F-5` from it; before this the orchestrator was instructed
+to name ids it had no contracted way to obtain.
 
 **Choose between the last two deliberately** — they route differently (§8.1). `changes-requested` means
 *fixable by implement*; it loops. `failed` means *rework cannot save this*; it stops and asks a human,
@@ -1369,6 +1539,15 @@ routes, and a human chooses:
 The budget matters: a re-review is cheap and sometimes correct, but two independent reviews reaching
 `failed` is evidence, not noise. **Never re-review a third time** — at that point the disagreement is
 about the task, not the code, and only a human can settle it.
+
+**The budget lives in `REVIEW.md.review_round`** (`1` on a first review, `2` on a re-review), and it has
+to. `attempts` deliberately does not increment, and the re-review overwrites the same `REVIEW.md` path,
+so without the field a resumed session cannot tell a first `failed` from a second and the "once only"
+rule silently becomes "as often as the pipeline restarts". This is the same reasoning that makes a gate
+write `awaiting-approval` before calling `AskUserQuestion` (§6.1): **a budget enforced only by what the
+orchestrator remembers is not enforced.** The orchestrator refuses a re-review when it reads
+`review_round: 2` and goes straight to the human, carrying the superseded first review — recoverable
+from the artifact commit that recorded it (§4.6).
 
 `blocked` remains the outcome when the human chooses no route, or when they decide the design must be
 revisited (`blocked_reason: design-invalid`). It is where `failed` may *end up*, never where it starts.

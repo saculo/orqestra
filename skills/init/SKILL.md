@@ -3,6 +3,7 @@ name: init
 argument-hint: "[--force]"
 description: "Scaffolds the .orqestra/ workspace in a repository — config, templates for state, project stub, and the decisions directory — then commits it. The first command run in any orqestra project. Use when the user says '/orqestra:init', asks to set up orqestra, or starts a new orqestra-managed project."
 allowed-tools: Read, Write, Glob, Grep, Bash, AskUserQuestion
+disallowed-tools: Agent, Edit, NotebookEdit
 ---
 
 > **Arguments**: `/orqestra:init [--force]`
@@ -75,7 +76,7 @@ Run in order (D6):
 ├── decisions/
 │   └── INDEX.md               # empty table, next_id: 1
 ├── project/
-│   └── PROJECT.md             # stack + detected commands; conventions filled in at first design
+│   └── PROJECT.md             # stack + detected commands + git rules; rest at first design
 ├── phases/                    # empty
 └── work/                      # empty
 ```
@@ -104,18 +105,28 @@ Run in order (D6):
    `create-tasks` blocks on a module that is not registered, and the fix is a two-line edit they should
    already know about.
 
-7. **Commit**: `chore(orqestra): initialize workspace` (§4.6).
+7. **Commit**: `orqestra: initialize workspace` — the scope is `orqestra` because no task and no phase
+   exists yet, which is rung 3 of the ladder in §4.6. **Read the format from `config.md`'s
+   `commit_style`; never hard-code one** — this line did, and that is why the convention had to change
+   in two kinds of place instead of one (D-018).
 
 8. **Report** what was written and exactly one next command.
 
 ## PROJECT.md at init
 
 A stub, honestly labelled. It holds the stack and whatever build and test commands you could detect —
-nothing more. Conventions and layout are filled in by `design` during the first task, when there is
-actual code to describe.
+nothing more. Layout, conventions, testing, and traps are filled in by `design` during the first task,
+when there is actual code to describe.
 
-**Do not scan the codebase to populate it.** v1 is greenfield-only (§1.3 principle 6); a half-inferred
-conventions section is worse than an empty one, because every downstream agent will trust it.
+**One section is not a stub.** `## Git and GitHub` ships from the template already written, and you copy
+it through verbatim (D16). Those rules are not project facts to be discovered — they are the ones whose
+violation costs the most and is recoverable the least, so they hold from the first command, not from the
+first design (§4.8.5). Append the repo's own git rules underneath if the human tells you any; delete
+none of the defaults.
+
+**Do not scan the codebase to populate the rest.** v1 is greenfield-only (§1.3 principle 6); a
+half-inferred conventions section is worse than an empty one, because every downstream agent will trust
+it.
 
 ## Return
 
