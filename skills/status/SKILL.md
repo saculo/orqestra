@@ -78,12 +78,41 @@ Any artifact with `status: blocked` overrides everything: the task is `blocked`,
 
 ## Determining what is next
 
-1. **Blocked tasks first.** Anything blocked is the top of the report — nothing downstream matters.
-2. **Awaiting approval next.** A gate waiting on a human halts that workflow entirely.
-3. **Unmerged PRs next.** A task at `pushed` blocks every dependent task (§7.4.1), so report it as an
-   active obstruction rather than as progress.
-4. **Then the first actionable task**, in dependency order: the lowest-numbered task whose stage is not
-   terminal and whose `depends_on` are all `delivered`.
+**Two different questions, answered on two different axes.** Conflating them is the easiest mistake to
+make here, and the report must not make a reader guess which one it is answering.
+
+### Row order — by attention
+
+What most needs a human's eye, top first:
+
+1. **Blocked tasks.** Something is wrong and only a person can settle it.
+2. **Awaiting approval.** A parked gate halts that workflow entirely.
+3. **Unmerged PRs.** A task at `pushed` blocks every dependent task (§7.4.1), so it is an active
+   obstruction, not progress.
+4. **Everything else**, in dependency order.
+
+**Each of these rows carries its own action inline** — `→ /orqestra:unblock`, `→ /orqestra:approve` —
+so nothing that needs a decision is invisible just because it is not the single next command.
+
+### The one next command — by leverage
+
+**The action that unblocks the most work**, which is *not* always the top row. A blocked task holding up
+nothing is less urgent than a merged-and-waiting PR holding up four tasks — and saying so is the whole
+point of naming one command.
+
+Ties break to the **lowest id** (D10). Never "whichever seems most important": that is exactly the
+choice that differs between two runs of identical state.
+
+```
+⛔ TASK-008  audit log       api   designed   BLOCKED: contradictory-input → /orqestra:unblock
+← TASK-002  login endpoint  api   pushed     PR #102 open ← waiting on you
+
+→ Next: merge PR #102 (unblocks TASK-003 and TASK-004)
+```
+
+Blocked is reported first because it needs a decision; the merge is named next because it releases two
+tasks and the block releases none. **Both are true and the report shows both** — a reader who only reads
+`→ Next` still sees the blocked row above it.
 
 A task whose dependencies are not merged is **not** actionable. Report it as `blocked by TASK-NNN`.
 
