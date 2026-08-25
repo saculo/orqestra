@@ -4,7 +4,7 @@ type: tasks
 status: in-progress
 updated: 2026-08-24
 phase: PHASE-1
-task_count: 7
+task_count: 10
 ---
 
 ## Tasks
@@ -18,6 +18,9 @@ task_count: 7
 | TASK-005 | status derives every task stage correctly | plugin | TASK-001, TASK-002 | SC-4 |
 | TASK-006 | status reports what is next | plugin | TASK-005 | SC-6 |
 | TASK-007 | Reconcile the specification with the shipped tree | docs | TASK-001 | SC-5 |
+| TASK-008 | Fix the checker coverage hole and exit codes | plugin | — | SC-5 |
+| TASK-009 | Commits are identified by task id, not commit type | plugin | — | SC-2 |
+| TASK-010 | Specification records the commit convention | docs | TASK-009 | SC-2 |
 
 ## Dependency Order
 
@@ -28,7 +31,12 @@ TASK-002  manifest + commands ───────────┤
                                          └─→ TASK-007 spec reconciliation
 ```
 
-**Delivery order**: TASK-001, TASK-002, TASK-003, TASK-004, TASK-005, TASK-006, TASK-007.
+**Delivery order**: TASK-001, TASK-002, TASK-003, TASK-004, TASK-005, TASK-006, TASK-007, TASK-008,
+TASK-009, TASK-010.
+
+**Added mid-phase** (2026-08-25): TASK-008 from TASK-001's review findings; TASK-009 and TASK-010 from a
+convention change requested during the phase. All three are `create-task --mode add`, and all cite an
+existing success criterion — none of them widened the phase's goal.
 
 Seven sequential PRs. TASK-001 and TASK-002 are genuinely independent and TASK-004, TASK-006, and
 TASK-007 sit on separate branches of the graph — but v1 delivers one task at a time (D15), so the graph
