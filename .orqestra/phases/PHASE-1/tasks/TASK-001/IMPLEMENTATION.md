@@ -33,3 +33,20 @@ files_changed: 3
      backlink (§7.3.1).
 - The checker validates **templates** only. Runtime artifact validation is the orchestrator's contract
   check (§4.4.5) and is not covered here.
+
+**Accepted as tech debt at the review gate (2026-08-25)** — `REVIEW.md` verdict `passed`, no required findings,
+approved with these carried forward to TASK-008:
+
+- **F-1 (major)** — the "no headings" exemption skips the **whole catalogue row**, so
+  `templates/DECISION.md` has never had its frontmatter checked. The checker has been reporting "20
+  templates checked" while one was silently uncovered.
+- **F-2 (minor)** — a missing `REQUIREMENTS.md` exits 1 with a traceback rather than the documented
+  exit 2; only a missing §4.8.1 reaches that path.
+- **F-3 (nit)** — `FREEFORM` restates what the catalogue row already declares, contradicting
+  `DESIGN.md`'s "the catalogue is parsed, never restated".
+
+**Where F-1 belongs — a disagreement with the reviewer, recorded rather than settled silently.** The
+review attributed F-1's root cause to §4.8.1's non-`##` heading form and assigned it to `docs`
+(TASK-007). The catalogue is right: `DECISION.md` genuinely uses an H1 plus bold labels, and the row
+describes that accurately. The defect is the **checker** conflating "no headings to check" with
+"nothing to check" — a `plugin` fix. Assigned to TASK-008 accordingly.
