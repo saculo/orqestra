@@ -1,7 +1,7 @@
 ---
 id: TASK-009
 type: task
-status: pending
+status: done
 updated: 2026-08-25
 phase: PHASE-1
 module: plugin
@@ -55,3 +55,19 @@ That is the `docs` module and therefore TASK-010 (D14).
 
 Rewriting the history already committed. The convention applies from adoption forward; rewriting 20
 commits would break every SHA already cited in artifacts and decisions.
+
+<!-- CLOSED BY HAND 2026-08-25, outside the delivery pipeline, at the user's direction.
+
+     Every acceptance criterion above is met and verifiable, but this task produced NO
+     IMPLEMENTATION.md, QA.md, REVIEW.md, or PR — it was not run through `/orqestra:task`.
+     `status: done` here records that the criteria are satisfied, not that the pipeline
+     ran. Do not read this task as evidence the delivery loop works; nothing has exercised
+     it end to end yet.
+
+     Verification actually performed:
+       AC-1..AC-3  `step-push.md` and `step-reply.md` name the `TASK-NNN:` form explicitly
+                   while still deferring to `commit_style`; `init` documents rung 3.
+       AC-4        `templates/config.md` and `.orqestra/config.md` carry `commit_style: scoped`
+                   with the ladder written inline, where the value lives.
+       AC-5        `grep -rnE '(feat|fix|chore|docs|test)\(' skills/ templates/` returns
+                   nothing — D-018's own stated conformance test. -->
