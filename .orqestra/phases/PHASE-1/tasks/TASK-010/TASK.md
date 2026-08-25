@@ -7,14 +7,19 @@ phase: PHASE-1
 module: docs
 stack: markdown
 origin: feature
-depends_on: [TASK-009]
+depends_on: []
 serves: [SC-2]
 attempts: 0
 ---
 
 ## Goal
 
-Make `REQUIREMENTS.md` describe the commit convention that TASK-009 actually implements.
+Correct §4.6 so it documents the task-scoped commit convention — **before** TASK-009 implements it.
+
+This task comes first, and the ordering is the point. 13 of 17 commit sites in `skills/` say only
+"Commit (§4.6)": they **cite** the specification rather than restating it. While §4.6 documents
+`chore(orqestra):`, every one of them resolves to the old convention regardless of what any plugin-side
+change does. Fix the citation target and most of them become correct without being touched.
 
 §4.6 currently specifies the old format and shows three worked examples in it. A specification that
 contradicts the tool is worse than one that omits the subject: the skills cite §4.6 by number, so a

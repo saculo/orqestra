@@ -7,7 +7,7 @@ phase: PHASE-1
 module: plugin
 stack: markdown
 origin: feature
-depends_on: []
+depends_on: [TASK-010]
 serves: [SC-2]
 attempts: 0
 ---
@@ -32,6 +32,21 @@ success criterion the work serves. One prefix turns `git log` into an index into
 | AC-3 | Commits with no owning task — `init` scaffolding, phase and task creation — use a documented non-task prefix, and the rule for choosing between them is stated, not left to judgement |
 | AC-4 | `config.md` records the convention explicitly in place of `commit_style: conventional`, and every skill that commits reads it from there rather than hard-coding a format |
 | AC-5 | No skill emits a conventional-commit type prefix any more — verifiable by grepping `skills/` for `feat(`, `fix(`, `chore(`, `docs(`, `test(` |
+
+<!-- DEPENDENCY REVERSED 2026-08-25, by human decision, after a pipeline run failed qa 3/5.
+     TASK-009 originally had no dependency and TASK-010 depended on it. That was backwards.
+
+     13 of 17 commit sites in `skills/` say only "Commit (§4.6)" — they DEFER to the
+     specification rather than restating the format. So while §4.6 documents
+     `chore(orqestra):`, those sites resolve to the old convention no matter what this
+     task changes, and AC-1/AC-2/AC-4 are unsatisfiable from inside `plugin`.
+
+     Once TASK-010 corrects §4.6, most of those 13 sites become correct with no further
+     change — they were already deferring properly. The failure was never in the sites.
+
+     The abandoned attempt (implement, qa 3/5, partial attempt 2) is on the local branch
+     `feat/TASK-009-commits-identified-by-task-id`, commits 97567fa..f4f4513. Never pushed,
+     no PR. -->
 
 ## Out of Scope
 

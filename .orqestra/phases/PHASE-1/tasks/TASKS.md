@@ -19,8 +19,8 @@ task_count: 10
 | TASK-006 | status reports what is next | plugin | TASK-005 | SC-6 |
 | TASK-007 | Reconcile the specification with the shipped tree | docs | TASK-001 | SC-5 |
 | TASK-008 | Fix the checker coverage hole and exit codes | plugin | — | SC-5 |
-| TASK-009 | Commits are identified by task id, not commit type | plugin | — | SC-2 |
-| TASK-010 | Specification records the commit convention | docs | TASK-009 | SC-2 |
+| TASK-010 | Specification records the commit convention | docs | — | SC-2 |
+| TASK-009 | Commits are identified by task id, not commit type | plugin | TASK-010 | SC-2 |
 
 ## Dependency Order
 
@@ -32,7 +32,11 @@ TASK-002  manifest + commands ───────────┤
 ```
 
 **Delivery order**: TASK-001, TASK-002, TASK-003, TASK-004, TASK-005, TASK-006, TASK-007, TASK-008,
-TASK-009, TASK-010.
+TASK-010, TASK-009.
+
+**TASK-010 before TASK-009** — reversed on 2026-08-25 after a pipeline run proved the original order
+unsatisfiable. The skills **cite** §4.6 rather than restating it, so the specification has to be right
+before the implementation can be (see D-019).
 
 **Added mid-phase** (2026-08-25): TASK-008 from TASK-001's review findings; TASK-009 and TASK-010 from a
 convention change requested during the phase. All three are `create-task --mode add`, and all cite an

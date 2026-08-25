@@ -3,8 +3,8 @@ id: DECISIONS
 type: decisions-index
 status: done
 updated: 2026-08-24
-count: 17
-next_id: 18
+count: 19
+next_id: 20
 ---
 
 ## Decisions
@@ -28,3 +28,5 @@ next_id: 18
 | D-015 | A `failed` review is a gate | workflow | active | `changes-requested` loops to implement; `failed` asks a human, re-review allowed once |
 | D-016 | Rework routes to the owner | workflow | active | Findings carry `owner`; rework goes to who fixes it, not who found it. **Due PHASE-3** |
 | D-017 | `failed` states its reversal | schemas | active | `## What Would Change This Verdict`, schema-enforced. **Due PHASE-3** |
+| D-018 | Commits scoped by owning work | process | active | `TASK-NNN:` / `PHASE-N:` / `orqestra:` — most specific scope that owns the change |
+| D-019 | Spec-first when skills cite it | process | active | Code that *cites* a section inherits it, so docs leads; code that *reads* it may follow |
