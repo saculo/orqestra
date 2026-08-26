@@ -862,7 +862,10 @@ is a fixed block of text — same fields, same order, every dispatch, every work
 ```
 ROLE:      orqestra:backend-engineer
 STEP:      implement
+SKILL:     orqestra:implement
 TASK:      PHASE-1/TASK-007
+MODULE:    api
+PATHS:     services/api
 STACK:     java
 EXPERTISE: java-expertise, test-quality
 
@@ -873,7 +876,7 @@ READ:
   .orqestra/project/PROJECT.md
   .orqestra/decisions/INDEX.md
 
-TEMPLATE:  templates/IMPLEMENTATION.md
+TEMPLATE:  ${CLAUDE_PLUGIN_ROOT}/templates/IMPLEMENTATION.md
 WRITE:     .orqestra/phases/PHASE-1/tasks/TASK-007/IMPLEMENTATION.md
 
 REWORK:    REVIEW.md — address findings F-2, F-5 only.     # present only on a re-dispatch
@@ -885,13 +888,64 @@ exactly as skills are, so the row's `backend-engineer` is dispatched as the suba
 `orqestra:backend-engineer`. The registry stores the bare name; the envelope and the dispatch use the
 namespaced one. An `agent` value with no matching file in `agents/` is a config error, not a fallback.
 
+**`SKILL` names the step skill, and the agent invokes it.** `STEP` is the stage — it appears in the
+`status` table, in reports, and in artifact frontmatter. `SKILL` is the plugin skill carrying the
+*procedure* for that stage, namespaced like any other. Collapsing the two would be wrong as often as it
+would be right: `STEP: review` runs `SKILL: orqestra:review-task` (§5.1.1). The consumer is the
+dispatched agent, which invokes the skill and follows what it returns — the persona says who is
+working, the step skill says what the work is, and neither has to duplicate the other (D4: the envelope
+is the only channel, so a procedure not named here is a procedure the agent has to invent).
+
+**Why the skill is invoked and never read.** A step skill's body names its own template as
+`${CLAUDE_PLUGIN_ROOT}/templates/DESIGN.md`. That variable is expanded by the harness at the moment a
+skill is **invoked**; a `Read` of the same file returns it as a literal string and nothing downstream
+expands it. An agent handed the procedure by `Read` therefore receives a `TEMPLATE:` path it cannot
+open, and D16 — copy the template, never reproduce it from memory — silently becomes unfollowable. So
+`SKILL` carries a name, not a path. The envelope's own `TEMPLATE:` line carries the prefix and gets
+away with it for the mirror-image reason: the orchestrator composes the envelope from inside an invoked
+skill, so the value is already expanded by the time an agent reads it. A bare
+`templates/IMPLEMENTATION.md` would resolve against the user's project root, where orqestra's templates
+do not exist.
+
+**`EXPERTISE` names the module's expertise skills, and the agent invokes those too** — bare names,
+neither paths nor namespaced, because they are the project's own skills in `.claude/skills/` rather
+than the plugin's (§5.3). **This requires `Skill` in the dispatched agent's `agents/*.md` `tools:`**,
+the one layer that binds for a whole subagent run (§7.0.1, D-024). The contract names its own
+precondition because it cannot enforce it from this side: where that grant is missing, `SKILL` and
+`EXPERTISE` are both inert. The dispatch does not fail — it degrades to the bare persona, with no
+procedure and no project conventions, and returns plausible work that follows none of this project's
+rules. That is the worst failure shape available, which is why the requirement is stated here rather
+than left to be discovered.
+
+**`MODULE` and `PATHS` carry the row the routing came from.** `MODULE` is the task's `module:` — the
+single key that resolved `ROLE`, `STACK`, `EXPERTISE`, and `PATHS` from one `modules.md` row (§5.1,
+D-004); the agent cites it, and `review-task` looks the row up by it. `PATHS` is that row's `paths`,
+and it is a boundary rather than a hint: the agent writes nothing outside it, and `review-task` flags
+any changed file that falls outside as a `major` finding (§5.2, §7.8.1, D2). Both travel in the
+envelope because that check has to be mechanical — a reviewer who must go and find the row itself is a
+reviewer who sometimes does not.
+
 **Paths, never contents.** The orchestrator names the files; the agent reads them itself, in its own
 context. Inlining an artifact into the envelope would move it through the orchestrator's context —
 which is the exact cost subagents exist to avoid.
 
-`EXPERTISE` names skills the agent loads first. `REWORK` appears only on a re-dispatch and is precise:
-*these findings, nothing else.* A re-dispatch without it produces a full redo, which is how rework
-loops turn into rewrite loops.
+**Which fields are mandatory.** Three obligation classes, each with a condition decidable by looking at
+exactly one thing:
+
+| Field | Obligation | Condition |
+|---|---|---|
+| `ROLE` `STEP` `SKILL` `READ` `TEMPLATE` `WRITE` `RETURN` | always | — |
+| the scope — exactly one of `TASK` `PHASE` `BUG` | always | the unit of work the step operates on |
+| `MODULE` `PATHS` `STACK` `EXPERTISE` | conditional | mandatory **iff** the scope unit has a module — its `TASK.md`/`BUG.md` frontmatter carries `module:`. `create-phases` and `create-tasks` run before any task has one and omit all four; that is conformant, not an exception |
+| `EXPERTISE` | additionally | omitted when the module row's `expertise` cell is empty. The row decides, never the agent: §5.3's warn-once rule covers a *named* skill that is not installed, and does not license dropping the field |
+| `REWORK` | re-dispatch only | — |
+
+Every condition above is answered by something the orchestrator has already read to route the dispatch,
+so **an omission is a contract violation rather than a judgement call**, and a dispatch missing a field
+its class requires is rejected exactly as a missing `WRITE:` is (D2).
+
+`REWORK` is precise when it appears: *these findings, nothing else.* A re-dispatch without it produces
+a full redo, which is how rework loops turn into rewrite loops.
 
 #### 5.5.1 The return contract — and why it matters more than it looks
 
