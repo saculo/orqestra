@@ -21,7 +21,7 @@ task_count: 11
 | TASK-008 | Fix the checker coverage hole and exit codes | plugin | — | SC-5 |
 | TASK-010 | Specification records the commit convention | docs | — | SC-2 |
 | TASK-009 | Commits are identified by task id, not commit type | plugin | TASK-010 | SC-2 |
-| TASK-011 | Orchestrators must not write artifacts | docs | — | SC-5 |
+| TASK-011 | Orchestrators must not write artifacts | docs | — | SC-7 |
 
 ## Dependency Order
 

@@ -9,7 +9,7 @@ stack: markdown
 origin: feature
 bug:
 depends_on: []
-serves: [SC-5]
+serves: [SC-7, SC-5]
 attempts: 0
 ---
 
@@ -61,6 +61,10 @@ from `git` and `gh` calls the orchestrator itself makes. It is also double-writt
 | AC-3 | The four gate-write instructions are gone: grepping `skills/` for an orchestrator instructed to set `awaiting-approval` returns nothing, and D-008 states **which skill** performs that write and when |
 | AC-4 | `approve`, `reject`, and `unblock` no longer edit artifacts they do not own under D1 — the spec states how a status transition and an `attempts` increment are performed by the owning skill instead |
 | AC-5 | §7.0.1 states the rule as a general one with its reason, so a future step file cannot reintroduce the pattern by looking locally reasonable |
+
+<!-- SERVES AMENDED 2026-08-26. Filed against SC-5 because §4.8.1's written-by column is
+     catalogue content — a stretch, and said so at filing. SC-7 was added the same day and
+     is what this task actually serves; SC-5 stays because AC-1 does edit a catalogue row. -->
 
 ## Out of Scope
 
