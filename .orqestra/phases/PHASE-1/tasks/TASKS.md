@@ -4,7 +4,7 @@ type: tasks
 status: in-progress
 updated: 2026-08-26
 phase: PHASE-1
-task_count: 11
+task_count: 27
 ---
 
 ## Tasks
@@ -22,6 +22,22 @@ task_count: 11
 | TASK-010 | Specification records the commit convention | docs | — | SC-2 |
 | TASK-009 | Commits are identified by task id, not commit type | plugin | TASK-010 | SC-2 |
 | TASK-011 | Orchestrators must not write artifacts | docs | — | SC-7 |
+| TASK-012 | Branch created at preflight, not at push | docs | — | PHASE-3/SC-1 |
+| TASK-013 | `blocked_reason` and the status vocabulary in the catalogue | docs | — | SC-5 |
+| TASK-014 | `status` may read configuration, not only frontmatter | docs | — | SC-4 |
+| TASK-015 | The dispatch envelope delivers the layers it advertises | docs | — | PHASE-3/SC-1 |
+| TASK-016 | A parked gate records enough to be resumed | docs | TASK-011 | SC-7 |
+| TASK-017 | An accepted phase gap must not wedge planning | docs | — | PHASE-5/SC-1 |
+| TASK-018 | `PROJECT.md` has an owner that populates it | docs | — | SC-5 |
+| TASK-019 | Dispatched agents can reach their step and expertise skills | plugin | TASK-015 | PHASE-3/SC-1 |
+| TASK-020 | Pipeline branches at preflight | plugin | TASK-012 | PHASE-3/SC-1 |
+| TASK-021 | `init` produces a workspace `greenfield` can use | plugin | — | SC-2 |
+| TASK-022 | PR review threads via a command that exists | plugin | — | PHASE-4/SC-1 |
+| TASK-023 | Workspace mode enforces what template mode enforces | plugin | TASK-013 | SC-5 |
+| TASK-024 | Every referenced step file exists | plugin | — | SC-1 |
+| TASK-025 | Split mode and gap mode stop contradicting themselves | plugin | TASK-017 | PHASE-5/SC-1 |
+| TASK-026 | `bugfix` leaves a tree its own task can be delivered from | plugin | TASK-020 | PHASE-5/SC-1 |
+| TASK-027 | Skills implement writer discipline and gate state | plugin | TASK-011, TASK-016 | SC-7 |
 
 ## Dependency Order
 
@@ -81,3 +97,32 @@ unexecutable gate-write instructions were hit in that single run, and `PR.md` �
 an orchestrator as sole writer — could not be written at all, which is why TASK-008 is parked at
 `push` with PR #2 open. `docs` module, so `architect`, and the plugin change that follows it is a
 separate task and a separate PR (D-019).
+
+**Added 2026-08-26, from `ORQESTRA_AUDIT.md`**: TASK-012 through TASK-027. Sixteen tasks from an audit
+of every shipped skill, step file, agent, template, the checker, and the manifest. Seven of its claims
+were independently verified before filing; all seven held.
+
+**`docs` before `plugin`, without exception** (D-019). Eight of these are specification tasks and eight
+implement them. Every plugin task depends on its docs counterpart because the skills **cite** the spec
+rather than restating it — the same ordering that had to be discovered the hard way when TASK-009 and
+TASK-010 were reversed mid-phase after a pipeline run failed qa 3 of 5.
+
+**Delivery order.** The docs tasks are independent of each other and can go in any order; the pairs are
+what matter:
+
+```
+TASK-015 → TASK-019    envelope contract  → agents reach their skills   ← start here
+TASK-012 → TASK-020    branch timing      → pipeline branches early
+TASK-011 → TASK-027    writer discipline  → skills stop writing         (also needs TASK-016)
+TASK-013 → TASK-023    schema vocabulary  → checker enforces it
+TASK-017 → TASK-025    gap acceptance     → split and gap modes
+TASK-020 → TASK-026    (branch timing)    → bugfix reproduction
+```
+
+TASK-021, TASK-022, TASK-024, TASK-018 and TASK-014 have no plugin/docs pairing and can run whenever.
+
+**CRITERION GAP.** Seven of these serve criteria in phases that are not yet planned — written as
+`PHASE-3/SC-1`, `PHASE-4/SC-1`, `PHASE-5/SC-1` rather than forced onto a PHASE-1 criterion that does not
+fit. They are substrate defects found while delivering PHASE-1, but the behaviour they fix belongs to
+later phases. Whether they stay here, move when those phases are planned, or justify more PHASE-1
+criteria is a phase-definition decision (§8.2) and a human's call.
