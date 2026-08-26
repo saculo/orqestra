@@ -2,107 +2,87 @@
 id: TASK-015
 type: qa
 status: done
-updated: 2026-08-26
+updated: 2026-08-27
 task: TASK-015
 result: passed
-test_command: git show 5bc3ec5 --stat; md5sum region-compare of REQUIREMENTS.md against HEAD~2; obligation table applied to the 9 real envelopes in skills/
+test_command: python3 scratchpad/table.py <9 envelopes + §5.5's own example>; git diff 5bc3ec5 39393f8; heading-list diff vs 27349b1 and 5bc3ec5; python3 scripts/check-templates.py
 ---
 
 ## Test Strategy
 
-A specification change, so behaviour is what the amended §5.5 **permits, requires, and contradicts** for
-its two consumers: a human reading it, and an orchestrator composing a dispatch from it. Nothing below
-is taken from `IMPLEMENTATION.md`; every claim was re-derived from `REQUIREMENTS.md` and the diff.
+Round 2, after the rework that closed `REVIEW.md` F-1 and F-2 (both on AC-2). All five criteria were
+re-verified from `REQUIREMENTS.md` as it stands at `39393f8`, not from `IMPLEMENTATION.md`, and AC-1,
+AC-3, AC-4, AC-5 were re-checked for regression rather than assumed intact.
 
-**1. Per-criterion textual conformance.** §5.5's body (lines 856–948) read as a dispatching
-orchestrator would, asking of each criterion the question its consumer actually asks, and cross-checking
-every citation it makes (§5.1, §5.1.1, §5.3, §7.0.1, §7.8.1, D-004, D-024, D2, D4, D16) against the
-cited text rather than trusting the reference.
+**1. The obligation table executed, not read.** AC-2 is met only if the table returns a verdict per
+field with no interpretation, so §5.5's four classes and its new closed-list rule were **encoded as a
+program** and run over the nine real envelopes in `skills/` and over §5.5's own example. The program
+decides from exactly what the text says it may decide from — `STEP`, the scope field, and whether the
+scope unit's frontmatter carries `module:` — and prints `UNDECIDED` wherever the text yields no answer.
+That is the check round 1 could not make mechanically, because two carried fields had no class at all.
 
-**2. Structural regression, byte-level.** The renumbering hazard cannot be caught by reading, because a
-stale `§5.5.1` citation still resolves — to the wrong text. So: heading list extracted from both
-revisions and compared as text; the two untouched regions compared by checksum.
+**2. Per-criterion textual conformance, citations resolved.** Every section §5.5 cites was opened and
+read against the claim made about it: §7.0.1 (the `tools:` layer binds for a whole subagent run),
+§5.1.1 (`review` → `review-task`, the divergence AC-4 rests on), §8.1 (`review_round` 1/2, the claim
+the new `ROUND` row makes), §7.8.2, §4.4.1 Rule B, D2/D4/D-004/D-024.
 
-**3. The obligation table exercised, not read.** AC-2 is only met if the table yields yes/no per field
-with no interpretation, so it was applied to all nine real envelopes in `skills/` — every field each
-one carries and every field it omits, including fields §5.5 does not name.
+**3. Structural regression, by diff and heading list.** The renumbering hazard cannot be caught by
+reading — a stale `§5.5.1` citation still resolves, to the wrong text. Heading lists were extracted
+from the pre-task baseline (`27349b1`), from round 1 (`5bc3ec5`), and from `HEAD`, and compared as text.
 
 ## Results
 
 | check | outcome |
 |---|---|
-| `git show 5bc3ec5 --stat` | `REQUIREMENTS.md` 58/4 and the task's `IMPLEMENTATION.md`. No other file |
-| headings, count | 106 → 106 |
-| `md5sum` lines 1–861, old vs new | `708871…` = `708871…` — identical |
-| `md5sum` old 896–2031 vs new 950–2085 | `c47f72…` = `c47f72…` — identical |
-| net effect | the whole change is confined to old 862–895 → new 862–949; §5.5.1 still `#### 5.5.1`, uniform +54 shift |
-| `grep -i "loads first"` | 0 hits; the superseded wording is gone, not duplicated elsewhere |
-| obligation table vs 9 `skills/` envelopes | 9/9 decided on every field the table names; 2 fields it does not name (see I-4) |
+| `git diff 5bc3ec5 39393f8 -- REQUIREMENTS.md` | 3 hunks: §5.5 opening (F-1), the table + closing paragraph (F-2), one clause in §7.8.2 (the recorded minor deviation). Nothing else in a 2093-line file |
+| commit contents | `REQUIREMENTS.md` (inside `docs` `PATHS`) + this task's `IMPLEMENTATION.md`. No other file |
+| headings, count | 106 (baseline) → 106 (round 1) → 106 (HEAD) |
+| heading text, baseline vs HEAD | **identical, line for line** — nothing added, moved, or renumbered; `#### 5.5.1` intact |
+| table applied to 9 `skills/` envelopes | **9/9 decided on every field carried**; 0 undeclared fields (round 1: 2). 7/9 fully decided on required fields; 2 hit `UNDECIDED` on the module condition — F-4, open by instruction |
+| table applied to §5.5's own example | required-but-missing: **none**; carried-but-undeclared: **none** |
+| `grep "same fields" REQUIREMENTS.md` | 0 hits — the contradicting clause is gone, not moved |
+| `grep "LENSES\|ROUND" REQUIREMENTS.md` | now 2 and 1 hits, defined with consumers; both were 0 in round 1 |
+| `python3 scripts/check-templates.py` | 20 templates, all conform |
 
-**AC-2 exercised.** `skills/task/step-review.md` — scope `TASK`, task has a module, so `MODULE` `PATHS`
-`STACK` `EXPERTISE` are mandatory and all four are absent: **non-conformant**, decided from frontmatter
-the orchestrator already read. `skills/greenfield/step-phases.md` — `create-phases`, no module, the four
-correctly absent: **conformant** on that class (it carries no scope field, which the "always" class does
-require). The remaining seven decide the same way. That divergence is TASK-019's by D14/D-019 and is
-declared as debt, not as done — verified: all eight `agents/*.md` `tools:` lines still omit `Skill`, and
-§5.5 states the grant as a precondition it cannot enforce rather than asserting it exists.
+**F-2 exercised, not inspected.** `skills/task/step-review.md` carries `LENSES:` and `ROUND:`. Before
+the rework the table returned *no verdict at all* on them; it now returns `permitted` (step-specific,
+mandatory on a `review` dispatch), and returns `VIOLATION-not-permitted` for the same fields on any
+other step — the program tests both branches. Every other envelope's carried fields land in a declared
+row, so the closed-list rule fires on nothing that exists today, which is what "closed" should mean
+after the classes are complete.
 
 ## Criteria Coverage
 
 | criterion | covered by | result |
 |---|---|---|
-| AC-1 | §5.5 `EXPERTISE` paragraph reads "the agent **invokes** those too"; the precondition is in its own text — `Skill` in the dispatched agent's `agents/*.md` `tools:` — with §7.0.1 and D-024 cited, and §7.0.1 verified to actually say that layer binds for the whole subagent run. Unmet-precondition failure named (silent degradation to bare persona). No surviving `Read`-implying wording in §5.5 | passed |
-| AC-2 | The three-class obligation table plus the closing sentence ("an omission is a contract violation rather than a judgement call … rejected exactly as a missing `WRITE:` is", D2). Exercised against all nine real envelopes | passed, see I-2, I-3, I-4 |
-| AC-3 | §5.5's example carries all eight always-mandatory fields plus all four conditionals, in the stated order, with `REWORK` marked re-dispatch-only. `MODULE:` and `PATHS:` occurred nowhere in `REQUIREMENTS.md` before and are now defined in prose with consumers named, not merely shown | passed, see I-1 |
-| AC-4 | `SKILL` defined as the namespaced step skill the agent invokes, separated from `STEP` by the divergence that proves one field cannot serve both — `STEP: review` → `SKILL: orqestra:review-task`, checked against §5.1.1's own row. Consumer named (the dispatched agent), grounded in D4 | passed |
-| AC-5 | "Why the skill is invoked and never read" states the asymmetry (expands on invoke, literal string on `Read`) **and** its consequence (a dead `TEMPLATE:` path, D16 unfollowable), and derives from it why `SKILL` is a name. §5.5's own `TEMPLATE:` corrected from the bare `templates/IMPLEMENTATION.md` | passed |
-| regression: no renumbering | 106/106 headings, heading text identical, `#### 5.5.1` intact | passed |
-| regression: no collateral edit | both untouched regions checksum-identical despite the file being rewritten whole through `Write` | passed |
+| AC-1 | §5.5's `EXPERTISE` paragraph (912–922): "the agent **invokes** those too", precondition stated in its own text as `Skill` in the dispatched agent's `agents/*.md` `tools:`, with §7.0.1 and D-024 cited — §7.0.1 opened and verified to actually say that layer is a true allowlist binding for the whole subagent run. Unmet-precondition behaviour named (silent degradation to bare persona). No `Read`-implying wording survives in §5.5. Unchanged by the rework diff | passed |
+| AC-2 | The four-class obligation table (934–946) plus **The list is closed** (946–953), executed as a program over 9 real envelopes and §5.5's example. Every field carried by every envelope now resolves to exactly one row; the step-specific class AC-2 names by word exists; an unlisted field is a stated violation, grounded in Rule B (§4.4.1). The opening sentence (859–861) now defers to the table instead of contradicting it, so the D9 tie-break AC-2 exists to remove is no longer needed | passed, see I-1 |
+| AC-3 | §5.5's example (865–885) run through the same program: 13 fields, every one the table marks mandatory for an `implement` dispatch present, zero undeclared, in the order §5.5 fixes (`ROLE STEP SKILL TASK MODULE PATHS STACK EXPERTISE READ TEMPLATE WRITE REWORK RETURN`), `REWORK` annotated re-dispatch-only. `MODULE:` and `PATHS:` occur nowhere else in `REQUIREMENTS.md` and are defined in prose with consumers named. Not regressed: the rework did not touch the example | passed, see I-2 |
+| AC-4 | The `SKILL` paragraph (893–899): namespaced step skill, the agent **invokes** it, separated from `STEP` by the case that proves one field cannot serve both — `STEP: review` → `SKILL: orqestra:review-task`, checked against §5.1.1's step table, which gives exactly that pairing. Consumer named (the dispatched agent), grounded in D4. Not regressed | passed |
+| AC-5 | "Why the skill is invoked and never read" (901–910): the expansion asymmetry stated (expanded on invoke, literal string on `Read`), tied to its consequence (an unopenable `TEMPLATE:` path, D16 unfollowable), and used to derive why `SKILL` carries a name. §5.5's own `TEMPLATE:` line carries `${CLAUDE_PLUGIN_ROOT}`, with the mirror-image reason given. Not regressed | passed |
+| regression: no renumbering | Heading list identical to the pre-task baseline; 106/106/106; `#### 5.5.1` still the return contract, so all ten citations to it still resolve | passed |
+| regression: no collateral edit | The rework diff is 3 hunks, two in §5.5 and one recorded as a deviation; the commit touches no file outside `docs` `PATHS` plus its own artifact | passed |
+| regression: deviation covered | The `minor` deviation (§7.8.2 gains "carried to the reviewer in the envelope's `LENSES` field (§5.5)") verified in place at 1445–1446 and consistent with the new table row; no heading touched | passed |
 
 ## Issues
 
-**I-1 — minor. §5.5's example contradicts §5.1's module registry.**
+**I-1 — the module condition still leaves two real dispatches undecided (F-4, open by instruction).**
+
+- *Criterion*: AC-2.
+- *Observed*: the program returns `UNDECIDED-module-condition` for `skills/close-phase/SKILL.md`
+  (`review-phase`, `PHASE`-scoped) **and** for `skills/add-phase/step-define-phase.md`
+  (`create-phase`) — neither is a `TASK`/`BUG` scope nor one of the two steps excused by name.
+- *Expected*: a verdict from the text alone. This is `REVIEW.md` F-4, deliberately left open, and is
+  **not graded here**. Recorded only because the mechanical run widens it by one dispatch:
+  `create-phase` is hit by the same gap as `review-phase`, so naming `templates/PHASE.md` would need to
+  cover both.
+
+**I-2 — §5.5's example still contradicts §5.1's registry (F-3, open by instruction).**
 
 - *Criterion*: AC-3.
-- *Observed*: `MODULE: api` alongside `EXPERTISE: java-expertise, test-quality`. §5.1's registry gives
-  the `api` row as `java-expertise, spring-conventions`.
-- *Expected*: `java-expertise, spring-conventions`, or a `MODULE` whose row matches.
-- *Why it is this change's defect*: the `EXPERTISE` line is pre-existing and was unfalsifiable while no
-  `MODULE` was shown. Adding `MODULE: api` is what makes it checkable — and it now fails the rule §5.5
-  itself states two paragraphs later, that `MODULE` "resolved `ROLE`, `STACK`, `EXPERTISE`, and `PATHS`
-  from one `modules.md` row". `ROLE`, `STACK` and `PATHS` match the row; only `expertise` diverges.
+- *Observed*: `MODULE: api` with `EXPERTISE: java-expertise, test-quality`; §5.1's `api` row (731) gives
+  `java-expertise, spring-conventions`. Re-verified unchanged at `HEAD`.
+- *Expected*: the row's value. Left open per the rework instruction and **not graded**.
 
-**I-2 — minor. The condition names only `TASK.md`/`BUG.md`, leaving `PHASE`-scoped dispatches undecided.**
-
-- *Criterion*: AC-2.
-- *Observed*: "mandatory **iff** the scope unit has a module — its `TASK.md`/`BUG.md` frontmatter
-  carries `module:`", excusing `create-phases`/`create-tasks` by name. `close-phase`'s `review-phase`
-  dispatch is `PHASE`-scoped *after* its tasks have modules, and neither clause reaches it.
-- *Expected*: decidable from the text. The right answer exists — `templates/PHASE.md` frontmatter has no
-  `module:` key, verified — but it is reached by inference from a file §5.5 never names.
-
-**I-3 — minor. §5.5's opening sentence now contradicts its own table.**
-
-- *Criterion*: AC-2.
-- *Observed*: line 860 still reads "the envelope is a fixed block of text — **same fields, same order,
-  every dispatch, every workflow**". The new table makes four fields legitimately absent from
-  `create-phases` and `create-tasks` envelopes and calls that "conformant, not an exception".
-- *Expected*: one statement, not two. The specific table governs the general sentence (D9), so a careful
-  reader lands right; a reader who stops at the opening line concludes every envelope must carry all
-  twelve fields — which is the judgement call AC-2 exists to remove. The sentence was true before this
-  change and was left unamended by it.
-
-**I-4 — minor. The table classes no step-specific field, though AC-2 asks for exactly that.**
-
-- *Criterion*: AC-2 ("states which fields are mandatory in every envelope **and which are step-specific**").
-- *Observed*: the classes are always / scope / conditional-on-module / re-dispatch-only. `LENSES:` and
-  `ROUND:`, which `skills/task/step-review.md` carries and which §7.8.2 requires be conveyed per
-  dispatch, appear nowhere in `REQUIREMENTS.md` — `grep 'LENSES'` returns 0 hits. Applying the table to
-  that envelope therefore yields verdicts on the four fields it is missing and **no verdict at all** on
-  two of the fields it has: undeclared extras are neither permitted nor forbidden.
-- *Expected*: a class covering step-specific fields, or an explicit statement that the list is closed and
-  a field outside it is a violation. `REWORK` is currently the only field the section treats as
-  step-scoped, and it is named in the list.
-
-None of the four falsifies a criterion; all four are single-line corrections inside §5.5. Severity is
-the reviewer's to grade — I-3 and I-4 sit closest to AC-2's own wording.
+Both remaining issues are the two `minor` findings the rework was told not to address. No new defect was
+introduced by it, and nothing that AC-1, AC-3, AC-4 or AC-5 rests on moved.
