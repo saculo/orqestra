@@ -2,7 +2,7 @@
 name: status
 description: "The single state authority for orqestra. Globs .orqestra/, derives every task's stage from artifact presence and frontmatter, and reports what is done, what is waiting on a human, and the one next command to run. Use when the user says '/orqestra:status', asks where a project stands, or whenever an orchestrator needs to know its position — orchestrators must call this rather than globbing themselves."
 allowed-tools: Read, Glob, Grep
-disallowed-tools: Agent, Write, Edit, NotebookEdit, Bash
+disallowed-tools: Write, Edit, NotebookEdit
 ---
 
 > **Invocation**: `/orqestra:status`, or invoked by any orchestrator to determine position.
