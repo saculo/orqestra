@@ -2,9 +2,9 @@
 id: TASKS-PHASE-1
 type: tasks
 status: in-progress
-updated: 2026-08-24
+updated: 2026-08-26
 phase: PHASE-1
-task_count: 10
+task_count: 11
 ---
 
 ## Tasks
@@ -21,6 +21,7 @@ task_count: 10
 | TASK-008 | Fix the checker coverage hole and exit codes | plugin | — | SC-5 |
 | TASK-010 | Specification records the commit convention | docs | — | SC-2 |
 | TASK-009 | Commits are identified by task id, not commit type | plugin | TASK-010 | SC-2 |
+| TASK-011 | Orchestrators must not write artifacts | docs | — | SC-5 |
 
 ## Dependency Order
 
@@ -74,3 +75,9 @@ whoever owns the spec. Its agent is `architect`, not an engineer.
 **No task writes new skills.** The plugin source for `init`, `status`, the commands, and the templates
 already exists as an untested draft. Every criterion here is written as observable behaviour precisely
 so that existing source does not satisfy it — nothing has been run.
+
+**Added 2026-08-26**: TASK-011, from running the delivery pipeline on TASK-008. Three of the four
+unexecutable gate-write instructions were hit in that single run, and `PR.md` — the one D1 row naming
+an orchestrator as sole writer — could not be written at all, which is why TASK-008 is parked at
+`push` with PR #2 open. `docs` module, so `architect`, and the plugin change that follows it is a
+separate task and a separate PR (D-019).
