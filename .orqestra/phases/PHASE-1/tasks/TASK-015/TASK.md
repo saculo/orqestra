@@ -35,10 +35,27 @@ happen at all.
 
 | id | criterion |
 |---|---|
-| AC-1 | §5.5 defines `EXPERTISE` as **paths** to skill files, with the reason: an agent's `tools:` allowlist is what decides what it can reach, and `Skill` is not in it (D-024) |
+| AC-1 | §5.5 defines `EXPERTISE` as skills the agent **invokes**, and states the precondition that makes it possible: `Skill` must appear in the agent's `tools:`, which is the binding layer (D-024). The contract names its own requirement rather than assuming it |
 | AC-2 | §5.5 states which fields are mandatory in **every** envelope and which are step-specific, so an omission is a contract violation rather than a judgement call |
-| AC-3 | Every envelope example in §7.3, §7.4, and §7.5 carries the mandatory fields — no example contradicts the contract it illustrates |
-| AC-4 | The envelope names the **step skill's path** too, so a dispatched agent can read the procedure it is executing rather than relying on its persona duplicating it |
+| AC-3 | §5.5's own envelope example carries every field it declares mandatory — today it omits `MODULE` and `PATHS`, neither of which appears anywhere in `REQUIREMENTS.md` |
+| AC-4 | The envelope names the **step skill**, so a dispatched agent executes the procedure rather than relying on its persona duplicating it |
+| AC-5 | §5.5 records why the step skill is invoked rather than read: `${CLAUDE_PLUGIN_ROOT}` expands at invocation and **not** on `Read`, so a path-read skill carries dead `TEMPLATE:` references |
+
+<!-- AMENDED 2026-08-26, by human decision, after the plan.
+
+     AC-3 was mis-scoped BY ME at filing: it named §7.3/§7.4/§7.5, which contain step
+     listings and no envelopes. The nine real envelopes are in `skills/` — `plugin`, so
+     TASK-019's, not this task's (D14). AC-3 now covers the one envelope the spec actually
+     contains, which turned out to be defective in the same way.
+
+     AC-1 was reversed. It required EXPERTISE to pass PATHS, on the reasoning that agents
+     hold `Read` but not `Skill`. The decision taken instead is to grant agents `Skill`,
+     which makes names correct again — so the criterion now requires the spec to state the
+     PRECONDITION rather than to work around its absence.
+
+     AC-5 is new, from evidence this session: invoking a skill expands
+     ${CLAUDE_PLUGIN_ROOT}; reading the file does not. That single fact is what rules out
+     the cheap path-read fix, and it belongs in the spec so nobody re-derives it. -->
 
 ## Out of Scope
 
