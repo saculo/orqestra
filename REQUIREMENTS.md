@@ -857,7 +857,9 @@ isolation per step is the reason: the orchestrator's own context must survive a 
 
 The triple describes *who* runs a step. The envelope is *how* they are told to. nit could hand a
 subagent an `input.json` because its CLI wrote one; orqestra dispatches with a prompt, so the envelope
-is a fixed block of text — same fields, same order, every dispatch, every workflow.
+is a fixed block of text — **same order, every dispatch, every workflow**, drawn from a closed set of
+fields. *Which* of those fields a given dispatch must carry is a separate question, and not a judgement
+call either: the obligation table below answers it per field, and it is the only thing that does.
 
 ```
 ROLE:      orqestra:backend-engineer
@@ -929,7 +931,7 @@ reviewer who sometimes does not.
 context. Inlining an artifact into the envelope would move it through the orchestrator's context —
 which is the exact cost subagents exist to avoid.
 
-**Which fields are mandatory.** Three obligation classes, each with a condition decidable by looking at
+**Which fields are mandatory.** Four obligation classes, each with a condition decidable by looking at
 exactly one thing:
 
 | Field | Obligation | Condition |
@@ -938,11 +940,16 @@ exactly one thing:
 | the scope — exactly one of `TASK` `PHASE` `BUG` | always | the unit of work the step operates on |
 | `MODULE` `PATHS` `STACK` `EXPERTISE` | conditional | mandatory **iff** the scope unit has a module — its `TASK.md`/`BUG.md` frontmatter carries `module:`. `create-phases` and `create-tasks` run before any task has one and omit all four; that is conformant, not an exception |
 | `EXPERTISE` | additionally | omitted when the module row's `expertise` cell is empty. The row decides, never the agent: §5.3's warn-once rule covers a *named* skill that is not installed, and does not license dropping the field |
+| `LENSES` `ROUND` | step-specific | mandatory on a `review` dispatch and permitted on no other. `LENSES` is the resolved lens set (§7.8.2); `ROUND` is `1`, or `2` on the re-review of a disputed `failed` (§8.1), and the reviewer writes it to `REVIEW.md.review_round`. Both sit immediately after the scope field |
 | `REWORK` | re-dispatch only | — |
 
-Every condition above is answered by something the orchestrator has already read to route the dispatch,
-so **an omission is a contract violation rather than a judgement call**, and a dispatch missing a field
-its class requires is rejected exactly as a missing `WRITE:` is (D2).
+**The list is closed.** A field appearing in no row above is not part of the envelope, and adding one is
+a contract violation in the same way an omission is: a field no step is contracted to read is a field
+the receiving agent is entitled to ignore, so inventing one hides the instruction rather than delivering
+it (Rule B, §4.4.1, applied to the envelope rather than to frontmatter). Every condition in the table is
+answered by something the orchestrator has already read to route the dispatch, so **an omission is a
+contract violation rather than a judgement call**, and a dispatch missing a field its class requires is
+rejected exactly as a missing `WRITE:` is (D2).
 
 `REWORK` is precise when it appears: *these findings, nothing else.* A re-dispatch without it produces
 a full redo, which is how rework loops turn into rewrite loops.
@@ -1435,7 +1442,8 @@ forbade recording what it had just instructed the reviewer to find.
 
 #### 7.8.2 The lenses — elective attention
 
-Selectable by argument or config, default `correctness,design`:
+Selectable by argument or config, default `correctness,design`, and carried to the reviewer in the
+envelope's `LENSES` field (§5.5):
 
 | lens | Looks for |
 |---|---|
