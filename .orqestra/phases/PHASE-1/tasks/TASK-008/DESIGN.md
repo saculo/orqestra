@@ -2,7 +2,7 @@
 id: TASK-008
 type: design
 status: done
-updated: 2026-08-25
+updated: 2026-08-26
 task: TASK-008
 decisions: []
 ---
@@ -19,11 +19,22 @@ decisions: []
 
 Unchanged. Exit codes keep their documented meaning: 0 conforms · 1 violations · 2 catalogue unreadable.
 
-## File Plan
+## Structure
 
-| path | action | purpose |
-|---|---|---|
-| `scripts/check-templates.py` | modify | All three fixes |
+One area: the conformance checker in the `plugin` module's `scripts/` layer — `scripts/check-templates.py`,
+an existing file being extended. Nothing else in the module changes; `templates/` is the subject under
+test, not a participant.
+
+The §4.8.1 catalogue in `REQUIREMENTS.md` is read-only input here. It belongs to the `docs` module and is
+out of scope (D14) — the defect is in how the checker reads the catalogue, not in what the catalogue says.
+
+The boundary that carries the fix: **all catalogue interpretation lives in the parsing component.** Whether
+a row is free-form, and whether it declares headings, are facts the parsed row carries; the checking loops
+consume those facts and may never re-derive them from an artifact's name. That is the rule AC-4 is asking
+for, and hard-coding a name anywhere downstream violates it even if the criteria pass.
+
+Order: the parse-side guard and the derived free-form flag come first, because the loop change reads the
+row shape they produce.
 
 ## Decisions
 
