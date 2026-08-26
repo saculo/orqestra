@@ -4,31 +4,32 @@ type: review
 status: done
 updated: 2026-08-27
 task: TASK-015
-verdict: changes-requested
+verdict: passed
 lenses: [correctness, design]
-required: [F-1, F-2]
+required: []
 review_round: 1
 ---
 
 ## Verdict
 
-The amendment lands all five design components in §5.5 with no renumbering, no collateral edit, and
-no unrecorded deviation — AC-1, AC-3, AC-4 and AC-5 are met on the text as written, and the diff stays
-inside the `docs` module's `paths`. AC-2 is not: §5.5 now says two contradictory things about whether
-every dispatch carries every field (line 860 against the table at 936–941), and the table declares no
-class for step-specific fields, so applying it to a `review` dispatch returns no verdict on `LENSES:`
-and `ROUND:` — the two omissions land on exactly the clause AC-2 was written to close ("which are
-step-specific … so an omission is a contract violation rather than a judgement call"). Both are
-single-line corrections inside the section already open for edit.
+F-1 and F-2 are both genuinely closed, and nothing AC-1, AC-3, AC-4 or AC-5 rests on moved. The opening
+sentence at 858–862 no longer asserts "same fields" — it keeps the order half in bold and hands the
+field question to the table, which is now the only thing that answers it; and the table at 934–946 gains
+the fourth, step-specific class (`LENSES` `ROUND`, mandatory on `review` and permitted on no other, each
+with meaning, consumer and position stated) plus a closing **The list is closed** paragraph grounded in
+Rule B, so every field any real envelope carries now resolves to exactly one row and an unlisted field is
+a stated violation rather than silence. I re-derived that last claim independently: extracting field
+names from all nine dispatch blocks in `skills/` yields fifteen names, every one of them declared. The
+rework diff is three hunks, two inside §5.5 and one in §7.8.2 recorded as a `minor` deviation, all inside
+the `docs` module's `paths`. F-3 and F-4 remain open below, unchanged and still `minor`; they were left
+open by instruction and are not counted against this round.
 
 ## Findings
 
 | id | severity | file:line | finding |
 |---|---|---|---|
-| F-1 | major | REQUIREMENTS.md:860 | §5.5's opening sentence — "same fields, same order, every dispatch, every workflow" — was true before this change and is false after it. The new table (939) makes `MODULE` `PATHS` `STACK` `EXPERTISE` legitimately absent from `create-phases`/`create-tasks` envelopes and calls that "conformant, not an exception". A reader who stops at the opening line concludes all twelve fields are always required; one who reaches the table concludes otherwise. D9 resolves it in the table's favour, but needing D9 to resolve a contradiction four lines wide is the judgement call AC-2 exists to remove. The **order** half of the sentence survives; the "same fields" half must yield to the table. |
-| F-2 | major | REQUIREMENTS.md:936-941 | The table's classes are always / scope / conditional-on-module / re-dispatch-only. None of them is the step-specific class AC-2 names, and DESIGN.md C4 promised ("always mandatory, conditionally mandatory … or step-specific"). The consequence is live, not theoretical: `skills/task/step-review.md:17` carries `LENSES:` and `ROUND:`, `grep 'LENSES' REQUIREMENTS.md` returns 0 hits, and §7.8.2 (1436) describes lenses as selectable without ever putting them in the envelope. Applying the table to a review dispatch therefore yields verdicts on the fields it lacks and **no verdict at all** on two fields it carries — an undeclared field is neither permitted nor forbidden. Either add a step-specific class, or state that the field list is closed and an unlisted field is a violation. |
-| F-3 | minor | REQUIREMENTS.md:870 | `MODULE: api` with `EXPERTISE: java-expertise, test-quality` contradicts §5.1's `api` row (731), which gives `java-expertise, spring-conventions` — against the rule §5.5 itself states at 931, that `MODULE` "resolved `ROLE`, `STACK`, `EXPERTISE`, and `PATHS` from one `modules.md` row". `ROLE`, `STACK` and `PATHS` all match the row; only `expertise` diverges. The pairing is pre-existing (709, 1521, 1708 pair it the same way, so the registry row is the outlier), which is why this is not a major — but adding `MODULE:` is what made it checkable, and the section now fails its own stated rule in its own example. |
-| F-4 | minor | REQUIREMENTS.md:939 | The condition reads "the scope unit has a module — its `TASK.md`/`BUG.md` frontmatter carries `module:`", and excuses `create-phases`/`create-tasks` by name. A `PHASE`-scoped dispatch made *after* its tasks have modules — `close-phase`'s `review-phase` — is reached by neither clause. The right answer is derivable (`templates/PHASE.md` frontmatter has no `module:` key) but only from a file §5.5 never names, so the condition is not decidable "by looking at exactly one thing" as the sentence at 934 claims. Naming `PHASE.md` alongside the other two closes it. |
+| F-3 | minor | REQUIREMENTS.md:870 | Carried forward, unchanged and deliberately deferred. `MODULE: api` with `EXPERTISE: java-expertise, test-quality` contradicts §5.1's `api` row (731), which gives `java-expertise, spring-conventions` — against the rule §5.5 itself states at 926, that `MODULE` "resolved `ROLE`, `STACK`, `EXPERTISE`, and `PATHS` from one `modules.md` row". `ROLE`, `STACK` and `PATHS` all match the row; only `expertise` diverges. The pairing is pre-existing elsewhere in the file, which is why it is not a major. |
+| F-4 | minor | REQUIREMENTS.md:942 | Carried forward, unchanged and deliberately deferred. The module condition reads "the scope unit has a module — its `TASK.md`/`BUG.md` frontmatter carries `module:`", and excuses `create-phases`/`create-tasks` by name. `close-phase`'s `PHASE`-scoped `review-phase` is reached by neither clause, and `QA.md` I-1's mechanical run widens this by one: `add-phase`'s `create-phase` is hit by the same gap. Naming `templates/PHASE.md` — whose frontmatter has no `module:` key — closes both at once. |
 
 ## What Would Change This Verdict
 
@@ -36,18 +37,24 @@ _n/a_
 
 ## Notes
 
-- Floor checks all clear. Diff is `REQUIREMENTS.md` (inside `PATHS`) plus this task's own
-  `IMPLEMENTATION.md`; `IMPLEMENTATION.md` records `deviation: none` and the diff bears that out
-  against DESIGN.md's five components; nothing contradicts an active `D-NNN` — D-024 is cited
-  correctly at 921 as the binding layer, and D-004/D2/D4/D16 all check out against their targets.
-- `QA.md`'s coverage map is the strongest part of this task's record: every AC maps to an assertion
-  re-derived from the file rather than from `IMPLEMENTATION.md`, the renumbering hazard is checked by
-  checksum rather than by reading, and the obligation table was *exercised* against all nine `skills/`
-  envelopes instead of read. F-1 through F-4 correspond to its I-3, I-4, I-1 and I-2; qa declined to
-  grade them and that was correct. I differ from qa only on severity, on the two that sit on AC-2.
-- `ORQESTRA_AUDIT.md` is untracked at the repo root and is not in this task's commit, so it is not
-  attributed here — but it is outside `PATHS` and someone should decide whether it belongs in the
-  tree at all.
-- The `agents/architect.md` `Edit` gap recorded as tech debt is real and worth raising in TASK-019
-  alongside the `Skill` grant: rewriting 2031 lines through `Write` to change 33 worked here and git
-  proves it, but the next amendment to this file is a larger gamble on the same mechanism.
+- Floor clear. Diff touches `REQUIREMENTS.md` plus this task's own `IMPLEMENTATION.md` and `QA.md` —
+  nothing outside `PATHS`. The one deviation from `DESIGN.md`'s "§5.5's body is the entire write
+  surface" (the §7.8.2 clause at 1445–1446) is recorded as `minor` with its reasoning, and is the right
+  call: declaring `LENSES` in §5.5 while the section that owns lenses stayed silent would have left the
+  same one-way link that let the field exist in `skills/` unnoticed by the spec. No active `D-NNN` is
+  contradicted; D-024 remains correctly cited at 921 as the binding layer, and the new row's citations
+  to §7.8.2 and §8.1 both resolve to text that says what the row claims.
+- `QA.md`'s coverage map is complete against all five criteria plus three regression checks, and it did
+  the thing that matters most here: it re-verified AC-1, AC-3, AC-4 and AC-5 from the file at `HEAD`
+  rather than assuming the rework left them alone, and it caught the F-2 fix by *executing* the table
+  over both branches (`permitted` on `review`, `VIOLATION-not-permitted` elsewhere) instead of reading
+  it. Its I-1 and I-2 correctly decline to grade the two deferred findings.
+- The table's "Both sit immediately after the scope field" matches `skills/task/step-review.md:17-18`,
+  which is where the real envelope puts them — so the order claim is checkable and true, even though
+  §5.5's own example is an `implement` dispatch and correctly shows neither field.
+- Tech debt stands as recorded and belongs to TASK-019: nine `skills/` envelopes now short only
+  `SKILL` plus the module four, `skills/task/SKILL.md:64`'s inline restatement, and the missing `Edit`
+  in `agents/architect.md` that forced a second whole-file `Write` of a 2093-line file. It verified
+  clean twice; a third round on the same mechanism is a gamble worth retiring first.
+- `ORQESTRA_AUDIT.md` is still untracked at the repo root and still not in any commit here, so it is
+  not attributed to this task — but someone should decide whether it belongs in the tree.
