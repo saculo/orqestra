@@ -9,6 +9,8 @@ ROLE:      orqestra:analyst
 STEP:      diagnose
 BUG:       BUG-003
 MODULE:    api
+PATHS:     services/api
+STACK:     java
 EXPERTISE: java-expertise, spring-conventions
 READ:
   .orqestra/work/BUG-003/BUG.md
