@@ -4,7 +4,7 @@ type: tasks
 status: in-progress
 updated: 2026-08-27
 phase: PHASE-1
-task_count: 28
+task_count: 32
 ---
 
 ## Tasks
@@ -39,6 +39,10 @@ task_count: 28
 | TASK-026 | `bugfix` leaves a tree its own task can be delivered from | plugin | TASK-020 | PHASE-5/SC-1 |
 | TASK-027 | Skills implement writer discipline and gate state | plugin | TASK-011, TASK-016 | SC-7 |
 | TASK-028 | Detect a write outside the dispatch contract | docs | TASK-011 | SC-7 |
+| TASK-029 | §5.5's always-class reaches a scope-less dispatch | docs | — | PHASE-3/SC-1 |
+| TASK-030 | Every envelope conforms, and the suite proves it | plugin | TASK-024, TASK-029 | PHASE-3/SC-1 |
+| TASK-031 | Prove EXPERTISE changes what a dispatched agent does | plugin | — | PHASE-3/SC-1 |
+| TASK-032 | qa needs a route for a failure implement cannot fix | docs | — | PHASE-3/SC-1 |
 
 ## Dependency Order
 
