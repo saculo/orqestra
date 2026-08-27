@@ -5,112 +5,116 @@ status: done
 updated: 2026-08-27
 task: PHASE-1/TASK-019
 result: failed
-test_command: python3 scripts/check-envelopes.py && python3 scripts/test-check-envelopes.py && python3 scripts/check-templates.py
+test_command: python3 scripts/test-check-envelopes.py && python3 scripts/check-decisions.py && python3 scripts/check-templates.py && python3 scripts/check-envelopes.py
 ---
 
 ## Test Strategy
 
-This module has no test framework; scripts are the checks and criteria are behavioural
-(`PROJECT.md` `## Testing`). Three sources of evidence were used, in descending strength:
+Round 2, after rework and the §8.2 amendment. Nothing from round 1 was carried forward on
+trust: the branch moved four commits, and every criterion below was re-run against the tree
+at `e05fca9`.
 
-**1. This dispatch is itself the experiment.** AC-1, AC-2 and AC-4 are claims about what a
-dispatched agent receives, and I am a dispatched agent running against the branch under test —
-`.claude/skills/orqestra/agents` is a symlink to the working tree's `agents/`, so the definition
-loaded is the one this diff changed. Three facts make that decisive rather than assumed:
+**On the amendment — judged, not accepted.** The rescope is honest. Four tests:
 
-- My system prompt contains, verbatim, *"Invoke `SKILL` first, then every skill in `EXPERTISE`,
-  before you do anything else"*. `git show master:agents/qa-engineer.md | grep -c Invoke` returns
-  `0`. The persona I received exists only on this branch.
-- On `master` and on `feat/TASK-015`, `agents/qa-engineer.md` reads
-  `tools: Read, Write, Edit, Glob, Grep, Bash` — no `Skill`. I invoked `Skill` three times
-  successfully (`orqestra:qa`, `claude-expert`, `orqestra-conventions`). Under D-024 the `tools:`
-  list is a true allowlist for the whole subagent run, so this could not have happened on either
-  other branch.
-- `skills/qa/SKILL.md:36` reads ``${CLAUDE_PLUGIN_ROOT}/templates/QA.md``. The invocation returned
-  it already expanded, to `/home/lgrula/Projects/orqestra/.claude/skills/orqestra/templates/QA.md`.
-  A `Read` of that file returns the literal token. This is direct behavioural confirmation of the
-  premise D-025 and §5.5 rest on — invoke expands, read does not — verified rather than argued.
+1. **The blockers are structural, not effort.** Verified, not read: no `agents/*.md` `tools:`
+   line contains `Agent` or `Task`, so no dispatched agent can dispatch AC-1's probe subject;
+   and `check-envelopes.py`'s two findings are `skills/diagnose/` not existing and §5.5's
+   always-class having no value a project-wide dispatch can supply. Neither is reachable from
+   `plugin` without crossing D14 or inverting D-019.
+2. **The criteria were carried, not softened.** TASK-031/AC-2 requires *both* directions of the
+   probe and output that **honours** the convention — strictly stronger than the removed AC-1,
+   which round 1 had already found could be satisfied by quoting. TASK-030/AC-1 requires
+   `check-envelopes.py` to exit 0 "with nothing invented", and its `## Out of Scope` forbids
+   fabricating a value to green the check. A laundering rescope weakens the criterion; this one
+   sharpened both.
+3. **The dependencies are real.** `TASK-030` carries `depends_on: [TASK-024, TASK-029]` — the
+   two blockers named. The work cannot be quietly skipped; it is ordered behind its causes.
+4. **The process gap was filed against itself.** TASK-032 exists because `step-qa.md` had no
+   route for this failure and would have burned three attempts then blocked with
+   `max-attempts` — the wrong cause. Its `## Out of Scope` explicitly refuses the softer
+   grade: "the fix is a route for the failure, not a softer grade." A dishonest split would
+   have taken that exit.
 
-**2. A new behavioural test of the envelope checker**, `scripts/test-check-envelopes.py` (added by
-this step, 19 cases, stdlib only). Running `check-envelopes.py` over the repo proves only what
-today's ten envelopes happen to be; it does not prove the checker would *notice* a violation not
-currently present, which is the only thing a conformance check is for. The new test drives
-`check()` directly over every §5.5 obligation class in both directions — always, scope
-(exactly-one), conditional (all-or-nothing), step-specific (`LENSES`/`ROUND` required on `review`
-and permitted on no other), the closed list, and duplicates. All 19 pass, so the checker is a
-faithful encoding of §5.5 and its two findings against the repo can be trusted.
+All four re-filed tasks exist on disk with full criteria and are registered in `TASKS.md`.
 
-**3. Static checks across all eight personas** for AC-3 and AC-6, where the criterion is itself an
-absence.
+**Method for the four remaining criteria.** This dispatch is again the experiment for AC-2 and
+AC-4: I am a subagent running the branch's `agents/qa-engineer.md` and I invoked `Skill` three
+times (`orqestra:qa`, `claude-expert`, `orqestra-conventions`). On `master` that `tools:` line
+is `Read, Write, Edit, Glob, Grep` — under D-024 a true allowlist for the whole run, so the
+invocations could not have happened there. AC-3 and AC-6 are absence criteria, checked by grep
+across all eight personas. AC-4's second half is checked by a new script, below.
+
+**Test added: `scripts/check-decisions.py`** (new, stdlib only). `check-templates.py` cannot
+see this class of defect — a decision file's schema lives in **bold field lines**, not `##`
+headings, so its heading check passes a decision missing every one of them. The new check
+derives the required fields from `templates/DECISION.md` itself and asserts every `D-NNN`
+carries them, plus index row/`count`/`next_id` agreement. Proven in both directions: it reports
+exactly one finding against the repo (positive control: 24 of 25 conform), and deleting a
+`**Why:**` line from a conformant fixture is caught (negative control).
 
 ## Results
 
 | command | outcome |
 |---|---|
-| `python3 scripts/test-check-envelopes.py` | 19 obligation cases, 19 pass, **exit 0** — new, added by this step |
-| `python3 scripts/check-envelopes.py` | 10 envelopes, **2 non-conformant, exit 1** |
-| `python3 scripts/check-templates.py` | 20 templates, all conform, exit 0 |
-| live dispatch | `Skill` invoked 3×, all succeeded; plugin-root token expanded on invocation |
+| `python3 scripts/test-check-envelopes.py` | 19 obligation cases, 19 pass, **exit 0** |
+| `python3 scripts/check-decisions.py` | 25 decisions, **1 finding, exit 1** — new, added by this step |
+| `python3 scripts/check-templates.py` | 20 templates conform, **exit 0** |
+| `python3 scripts/check-envelopes.py` | 10 envelopes, 2 non-conformant, exit 1 — **both now TASK-030**, out of scope here |
+| live dispatch | `Skill` invoked 3×, all succeeded; `${CLAUDE_PLUGIN_ROOT}` expanded on invocation |
 
-`check-envelopes.py` reproduces `IMPLEMENTATION.md`'s reported failures exactly:
+The rework commit `6631d38` regressed nothing: it touches three files, two of them two-line
+moves in `## Return` blocks, and `check-templates.py` and `test-check-envelopes.py` are both
+still green.
 
-```
-skills/bugfix/step-diagnose.md:8   [diagnose]        missing SKILL — always class
-skills/greenfield/step-phases.md:13 [create-phases]  0 scope fields; exactly one of TASK/PHASE/BUG required
-```
-
-Tests added: 1 file, 19 cases. No implementation file was modified.
+Tests added: 1 file (`scripts/check-decisions.py`). No implementation file was modified.
 
 ## Criteria Coverage
 
 | criterion | covered by | result |
 |---|---|---|
-| AC-1 — dispatched agent demonstrably receives expertise content, via a probe planted **only** in an expertise skill whose output **honours** it | This dispatch: `claude-expert` and `orqestra-conventions` both invoked; the string *"stopped listing required headings"* appears in exactly one file in the repo (`.claude/skills/orqestra-conventions/SKILL.md`), which I never opened, yet received. Honoured, not merely quoted: `claude-expert`'s two-layer rule (`allowed-tools` pre-approves, `agents/` `tools:` binds) is what made the branch-vs-master `tools:` comparison above a valid experiment | **not verified as written** — see I-1 |
-| AC-2 — receives the step procedure rather than relying on the persona duplicating it | `criterion-unsatisfiable`, `no-reproduction`, `SCHEMA:`, `CRITERIA:` and `## Criteria Coverage` each occur in `skills/qa/SKILL.md` and **zero times** in `agents/qa-engineer.md`. This artifact carries all five. The procedure reached me and was followed | **verified** |
-| AC-3 — no persona instructs an action its `tools:` allowlist forbids, across all eight | All eight scanned against their own `tools:` line. `analyst` and `architect` hold neither `Edit` nor `Bash` and instruct neither; `analyst.md:12` states *"you hold no `Edit`"*; `reviewer.md:26` names its lack of `Edit` as structural. The formerly unexecutable expertise-load bullet is gone from all eight | **verified** |
-| AC-4 — all eight hold `Skill` in `tools:`, and the choice is recorded as a `D-NNN` | Grant: all eight `tools:` lines begin `Skill, …`. Behaviour: `Skill` worked in this run and provably would not have on `master`. Decision: `D-025` exists with `**Constrains:**`-grade content and its `INDEX.md` row; index frontmatter `count: 25` matches 25 table rows | **verified** |
-| AC-5 — every envelope in `skills/` carries the fields §5.5 declares mandatory | `check-envelopes.py`, itself validated by the 19-case test. 8 of 10 conform; 2 do not | **failed** — see I-2 |
-| AC-6 — no persona instructs reading a step skill as a file | `grep -rn CLAUDE_PLUGIN_ROOT agents/` → none. `grep -rniE 'read (the )?(step \|expertise )?skill\|skills/.*\.md' agents/` → none. All eight instead carry *"skill names, not paths, and `Read` does not work on them"*. The premise is behaviourally confirmed by the expansion evidence above | **verified** |
+| AC-2 — a dispatched agent receives the step procedure rather than relying on its persona duplicating it | This dispatch. `criterion-unsatisfiable`, `no-reproduction`, `SCHEMA:` and `## Criteria Coverage` each occur once in `skills/qa/SKILL.md` and **zero times** in `agents/qa-engineer.md`; this artifact carries all four. The procedure reached me and was followed | **verified** |
+| AC-3 — no persona instructs an action its `tools:` allowlist forbids, across all eight | All eight re-scanned against their own `tools:` line. `analyst`/`architect` hold neither `Edit` nor `Bash` and instruct neither; `analyst.md:12` and `reviewer.md:26` name their lack of `Edit` as structural. The former unexecutable expertise-load bullet is gone from all eight, replaced by an `Invoke \`SKILL\` first` block whose only tool is `Skill`, which all eight now hold | **verified** |
+| AC-4 — all eight hold `Skill` in `tools:`, **and** the choice is recorded as a `D-NNN` so the next agent added inherits the reason | Grant half: all eight `tools:` lines begin `Skill, …`; `Skill` demonstrably worked in this run and provably would not have on `master`. **Record half: `scripts/check-decisions.py` — D-025 is the only one of 25 decisions missing `**Constrains:**`** | **failed** — see I-1 |
+| AC-6 — no persona instructs the agent to read a step skill as a file | `grep -rn CLAUDE_PLUGIN_ROOT agents/` → 0 hits; `grep -rniE 'read .*skill\|skills/[a-z-]+/' agents/` → 0 hits. All eight instead carry *"skill names, not paths, and `Read` does not work on them"*. The premise is behaviourally confirmed: the invocation returned the template path expanded, a `Read` of `skills/qa/SKILL.md` returns the literal token | **verified** |
+
+Removed by the 2026-08-27 §8.2 amendment and re-filed, not graded here: **AC-1 → TASK-031**,
+**AC-5 → TASK-030**. Round 1's findings I-1 and I-2 stand as the reasons those tasks exist.
 
 ## Issues
 
-**I-1 · AC-1 · the specified probe was not run, and cannot be run by this pipeline step.**
-Observed: no convention was planted in an expertise skill and no fresh agent was dispatched to
-check the output honours it. Expected: exactly that. Two structural obstacles, neither the
-engineer's to remove — the expertise skills live in `.claude/skills/`, outside the `plugin`
-module's `PATHS` (D14), and no agent in `agents/` holds the subagent tool (`Agent`; `Task` is its
-former name and grants nothing, per `PROJECT.md`), so neither implement nor qa can dispatch a
-probe. Rework to implement will not fix this. What *was* proved is receipt of expertise content
-unique to an expertise skill, on a live dispatch — stronger than the earlier quote-only probe
-`IMPLEMENTATION.md` records, weaker than the criterion. **A human must either accept this
-evidence as satisfying AC-1's intent, or move the probe to the eval harness (PHASE-1 SC-5), which
-is the layer that can dispatch.** Grading it "met in substance" without that ruling would be qa
-grading its own coverage, which D-023 exists to prevent.
+**I-1 · AC-4 · `D-025` omits `**Constrains:**`, the one field AC-4's own reasoning asks for.**
+Observed: `python3 scripts/check-decisions.py` → `D-025-agents-invoke-their-skills.md: missing
+**Constrains:**`, alone among 25 decisions. Expected: the field present, as
+`templates/DECISION.md` requires of every decision and as D-001 through D-024 all carry.
 
-**I-2 · AC-5 · two of ten envelopes are non-conformant; `check-envelopes.py` exits 1.**
-Observed: `skills/bugfix/step-diagnose.md:8` has no `SKILL` (always class); `skills/greenfield/step-phases.md:13`
-has no scope field (always class). Expected: all ten conform. `IMPLEMENTATION.md` grades both as
-owned elsewhere and I concur on ownership — `skills/diagnose/` does not exist (TASK-024), and
-`create-phases` operates on the whole project so it genuinely has no scope unit, which is a gap in
-§5.5's always class and therefore a `docs` change (D-019). **But ownership elsewhere does not make
-AC-5 met.** The criterion is observably false today. It cannot be closed inside this module, so
-this is a sequencing decision for a human, not a rework loop: either AC-5 narrows to the eight
-envelopes this task can reach, or TASK-019 waits on TASK-024 and the §5.5 amendment.
+This is not pedantry about a heading. AC-4 reads *"recorded as a `D-NNN` — the durable
+allowlist changed, so **the next agent added inherits the reason, not just the line**"*, and
+`templates/DECISION.md` defines `**Constrains:**` as *"what a FUTURE task must now do… the
+field that earns this file. If you cannot write this line, the decision is a note, not a
+decision."* AC-4's stated purpose and the missing field are the same sentence. D-025 has the
+substance — every agent holds `Skill`, every step skill's `RETURN` opens with `SKILLS:` — but
+a fresh agent adding the ninth persona reads the index row and the field lines, not 50 lines of
+rationale, and the field it would read is absent.
 
-**I-3 · AC-4 / D-025 · three artifacts disagree on where `SKILLS:` sits, and this one *is*
-fixable here.** Observed: `skills/implement/SKILL.md` and `skills/review-phase/SKILL.md` put
-`SKILLS:` on the **second** return line, after `STATUS:`; the other seven put it first. All eight
-personas say *"Your first `RETURN` line names what you loaded"*, and D-025 says every step skill's
-return *"opens with"* it. Expected: one of the three changes so they agree. `IMPLEMENTATION.md`
-grades this `minor`/"cosmetic in effect" and the effect is indeed nil — the orchestrator reads the
-block, not the ordinal. But both files are inside this module's `PATHS`, the fix is a two-line
-move, and an instruction that contradicts the file it describes is exactly the silent-drift shape
-D-025 was written to end. Correctly graded as minor; **not correctly left open.**
+Round 1 graded this half "verified", hedging it as *"`**Constrains:**`-grade content"*. That
+hedge was the miss: the content is Constrains-grade, the line is not there. Recorded so the
+error is visible rather than quietly corrected.
 
-**I-4 · observation, not a defect of this diff · the envelope's expansion premise did not hold
-for this dispatch.** §5.5 states the orchestrator composes the envelope from inside an invoked
-skill, *"so the value is already expanded by the time an agent reads it"*. The `TEMPLATE:` line I
-received carried the literal `${CLAUDE_PLUGIN_ROOT}` token, unexpanded. No harm resulted — the
-`orqestra:qa` invocation supplied the expanded path, which is precisely the redundancy D-025
-bought — but §5.5's claim is stated as a guarantee and behaved as a convention. Owned by `docs`;
-recorded here because this run is the only place it is observable.
+**Owner: implement.** In scope and fixable here — implement already writes `D-025` under AC-4's
+mandate and recorded doing so as a deliberate minor deviation. This is one line, not a rework
+spiral, and does not need TASK-032's escape route: it is an ordinary defect that implement can
+satisfy.
+
+**I-2 · minor · `skills/design/SKILL.md`'s `## Return` block is misaligned.** Observed:
+`SKILLS:` is padded to 3 spaces, `STATUS:`/`OUTCOME:` to 5 — the only one of the nine dispatch
+skills whose return block does not align on a single column. Introduced by `6631d38`'s sibling
+edits leaving this file's pre-existing padding untouched. No behavioural effect; the
+orchestrator parses the block, not the columns. Noted, not a gate.
+
+**I-3 · observation, unchanged from round 1, owned by `docs` · the envelope's expansion premise
+still did not hold for this dispatch.** §5.5 states the orchestrator composes the envelope from
+inside an invoked skill *"so the value is already expanded by the time an agent reads it"*. My
+`TEMPLATE:` line again carried the literal `${CLAUDE_PLUGIN_ROOT}` token. No harm — the
+`orqestra:qa` invocation supplied the expanded path, which is exactly the redundancy D-025
+bought — but §5.5 states as a guarantee something that behaves as a convention. Reproduced
+twice now, in two separate dispatches.
