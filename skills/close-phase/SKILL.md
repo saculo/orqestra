@@ -37,6 +37,7 @@ does not exist.
 ```
 ROLE:      orqestra:reviewer
 STEP:      review-phase
+SKILL:      orqestra:review-phase
 PHASE:     PHASE-1
 READ:
   .orqestra/phases/PHASE-1/PHASE.md

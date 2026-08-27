@@ -35,3 +35,4 @@ next_id: 25
 | D-022 | Severity is the only grade | schemas | active | `required` column dropped; `required: [F-N]` in frontmatter is what the rework loop reads |
 | D-023 | Review has a floor | workflow | active | Four contract checks run whatever the lenses; fixes qa grading its own coverage |
 | D-024 | Tool fields enforce at two layers | structure | active | `allowed-tools` only pre-approves; `agents/` `tools:` is the durable allowlist; orchestrators bind for one turn |
+| D-025 | Agents hold `Skill`; the triple composes by invocation | structure | active | `Skill` in every `agents/` `tools:`; `SKILL`/`EXPERTISE` invoked not read; `SKILLS:` in every return |

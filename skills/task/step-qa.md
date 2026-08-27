@@ -8,6 +8,7 @@ without asking a human, because the finding is objective and the fix is mechanic
 ```
 ROLE:      orqestra:qa-engineer
 STEP:      qa
+SKILL:      orqestra:qa
 TASK:      PHASE-1/TASK-007
 STACK:     java
 EXPERTISE: java-expertise, test-quality

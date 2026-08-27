@@ -14,6 +14,7 @@ For each task whose stage is below `designed`:
 ```
 ROLE:      orqestra:analyst
 STEP:      plan
+SKILL:      orqestra:plan
 TASK:      PHASE-1/TASK-007
 READ:
   .orqestra/phases/PHASE-1/tasks/TASK-007/TASK.md
@@ -36,6 +37,7 @@ yourself.
 ```
 ROLE:      orqestra:architect
 STEP:      design
+SKILL:      orqestra:design
 TASK:      PHASE-1/TASK-007
 READ:
   .orqestra/phases/PHASE-1/tasks/TASK-007/TASK.md

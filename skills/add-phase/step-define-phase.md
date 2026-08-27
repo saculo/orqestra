@@ -15,6 +15,7 @@ rereads the PRD, and a phase invented at this point looks exactly like a planned
 ```
 ROLE:      orqestra:analyst
 STEP:      create-phase
+SKILL:      orqestra:create-phase
 READ:
   .orqestra/PRD.md
   .orqestra/CLARIFICATIONS.md

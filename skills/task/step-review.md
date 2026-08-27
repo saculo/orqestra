@@ -13,6 +13,7 @@ From `config.md`, default `correctness,design`. Add `regression-risk` automatica
 ```
 ROLE:      orqestra:reviewer
 STEP:      review
+SKILL:      orqestra:review-task
 TASK:      PHASE-1/TASK-007
 LENSES:    correctness, design
 ROUND:     1

@@ -72,6 +72,7 @@ At most 10 lines, and nothing else:
 
 ```
 STATUS:    done | blocked
+SKILLS:    <the SKILL and EXPERTISE names you invoked, or `none`>
 OUTCOME:   <one line — what now exists that did not before>
 FILES:     <count> changed
 DEVIATION: none | minor | moderate | major

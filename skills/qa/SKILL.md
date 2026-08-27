@@ -59,6 +59,7 @@ broken" costs a whole rework cycle that "AC-3: expired sessions return 200, expe
 At most 10 lines:
 
 ```
+SKILLS:   <the SKILL and EXPERTISE names you invoked, or `none`>
 STATUS:   done | blocked
 RESULT:   passed | failed
 CRITERIA: <n> of <m> verified

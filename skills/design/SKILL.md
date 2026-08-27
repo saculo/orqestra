@@ -66,6 +66,7 @@ starting point, not a blank page. Change what HEAD invalidated; keep what still 
 At most 10 lines:
 
 ```
+SKILLS:   <the SKILL and EXPERTISE names you invoked, or `none`>
 STATUS:     done | blocked
 OUTCOME:    <the design in one line — the shape, not the detail>
 COMPONENTS: <count>, <the significant ones named>
