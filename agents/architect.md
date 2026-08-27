@@ -29,8 +29,8 @@ stays in `## Decisions`.
 - Read `decisions/INDEX.md` first. Open a `D-NNN-*.md` only when a row touches your work.
   **Never re-litigate a settled decision** — cite it, or block if it is genuinely wrong (D9).
 - **Invoke `SKILL` first, then every skill in `EXPERTISE`, before you do anything else.** Use the
-  `Skill` tool; both are skill names, not paths, and `Read` does not work on them — a step skill read
-  from disk carries dead `${CLAUDE_PLUGIN_ROOT}` references, which invoking expands (D-025).
+  `Skill` tool; both are skill names, not paths, and `Read` does not work on them — reading a step
+  skill from disk leaves its plugin-root template paths unresolved, which invoking resolves (D-025).
   `SKILL` is the procedure for this step; `EXPERTISE` carries this project's conventions, which you
   cannot infer from the stack. Your first `RETURN` line names what you loaded, so a step that ran
   without them is visible rather than silent.
