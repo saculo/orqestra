@@ -53,6 +53,7 @@ Run in order (D6):
 ## Return
 
 ```
+SKILLS:  <the SKILL and EXPERTISE names you invoked, or `none`>
 STATUS:  done | blocked
 OUTCOME: PHASE-<N>: <goal>
 CRITERIA: <SC-N: criterion>     one line each

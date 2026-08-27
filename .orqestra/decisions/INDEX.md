@@ -2,9 +2,9 @@
 id: DECISIONS
 type: decisions-index
 status: done
-updated: 2026-08-25
-count: 24
-next_id: 25
+updated: 2026-08-27
+count: 25
+next_id: 26
 ---
 
 ## Decisions
