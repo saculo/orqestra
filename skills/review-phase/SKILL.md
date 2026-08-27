@@ -56,8 +56,8 @@ Run in order (D6):
 ## Return
 
 ```
-STATUS:   done
 SKILLS:   <the SKILL and EXPERTISE names you invoked, or `none`>
+STATUS:   done
 CRITERIA: <n> of <m> met
 UNMET:    <SC-N: what is missing>          one line each; omit when all met
 DEBT:     <n> items carried forward

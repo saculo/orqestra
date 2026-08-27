@@ -38,13 +38,20 @@ both its plan and design dispatches; `step-qa.md` gained `MODULE`/`PATHS`; `step
 four, placed after `LENSES`/`ROUND` per §5.5; `step-diagnose.md` gained `PATHS`/`STACK`;
 `step-define-phase.md` gained `PHASE:`. `step-qa.md`'s `EXPERTISE` changed from
 `java-expertise, test-quality` to `java-expertise, spring-conventions`, matching §5.1's `api` row —
-the row decides, never the agent (§5.5). **AC-5 partially met** — see `## Deviations`.
+the row decides, never the agent (§5.5). **AC-5 is not met** — see `## Deviations`.
 
 **Return contract** — `SKILLS:` added to the `## Return` block of every skill that is dispatched
 with an envelope: `skills/implement/SKILL.md`, `qa/`, `plan/`, `design/`, `review-task/`,
 `review-phase/`, and — closing a gap found in this artifact's own first pass — `create-tasks/`,
 `create-phases/`, `create-phase/`. That is all nine `SKILL:` envelopes in the tree. This is the
 detection layer D-025 names: `tools:` grants the capability but cannot compel its use.
+
+**Rework, QA finding I-3.** `SKILLS:` was the *second* return line in `skills/implement/SKILL.md`
+and `skills/review-phase/SKILL.md`, and the first in the other seven — while all eight personas
+instruct *"Your first `RETURN` line names what you loaded"* and D-025 says the return *"opens
+with"* it. `SKILLS:` is now the first line of the `## Return` block in both files, each keeping its
+own column alignment (`STATUS:` moved to second). All nine dispatch skills now open their return
+with `SKILLS:`, so no skill contradicts the persona that dispatches to it. No other file touched.
 
 `skills/pr-comments/` was checked and deliberately left alone. It is an `orchestrator+` sub-workflow
 invoked by `skills/task/step-pr-comments.md` as `Skill: orqestra:pr-comments` with a PR number and
@@ -63,8 +70,13 @@ plugin skill and a bare expertise skill, and that `${CLAUDE_PLUGIN_ROOT}` does e
 not verified live because the session held agent definitions read at startup. This dispatch is that
 verification: this agent invoked `orqestra:implement`, `claude-expert` and `orqestra-conventions`
 successfully, and followed `implement`'s procedure and template rather than its persona's summary.
-AC-2 is met. AC-1 is met in substance but not by the probe it specifies — no convention unique to an
-expertise skill was planted and checked. QA owns the formal verdict.
+AC-2 is met. **AC-1 is not met**: the criterion requires a probe convention planted in an expertise
+skill and a fresh dispatch confirming the output honours it, and no such probe was run. QA (I-1)
+found the same and named why it cannot be run from here — the expertise skills live in
+`.claude/skills/`, outside this module's `paths` (D14), and no agent in `agents/` holds the subagent
+tool, so neither implement nor qa can dispatch a probe. Rework to implement will not close it. A
+human must either rule the live-dispatch evidence sufficient for AC-1's intent or move the probe to
+the eval harness (PHASE-1 SC-5). Open, owned elsewhere, awaiting that decision.
 
 **`.orqestra/decisions/INDEX.md` frontmatter** corrected to `count: 25`, `next_id: 26`,
 `updated: 2026-08-27`. The table already held 25 rows; the header had not been updated when D-025 was
@@ -80,8 +92,8 @@ are owned elsewhere and stay open: `step-diagnose.md`'s missing `SKILL` (TASK-02
 | deviation | from design | what | why |
 |---|---|---|---|
 | moderate | no design existed | Task ran with no `PLAN.md` and no `DESIGN.md`, by direct human instruction. TASK.md's six criteria were the whole specification | Recorded, not defended. The pipeline's plan and design steps were skipped; nothing verified the approach before it was built |
-| moderate | AC-5 | `scripts/check-envelopes.py` exits **1**, on two envelopes. `skills/bugfix/step-diagnose.md` has no `SKILL:` — `skills/diagnose/` does not exist (TASK-024). `skills/greenfield/step-phases.md` has no scope field — `create-phases` creates *all* phases and has no single scope unit, yet §5.5 puts the scope field in the always class | Both are real and owned elsewhere; §5.5 lives in the `docs` module (D-019). Inventing a skill name or a scope value to turn the check green would defeat the only thing the check is for. AC-5 is therefore **not fully met by this diff** |
-| minor | AC-4 / D-025 | `SKILLS:` is described in every persona as "your first `RETURN` line", and D-025 says every step skill's return "opens with" it. In `skills/implement/SKILL.md` and `skills/review-phase/SKILL.md` it is the **second** line, after `STATUS:` | Cosmetic in effect — the orchestrator reads the block, not the ordinal — but the persona instruction and the two skills disagree, so one of them is wrong |
+| moderate | AC-5 | `scripts/check-envelopes.py` exits **1**, on two envelopes. `skills/bugfix/step-diagnose.md` has no `SKILL:` — `skills/diagnose/` does not exist (TASK-024). `skills/greenfield/step-phases.md` has no scope field — `create-phases` creates *all* phases and has no single scope unit, yet §5.5 puts the scope field in the always class | Both are real and owned elsewhere; §5.5 lives in the `docs` module (D-019). Inventing a skill name or a scope value to turn the check green would defeat the only thing the check is for. **AC-5 is not met**, and cannot be closed inside this module — not deferred and not passing, but open pending a human sequencing call: narrow AC-5 to the eight reachable envelopes, or hold TASK-019 for TASK-024 and the §5.5 amendment |
+| minor | AC-4 / D-025 | **Closed by rework.** `SKILLS:` was the second return line in `skills/implement/SKILL.md` and `skills/review-phase/SKILL.md`; it is now the first in both, matching the other seven, the persona instruction and D-025 | QA I-3. Effect was nil — the orchestrator reads the block, not the ordinal — but an instruction contradicting the file it describes is the drift D-025 exists to end, and both files are inside this module's `paths` |
 | minor | module boundary | Two of the 29 changed files are `.orqestra/decisions/` — outside the `plugin` module's `paths` | AC-4 mandates the decision file, and `.orqestra/` belongs to no module per PROJECT.md's layout. Flagged so review sees it deliberately, not as an escape |
 
 ## Tech Debt

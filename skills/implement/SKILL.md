@@ -71,8 +71,8 @@ not after. They carry this project's conventions, which you cannot infer from th
 At most 10 lines, and nothing else:
 
 ```
-STATUS:    done | blocked
 SKILLS:    <the SKILL and EXPERTISE names you invoked, or `none`>
+STATUS:    done | blocked
 OUTCOME:   <one line — what now exists that did not before>
 FILES:     <count> changed
 DEVIATION: none | minor | moderate | major
