@@ -7,7 +7,7 @@ task: TASK-015
 branch: feat/TASK-015-envelope-delivers-its-layers
 pr_number: 3
 pr_url: https://github.com/saculo/orqestra/pull/3
-pr_state: open
+pr_state: merged
 ---
 
 ## Summary
@@ -43,3 +43,5 @@ grant is TASK-019's under D-019.
 No checks reported on the branch, at 2026-08-27T00:24+02:00. The repository configures no workflows,
 so this is the expected state and not a pending run. The task's own `test_command`
 (`python3 scripts/check-templates.py`) ran green at 20/20 in qa round 2.
+
+Merged 2026-08-27T18:04:40Z as merge commit `31d415e`, verified with `gh pr view`.

@@ -1,8 +1,8 @@
 ---
 id: TASK-015
 type: task
-status: pending
-updated: 2026-08-26
+status: done
+updated: 2026-08-27
 phase: PHASE-1
 module: docs
 stack: markdown
