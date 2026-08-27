@@ -2,7 +2,7 @@
 id: TASK-019
 type: implementation
 status: done
-updated: 2026-08-27
+updated: 2026-08-28
 task: PHASE-1/TASK-019
 deviation: moderate
 files_changed: 29
@@ -78,11 +78,21 @@ tool, so neither implement nor qa can dispatch a probe. Rework to implement will
 human must either rule the live-dispatch evidence sufficient for AC-1's intent or move the probe to
 the eval harness (PHASE-1 SC-5). Open, owned elsewhere, awaiting that decision.
 
+**Rework, QA finding I-1.** `D-025` carried no `**Constrains:**` line — the one field
+`templates/DECISION.md` calls "the field that earns this file", and the one AC-4 asks for when it
+requires the next agent to inherit *the reason, not just the line*. Alone of 25 decisions. Four
+constraints appended, written as rules a future agent can be held to rather than as a summary: names
+and never paths in `SKILL`/`EXPERTISE`; `Skill` in every new persona's `tools:`; the `tools:` grant is
+not evidence of a load, so `SKILLS:` stays the first `## Return` line; the expertise list lives in the
+`modules.md` module row and nowhere else. `python3 scripts/check-decisions.py` now exits 0 across all
+25. No other file touched.
+
 **`.orqestra/decisions/INDEX.md` frontmatter** corrected to `count: 25`, `next_id: 26`,
 `updated: 2026-08-27`. The table already held 25 rows; the header had not been updated when D-025 was
 appended.
 
-Tests: `python3 scripts/check-templates.py` — 20 templates, all conform, exit 0.
+Tests: `python3 scripts/check-decisions.py` — 25 decisions, all conform, exit 0.
+`python3 scripts/check-templates.py` — 20 templates, all conform, exit 0.
 `python3 scripts/check-envelopes.py` — 10 envelopes, 2 non-conformant, exit 1. Both remaining findings
 are owned elsewhere and stay open: `step-diagnose.md`'s missing `SKILL` (TASK-024) and
 `step-phases.md`'s missing scope field (§5.5, `docs` module, D-019).
@@ -94,6 +104,7 @@ are owned elsewhere and stay open: `step-diagnose.md`'s missing `SKILL` (TASK-02
 | moderate | no design existed | Task ran with no `PLAN.md` and no `DESIGN.md`, by direct human instruction. TASK.md's six criteria were the whole specification | Recorded, not defended. The pipeline's plan and design steps were skipped; nothing verified the approach before it was built |
 | moderate | AC-5 | `scripts/check-envelopes.py` exits **1**, on two envelopes. `skills/bugfix/step-diagnose.md` has no `SKILL:` — `skills/diagnose/` does not exist (TASK-024). `skills/greenfield/step-phases.md` has no scope field — `create-phases` creates *all* phases and has no single scope unit, yet §5.5 puts the scope field in the always class | Both are real and owned elsewhere; §5.5 lives in the `docs` module (D-019). Inventing a skill name or a scope value to turn the check green would defeat the only thing the check is for. **AC-5 is not met**, and cannot be closed inside this module — not deferred and not passing, but open pending a human sequencing call: narrow AC-5 to the eight reachable envelopes, or hold TASK-019 for TASK-024 and the §5.5 amendment |
 | minor | AC-4 / D-025 | **Closed by rework.** `SKILLS:` was the second return line in `skills/implement/SKILL.md` and `skills/review-phase/SKILL.md`; it is now the first in both, matching the other seven, the persona instruction and D-025 | QA I-3. Effect was nil — the orchestrator reads the block, not the ordinal — but an instruction contradicting the file it describes is the drift D-025 exists to end, and both files are inside this module's `paths` |
+| minor | AC-4 / D-025 | **Closed by rework.** `D-025` had no `**Constrains:**` field; it now carries four constraints in D-024's register | QA I-1. The substance was in the file but not in the field a fresh agent reads, and `templates/DECISION.md` is explicit that a decision without it is a note. `scripts/check-decisions.py`, added by qa, encodes the requirement and now passes |
 | minor | module boundary | Two of the 29 changed files are `.orqestra/decisions/` — outside the `plugin` module's `paths` | AC-4 mandates the decision file, and `.orqestra/` belongs to no module per PROJECT.md's layout. Flagged so review sees it deliberately, not as an escape |
 
 ## Tech Debt

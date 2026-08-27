@@ -49,3 +49,17 @@ capability; it cannot compel the agent to use it. Every step skill's `RETURN` th
 `SKILLS:` — the names actually invoked, or `none`. A step that ran bare is then visible in the return
 the orchestrator already reads, rather than three steps later. This is the §7.0.1 discipline applied to
 itself: name the layer that holds the guarantee, and when no layer holds it, say so and detect instead.
+
+**Constrains:**
+
+- Pass skill **names** in `SKILL` and `EXPERTISE`, never paths, and never route a step skill through
+  `READ`. `${CLAUDE_PLUGIN_ROOT}` expands at invocation and not on `Read`, so a step skill opened as a
+  file arrives with every `TEMPLATE:` line inside it pointing at a literal token.
+- Every new `agents/*.md` holds `Skill` in `tools:`. Adding a persona without it silently reinstates the
+  original defect — the agent runs on its persona alone, and the artifacts still look fine.
+- Never treat the `tools:` grant as evidence the skills were loaded. It grants the capability and
+  nothing compels its use (§7.0.1, D-024). Detection is the `SKILLS:` line, which must stay the **first**
+  line of the `## Return` block of every skill dispatched with an envelope.
+- The expertise list lives in the `modules.md` module row and nowhere else. No agent frontmatter field
+  preloads skills, and hardcoding a list into a persona or a step skill makes expertise plugin-owned and
+  static — the opposite of what the row buys.
