@@ -17,6 +17,7 @@ Exit:  0 all cases pass · 1 a case failed
 """
 
 import importlib.util
+import re
 import shutil
 import subprocess
 import sys
@@ -128,9 +129,43 @@ try:
 finally:
     shutil.rmtree(tmp)
 
+print("\nRobustness — the two ways the check refuses to answer")
+# Exit 2, not 0. A checker that reports "clean" when it read nothing is the failure mode that
+# makes the whole check worthless: the convention moves, the count silently goes to zero, and
+# the green tick keeps printing. Both cases must be distinguishable from a clean run.
+tmp = Path(tempfile.mkdtemp())
+try:
+    bare = tmp / "no-skills"
+    (bare / "scripts").mkdir(parents=True)
+    shutil.copy(SCRIPT, bare / "scripts" / SCRIPT.name)
+    out = subprocess.run([sys.executable, str(bare / "scripts" / SCRIPT.name)],
+                         capture_output=True, text=True)
+    case("no skills/ directory exits 2", out.returncode, 2)
+    case("...without a traceback", "Traceback" in (out.stdout + out.stderr), False)
+
+    (bare / "skills" / "nothing").mkdir(parents=True)
+    (bare / "skills" / "nothing" / "SKILL.md").write_text("# a skill that cites no step file\n")
+    out = subprocess.run([sys.executable, str(bare / "scripts" / SCRIPT.name)],
+                         capture_output=True, text=True)
+    case("a skills/ holding zero references exits 2", out.returncode, 2)
+finally:
+    shutil.rmtree(tmp)
+
 print("\nThe repository itself")
 out = subprocess.run([sys.executable, str(SCRIPT)], capture_output=True, text=True)
 case("every reference in skills/ resolves", out.returncode, 0)
+
+# The reported total is the number to read, because it is the one that silently goes to zero:
+# a fix that DELETED a dangling reference would also turn this check green. Counted here by a
+# scan written independently of references(), so agreement means something.
+independent = sum(
+    len(re.findall(r"`(?:\$\{CLAUDE_PLUGIN_ROOT\}/)?(?:[A-Za-z0-9._-]+/)*step-[a-z0-9-]+\.md`",
+                   "\n".join(cs.preprocess(p.read_text()))))
+    for p in sorted((ROOT / "skills").glob("*/*.md")))
+reported = re.search(r"checked (\d+) step references", out.stdout)
+case("the reported total matches an independent count",
+     int(reported.group(1)) if reported else None, independent)
+case("...and that total is not zero", independent > 0, True)
 
 print()
 if FAILED:
