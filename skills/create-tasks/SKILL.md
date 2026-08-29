@@ -83,6 +83,7 @@ TASK-007b  session API surface  AC-5..AC-8   depends_on: [TASK-007a]
 ## Return
 
 ```
+SKILLS:  <the SKILL and EXPERTISE names you invoked, or `none`>
 STATUS:  done | blocked
 OUTCOME: <n> tasks for PHASE-<N>
 TASKS:   <id: title (module) → SC-N>   one line each

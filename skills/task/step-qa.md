@@ -8,9 +8,12 @@ without asking a human, because the finding is objective and the fix is mechanic
 ```
 ROLE:      orqestra:qa-engineer
 STEP:      qa
+SKILL:     orqestra:qa
 TASK:      PHASE-1/TASK-007
+MODULE:    api
+PATHS:     services/api
 STACK:     java
-EXPERTISE: java-expertise, test-quality
+EXPERTISE: java-expertise, spring-conventions
 
 READ:
   .orqestra/phases/PHASE-1/tasks/TASK-007/TASK.md

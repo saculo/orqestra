@@ -13,9 +13,14 @@ From `config.md`, default `correctness,design`. Add `regression-risk` automatica
 ```
 ROLE:      orqestra:reviewer
 STEP:      review
+SKILL:     orqestra:review-task
 TASK:      PHASE-1/TASK-007
 LENSES:    correctness, design
 ROUND:     1
+MODULE:    api
+PATHS:     services/api
+STACK:     java
+EXPERTISE: java-expertise, spring-conventions
 
 READ:
   .orqestra/phases/PHASE-1/tasks/TASK-007/TASK.md

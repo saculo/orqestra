@@ -121,6 +121,7 @@ the *how I would have written it* judgement rule 3 forbids, and it belongs in `#
 At most 10 lines:
 
 ```
+SKILLS:   <the SKILL and EXPERTISE names you invoked, or `none`>
 STATUS:   done
 VERDICT:  passed | changes-requested | failed
 LENSES:   <the lenses applied>          ROUND: 1 | 2

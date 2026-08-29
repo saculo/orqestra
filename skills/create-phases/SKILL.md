@@ -53,6 +53,7 @@ A phase with one success criterion is usually fine. A phase with twelve is two p
 ## Return
 
 ```
+SKILLS:  <the SKILL and EXPERTISE names you invoked, or `none`>
 STATUS:  done | blocked
 OUTCOME: <n> phases
 PHASES:  <id: goal — <n> criteria>     one line each

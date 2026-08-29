@@ -31,6 +31,7 @@ gap is visible.
 ```
 ROLE:      orqestra:backend-engineer
 STEP:      implement
+SKILL:     orqestra:implement
 TASK:      PHASE-1/TASK-041
 MODULE:    worker
 PATHS:     services/worker          # you may not write outside these (D2, D3)

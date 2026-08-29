@@ -1,12 +1,13 @@
 ---
 name: task
 argument-hint: "<TASK-ID>"
-description: "The orqestra delivery pipeline — takes one designed task to a merged PR through preflight, implement, qa, review, push, PR comments, and merge. Resumable at any step. Use when the user says '/orqestra:task <TASK-ID>', asks to build or deliver a task, or resumes a task already in the pipeline."
+description: "The orqestra delivery pipeline — takes one task to a merged PR through preflight, implement, qa, review, push, PR comments, and merge, backfilling plan and design at preflight when they are missing. Resumable at any step. Use when the user says '/orqestra:task <TASK-ID>', asks to build or deliver a task, or resumes a task already in the pipeline."
 allowed-tools: Read, Glob, Grep, Skill, Agent, AskUserQuestion, Bash
 disallowed-tools: Write, Edit, NotebookEdit
 ---
 
-> **Arguments**: `/orqestra:task <TASK-ID>` — the task must be at stage `designed` or later.
+> **Arguments**: `/orqestra:task <TASK-ID>` — any stage. Below `designed`, preflight backfills
+> `plan` and `design` before anything is built (§7.4.3).
 > **Class**: orchestrator+
 
 # orqestra Task Pipeline
@@ -27,7 +28,7 @@ that is deliberate. Your `Bash` is for `git` and `gh` only.
 
 | step | file | dispatches | gate |
 |---|---|---|---|
-| preflight | `step-preflight.md` | — (may dispatch `design` if stale) | design, only if refreshed |
+| preflight | `step-preflight.md` | — (may dispatch `plan` and `design` if missing or stale) | design, whenever it ran |
 | implement | `step-implement.md` | `implement` + the module's agent + its expertise | no |
 | qa | `step-qa.md` | `qa` + `qa-engineer` + module expertise | no |
 | review | `step-review.md` | `review-task` + `reviewer` | **yes** |
@@ -52,12 +53,20 @@ Stage → next step:
 
 | stage | resume at |
 |---|---|
+| `created` | preflight — check (c) backfills `plan` and `design` (§7.4.3) |
+| `planned` | preflight — check (c) backfills `design` |
 | `designed` | preflight |
 | `implemented` | qa |
 | `verified` | review |
 | `reviewed` | push |
 | `pushed` | pr-comments |
 | `delivered` | nothing — report and stop |
+
+**Every stage below `designed` still enters at preflight** — it is not an error to point
+`/orqestra:task` at an unplanned task, and it must not be, because the alternative is a human running
+`plan` and `design` by hand and no step verifying they did. `status` reports the derived stage, so a
+task carrying artifacts past its first gap (§7.10.1) arrives here as `created` with an
+`IMPLEMENTATION.md` already on disk. Preflight backfills the planning; it does not re-run implement.
 
 ## Dispatch
 
@@ -101,7 +110,10 @@ rules govern all of them:
 4. **Never advance past `blocked`.** Report the reason and the specific next action, and stop.
 5. **One step at a time.** Never dispatch two steps concurrently, even when they look independent.
 6. **Never start a task whose dependencies are unmerged** — preflight enforces this before any work.
-7. **One task, one module** (§5.2). A task whose diff escapes its module is a review finding, not a
+7. **Never dispatch implement without `PLAN.md` and `DESIGN.md`, both `done`** (§7.4.3). Preflight
+   check (c) backfills them; there is no path past it. An engineer with no design guesses, and the
+   guess surfaces only later, in a deviation table written by a step that should not have run.
+8. **One task, one module** (§5.2). A task whose diff escapes its module is a review finding, not a
    convenience.
-8. Commit artifacts after each step passes its contract check (§4.6), on the task branch once one
+9. Commit artifacts after each step passes its contract check (§4.6), on the task branch once one
    exists.

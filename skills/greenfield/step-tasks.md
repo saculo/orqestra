@@ -13,6 +13,7 @@ The phase already has `TASK-*/TASK.md` → skip to plan-design.
 ```
 ROLE:      orqestra:analyst
 STEP:      create-tasks
+SKILL:     orqestra:create-tasks
 PHASE:     PHASE-1
 READ:
   .orqestra/phases/PHASE-1/PHASE.md

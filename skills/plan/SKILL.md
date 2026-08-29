@@ -55,6 +55,7 @@ possible: where the work lands, what it touches, what is risky, and what nobody 
 At most 10 lines:
 
 ```
+SKILLS:   <the SKILL and EXPERTISE names you invoked, or `none`>
 STATUS:   done | blocked
 OUTCOME:  <the approach, in one line>
 AREAS:    <the files or modules this lands in>

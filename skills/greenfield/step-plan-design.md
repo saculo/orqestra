@@ -14,7 +14,12 @@ For each task whose stage is below `designed`:
 ```
 ROLE:      orqestra:analyst
 STEP:      plan
+SKILL:     orqestra:plan
 TASK:      PHASE-1/TASK-007
+MODULE:    api
+PATHS:     services/api
+STACK:     java
+EXPERTISE: java-expertise, spring-conventions
 READ:
   .orqestra/phases/PHASE-1/tasks/TASK-007/TASK.md
   .orqestra/project/PROJECT.md
@@ -36,7 +41,12 @@ yourself.
 ```
 ROLE:      orqestra:architect
 STEP:      design
+SKILL:     orqestra:design
 TASK:      PHASE-1/TASK-007
+MODULE:    api
+PATHS:     services/api
+STACK:     java
+EXPERTISE: java-expertise, spring-conventions
 READ:
   .orqestra/phases/PHASE-1/tasks/TASK-007/TASK.md
   .orqestra/phases/PHASE-1/tasks/TASK-007/PLAN.md

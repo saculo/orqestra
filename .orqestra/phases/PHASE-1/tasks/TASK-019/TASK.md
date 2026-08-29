@@ -2,7 +2,7 @@
 id: TASK-019
 type: task
 status: pending
-updated: 2026-08-26
+updated: 2026-08-27
 phase: PHASE-1
 module: plugin
 stack: markdown
@@ -39,11 +39,9 @@ orchestrator's envelope carried the rest.
 
 | id | criterion |
 |---|---|
-| AC-1 | A dispatched agent demonstrably receives the module's expertise content — verified by dispatching one with a probe convention that appears **only** in an expertise skill and confirming the output honours it |
 | AC-2 | A dispatched agent receives the step procedure, rather than relying on its persona duplicating it |
 | AC-3 | No persona instructs an action its `tools:` allowlist forbids — checked across all eight |
 | AC-4 | All eight agents hold `Skill` in `tools:`, and the choice is recorded as a `D-NNN` — the durable allowlist changed, so the next agent added inherits the reason, not just the line |
-| AC-5 | Every envelope in `skills/` carries the fields §5.5 declares mandatory — the nine real dispatches, which is where TASK-015's AC-3 stops and this one starts |
 | AC-6 | No persona instructs the agent to **read** a step skill as a file: `${CLAUDE_PLUGIN_ROOT}` expands only at invocation, so a path-read skill's `TEMPLATE:` lines are dead references |
 
 <!-- AMENDED 2026-08-26, by human decision taken during TASK-015's planning.
@@ -55,6 +53,29 @@ orchestrator's envelope carried the rest.
 
      AC-5 absorbs what TASK-015's AC-3 turned out not to cover: the nine envelopes live in
      `skills/`, which is this module. AC-6 records the read-vs-invoke hazard as a check. -->
+
+<!-- AMENDED 2026-08-27, by human decision (§8.2), after qa failed this task 4 of 6.
+
+     AC-1 and AC-5 were REMOVED and re-filed, not dropped and not softened. qa graded both
+     as failures rather than deferrals — "ownership elsewhere explains why a criterion is
+     open, it does not make it met" — and that grading is correct. What was wrong was the
+     task, which carried two criteria it could not structurally reach:
+
+       AC-1 -> TASK-031   the probe needs a layer that can dispatch. A dispatched agent
+                          holds no `Agent`, and the fixture lives outside every module's
+                          PATHS, so nothing inside the pipeline can run it. AC-2 and AC-4
+                          were verifiable from inside and were verified; AC-1 was not.
+
+       AC-5 -> TASK-030   two envelopes cannot conform until `skills/diagnose/` exists
+                          (TASK-024) and §5.5's always-class is corrected for dispatches
+                          with no scope unit (TASK-029). Fixing either here would have
+                          crossed a module boundary (D14) or put plugin ahead of docs
+                          (D-019).
+
+     The remaining four criteria were met and verified on live behaviour. The pipeline had
+     no route for this: `step-qa.md` sends every failure to implement, which would have
+     spent three attempts on work implement cannot do and then blocked with the wrong
+     reason. That gap is now TASK-032. -->
 
 ## Out of Scope
 
