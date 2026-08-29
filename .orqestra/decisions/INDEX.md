@@ -2,9 +2,9 @@
 id: DECISIONS
 type: decisions-index
 status: done
-updated: 2026-08-27
-count: 25
-next_id: 26
+updated: 2026-08-29
+count: 26
+next_id: 27
 ---
 
 ## Decisions
@@ -36,3 +36,4 @@ next_id: 26
 | D-023 | Review has a floor | workflow | active | Four contract checks run whatever the lenses; fixes qa grading its own coverage |
 | D-024 | Tool fields enforce at two layers | structure | active | `allowed-tools` only pre-approves; `agents/` `tools:` is the durable allowlist; orchestrators bind for one turn |
 | D-025 | Agents hold `Skill`; the triple composes by invocation | structure | active | `Skill` in every `agents/` `tools:`; `SKILL`/`EXPERTISE` invoked not read; `SKILLS:` in every return |
+| D-026 | Reference shape follows how the file is loaded | structure | active | Index cells carry `${CLAUDE_PLUGIN_ROOT}`; prose and `step-*.md` use plugin-relative — the variable is inert under `Read` |

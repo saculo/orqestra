@@ -39,7 +39,7 @@ You hold no `Write` and no `Edit`.
 
 Read a step file only when that step runs.
 
-**`step-plan-design.md` is shared verbatim with `orqestra:add-phase`.** Do not copy it,
+**`step-plan-design.md` is shared verbatim with `orqestra:add-phase` and `orqestra:bugfix`.** Do not copy it,
 do not fork it. Divergence between the two planning tails is the most likely maintenance failure in
 orqestra, because the two workflows are otherwise so similar that a drift goes unnoticed for months.
 
