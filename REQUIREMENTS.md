@@ -1232,14 +1232,17 @@ Beyond that, the task is ordinary: same pipeline, same gates, same PR flow. That
 **One pipeline run per task.** `/orqestra:task <TASK-ID>`.
 
 ```
-step-preflight.md      three checks, in order, all must pass before anything runs:
+step-preflight.md      four checks, in order, all must pass before anything runs:
 
                           (a) DEPENDENCIES — every id in TASK.md.depends_on has status: done
                               AND its PR.md pr_state: merged.  → §7.4.1
                           (b) WORKING TREE — clean, on the base branch, base up to date with origin.
-                          (c) DESIGN — does DESIGN.md still hold against current HEAD? Do the files
-                              it names exist as expected? Have its assumptions been invalidated by
-                              tasks merged since it was written?
+                          (c) PLANNING COMPLETE — PLAN.md and DESIGN.md both exist and are done.
+                              Missing → dispatch the missing steps in order (plan, then design),
+                              then gate the design. Never continue without them.  → §7.4.3
+                          (d) DESIGN FRESHNESS — does DESIGN.md still hold against current HEAD? Do
+                              the files it names exist as expected? Have its assumptions been
+                              invalidated by tasks merged since it was written?
                               → holds: continue · stale: re-run `design`, re-gate
 
 step-implement.md      → implement, routed triple (skill + engineer subagent + stack expertise)
@@ -1323,6 +1326,38 @@ Two principles behind the table. **Adopt, never duplicate** — an existing bran
 evidence of a resumed run, and creating a second is the one failure that is genuinely hard to undo.
 **Never auto-resolve conflicts** — a rebase retried once is the entire automatic recovery budget;
 anything beyond that is a human decision about intent, not a mechanical merge.
+
+#### 7.4.3 The planning gate
+
+**No task reaches implement without `PLAN.md` and `DESIGN.md`.** Both `done`, both in the task
+directory, checked at preflight check (c) before any work and before any branch exists.
+
+This is not a precondition the caller is trusted to have met. `/orqestra:task` is documented as taking
+a task at stage `designed` or later, and for a long time that sentence was the only thing enforcing it —
+which is to say nothing enforced it. A task whose code was written by hand and whose `IMPLEMENTATION.md`
+was back-filled afterwards passes every other check in the pipeline: the tree is clean, the dependencies
+are merged, qa runs, review runs, and the first artifact that records the omission is
+`IMPLEMENTATION.md`'s own deviation table — written by the step that should never have run.
+
+**Missing → backfill, do not block.** The pipeline dispatches what is missing, in order:
+
+| State at preflight | Action |
+|---|---|
+| No `PLAN.md`, no `DESIGN.md` | Dispatch `plan`, then `design`, then gate the design |
+| `PLAN.md` only | Dispatch `design`, then gate the design |
+| Both present, one not `done` | **Block** — an artifact mid-flight is a resumed run, not a gap to fill |
+| Both `done` | Continue to check (d) |
+
+Backfilling rather than blocking is deliberate. The missing artifacts are recoverable by the two steps
+that exist to produce them, and a block here would ask a human to run `/orqestra:plan` and
+`/orqestra:design` by hand — the same manual route that produced the gap. **The design is always
+re-gated after a backfill**, on the same reasoning as check (d)'s refresh: a human has not seen it.
+
+**Why the check is presence, not the caller's word.** Stage derivation (§4.3) stops at the first gap, so
+a task with `IMPLEMENTATION.md` but no `PLAN.md` derives as `created` — and `status` (§7.10) reports it
+as *needing plan and design* while a full implementation sits in the directory. The derivation is right
+and the report is misleading, which is why §7.10 flags artifacts found past the gap rather than
+silently ignoring them.
 
 ### 7.5 `pr-comments` — delivery, sub-workflow and standalone
 
@@ -1512,6 +1547,24 @@ things:
    because nothing else in orqestra knows how state is derived.
 
 The seam is placed deliberately, in the one spot where prompt-based logic is weakest. See §12.
+
+#### 7.10.1 Artifacts found past the gap
+
+Stage derivation walks the chain and **stops at the first gap** (§4.3). That is correct — a task with no
+`PLAN.md` is not `implemented` however many later artifacts exist — but stopping silently hides the one
+state worth seeing: artifacts that exist *beyond* the gap, which can only mean a step ran that the
+pipeline would not have dispatched.
+
+`status` therefore reports the derived stage **and** names what it found past the gap:
+
+```
+⚠ TASK-019  agents invoke skills   plugin  created   IMPLEMENTATION.md, QA.md, REVIEW.md exist
+                                                     past the gap → /orqestra:task TASK-019 backfills
+```
+
+Never report such a task as merely *needing plan and design*: that is true of the artifacts and false
+about the work, and it is the reporting that let the gap survive nine commits. The next command is
+`/orqestra:task <ID>`, whose preflight check (c) backfills the missing steps (§7.4.3).
 
 ### 7.11 Output conventions
 

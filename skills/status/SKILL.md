@@ -48,7 +48,7 @@ Walk the chain in order and stop at the first gap:
 | `+ PR.md` (`pr_state: open`) | `pushed` |
 | `+ PR.md` (`pr_state: merged`) | `delivered` |
 
-**Two traps, both silent when you get them wrong:**
+**Three traps, all silent when you get them wrong:**
 
 1. **An artifact existing is not enough — check its `status`.** `IMPLEMENTATION.md` with
    `status: changes-requested` means the task is in rework, *not* `implemented` — the chain stops
@@ -57,6 +57,19 @@ Walk the chain in order and stop at the first gap:
    with `result: failed` leaves the task at `implemented`. `REVIEW.md` with
    `verdict: changes-requested` leaves it at `verified` — qa genuinely passed, and pretending otherwise
    loses real information.
+3. **Artifacts past the gap are the third trap, and the quietest.** Stopping at the first gap is right,
+   but say what you stepped over (§7.10.1). A task with `IMPLEMENTATION.md` and no `PLAN.md` derives as
+   `created` — reporting that as *"needs plan + design"* is true of the artifacts and false about the
+   work, and it is exactly the report that lets a hand-written implementation sit unnoticed. Name the
+   stage **and** the artifacts found beyond it:
+
+```
+⚠ TASK-019  agents invoke skills  plugin  created   IMPLEMENTATION.md, QA.md, REVIEW.md past the gap
+                                                    → /orqestra:task TASK-019 backfills plan + design
+```
+
+The next command is always `/orqestra:task <ID>`, never `/orqestra:plan` — preflight check (c)
+dispatches what is missing, and sending a human round the manual route is what produced the gap.
 
 **Name the step that will re-run, never the step that failed.** The rework loop always returns to
 **implement**, whatever failed (§8) — a qa failure does not re-run qa, and a rejected review does not
@@ -133,7 +146,8 @@ PHASE-1  Authentication                                   3/5 tasks
 → Next: merge PR #139, then /orqestra:task TASK-005
 ```
 
-Conventions: `▸` in progress · `✓` done · `✗` failed but recoverable · `⛔` blocked · `←` needs a human.
+Conventions: `▸` in progress · `✓` done · `✗` failed but recoverable · `⛔` blocked · `←` needs a human ·
+`⚠` artifacts past the gap (§7.10.1).
 **Stage names come from the table above verbatim** — never paraphrased, so a user can look them up.
 
 When an orchestrator calls you, return the same derivation as compact structured lines rather than the

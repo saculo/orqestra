@@ -1,6 +1,6 @@
 ---
 name: implement
-description: "Implement step for the orqestra delivery pipeline, shared by every engineer role (backend, frontend, devops, agentic). Reads the task, plan, and design; writes the code; produces IMPLEMENTATION.md recording changes, deviations, and tech debt. Use when the task pipeline dispatches the implement step, when rework returns after a qa failure or a changes-requested review, or when the user says '/orqestra:implement'."
+description: "Implement step for the orqestra delivery pipeline, shared by every engineer role (backend, frontend, devops, agentic). Reads the task, plan, and design; writes the code; produces IMPLEMENTATION.md recording changes, deviations, and tech debt. Use when the task pipeline dispatches the implement step, or when rework returns after a qa failure or a changes-requested review. Never invoked by hand: it requires DESIGN.md, and the pipeline's preflight is what guarantees one exists."
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 disallowed-tools: Agent
 ---

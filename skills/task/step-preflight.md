@@ -1,6 +1,6 @@
 # Step — Preflight
 
-Three checks, in order. **All must pass before any work happens.** Nothing is written, no branch is
+Four checks, in order. **All must pass before any work happens.** Nothing is written, no branch is
 created, so a failure here costs nothing to unwind — which is the entire reason this step exists.
 
 ## (a) Dependencies
@@ -35,7 +35,38 @@ Report which dependencies are unsatisfied and their current stage:
 A dirty tree is always a human's uncommitted work. Touching it is the one mistake that loses something
 orqestra cannot recreate.
 
-## (c) Design freshness
+## (c) Planning complete
+
+**No task reaches implement without `PLAN.md` and `DESIGN.md`** (§7.4.3). Check the task directory:
+
+| State | Action |
+|---|---|
+| Neither exists | Dispatch `plan`, then `design`. **Gate the design.** |
+| `PLAN.md` only | Dispatch `design`. **Gate the design.** |
+| Both exist, either not `done` | **Block** `contract` — an artifact mid-flight is a resumed run, not a gap |
+| Both `done` | Continue to (d) |
+
+**Do not take the caller's word for it.** This check exists because for a long time the only thing
+standing between a task and implement was a sentence saying the task *should* be at stage `designed` —
+which enforced nothing. A task whose code was written by hand and whose `IMPLEMENTATION.md` was
+back-filled afterwards passes every other check here: clean tree, merged dependencies, and qa and
+review both run happily on it. The first artifact recording the omission is written by the step that
+should never have run.
+
+**Backfill, do not block.** The two steps that produce these artifacts exist; blocking would ask a
+human to run `/orqestra:plan` and `/orqestra:design` by hand, which is the same manual route that
+produces the gap. Dispatch them in order — `plan` reads the codebase, `design` reads `PLAN.md`, so the
+order is not cosmetic. Build both envelopes exactly as `skills/greenfield/step-plan-design.md` does;
+they are the same two dispatches, resolved from the same `modules.md` row (§5.1).
+
+**Always re-gate the design after a backfill**, on the same reasoning as (d): a human has not seen it.
+
+```
+⚠ TASK-019 · planning incomplete — no PLAN.md, no DESIGN.md
+   → dispatching plan, then design. The design will come back to you at a gate.
+```
+
+## (d) Design freshness
 
 `DESIGN.md` was written during planning, possibly before several tasks merged. Check whether it still
 holds against current HEAD:
@@ -60,5 +91,5 @@ Report one line and continue. Preflight is silent when everything is fine — it
 when it stops something.
 
 ```
-✓ preflight · deps merged · tree clean · design holds
+✓ preflight · deps merged · tree clean · planning complete · design holds
 ```
