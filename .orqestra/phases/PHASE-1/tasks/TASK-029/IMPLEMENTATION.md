@@ -10,8 +10,8 @@ files_changed: 1
 
 ## Changes
 
-One file changed: `REQUIREMENTS.md`, +11 −3, all four amendments inside §5.5's body. Nothing under
-`skills/`, `scripts/` or `agents/` was touched, and no section was renumbered — `§5.5.1` and everything
+One file changed by this step: `REQUIREMENTS.md`, all amendments inside §5.5's body. Nothing under
+`skills/` or `scripts/` was touched, and no section was renumbered — `§5.5.1` and everything
 after it are byte-identical, so no `§N` citation in any of the ~90 citing files breaks.
 
 **C1 — the scope row of §5.5's obligation table.**

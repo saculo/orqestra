@@ -946,7 +946,7 @@ exactly one thing:
 |---|---|---|
 | `ROLE` `STEP` `SKILL` `READ` `TEMPLATE` `WRITE` `RETURN` | always | — |
 | the scope — exactly one of `TASK` `PHASE` `BUG` `PROJECT` | always | which unit of work the step operates on. `PROJECT` is the dispatch composed before any scope unit exists; its value is the project name from `.orqestra/config.md` `project:` (D-027) |
-| `MODULE` `PATHS` `STACK` `EXPERTISE` | conditional | mandatory **iff** the scope key is `TASK` or `BUG` — those units carry `module:` in their frontmatter. Omitted under `PHASE` and `PROJECT`: `templates/PHASE.md` carries no `module:`, and a `PROJECT` dispatch has no scope unit at all. The scope key decides, never a list of step names (D-027) |
+| `MODULE` `PATHS` `STACK` `EXPERTISE` | conditional | mandatory **iff** the scope key is `TASK` or `BUG` — those units carry `module:` in their frontmatter. **Must be omitted** under `PHASE` and `PROJECT` — carrying them there is a violation, not a harmless extra: `templates/PHASE.md` carries no `module:`, and a `PROJECT` dispatch has no scope unit at all. The scope key decides, never a list of step names (D-027) |
 | `EXPERTISE` | additionally | omitted when the module row's `expertise` cell is empty. The row decides, never the agent: §5.3's warn-once rule covers a *named* skill that is not installed, and does not license dropping the field |
 | `LENSES` `ROUND` | step-specific | mandatory on a `review` dispatch and permitted on no other. `LENSES` is the resolved lens set (§7.8.2); `ROUND` is `1`, or `2` on the re-review of a disputed `failed` (§8.1), and the reviewer writes it to `REVIEW.md.review_round`. Both sit immediately after the scope field |
 | `REWORK` | re-dispatch only | — |
