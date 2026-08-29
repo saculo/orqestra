@@ -7,7 +7,7 @@ task: TASK-024
 branch: feat/TASK-024-referenced-step-files-exist
 pr_number: 6
 pr_url: https://github.com/saculo/orqestra/pull/6
-pr_state: open
+pr_state: merged
 ---
 
 ## Summary
@@ -49,7 +49,7 @@ preflight check (c) backfilled `plan` and `design` (§7.4.3), and both gates wer
 
 ## CI
 
-`gh pr checks 6` at 2026-08-30: **no checks reported**. The repository has no CI workflow, so this is
+`gh pr checks 6` at 2026-08-30: **no checks reported**. Merged as `ac465e4`. The repository has no CI workflow, so this is
 absence rather than pending. No review threads on the PR.
 
 The suite was run by hand before push:
