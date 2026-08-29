@@ -24,7 +24,7 @@ after it are byte-identical, so no `§N` citation in any of the ~90 citing files
 **C2 — the conditional row (`MODULE` `PATHS` `STACK` `EXPERTISE`).**
 
 - before: `| ... | conditional | mandatory **iff** the scope unit has a module — its `TASK.md`/`BUG.md` frontmatter carries `module:`. `create-phases` and `create-tasks` run before any task has one and omit all four; that is conformant, not an exception |`
-- after: `| ... | conditional | mandatory **iff** the scope key is `TASK` or `BUG` — those units carry `module:` in their frontmatter. Omitted under `PHASE` and `PROJECT`: `templates/PHASE.md` carries no `module:`, and a `PROJECT` dispatch has no scope unit at all. The scope key decides, never a list of step names (D-027) |`
+- after: `| ... | conditional | mandatory **iff** the scope key is `TASK` or `BUG` — those units carry `module:` in their frontmatter. **Must be omitted** under `PHASE` and `PROJECT` — carrying them there is a violation, not a harmless extra: `templates/PHASE.md` carries no `module:`, and a `PROJECT` dispatch has no scope unit at all. The scope key decides, never a list of step names (D-027) |`
 - intent: one lookup — read the scope key, know the class. The named-steps clause is **gone** and no
   replacement list appears; naming steps in the rule is precisely defect F-4. Serves AC-2, AC-3.
 
