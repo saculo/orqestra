@@ -1,7 +1,7 @@
 ---
 id: TASK-008
 type: review
-status: awaiting-approval
+status: done
 updated: 2026-08-29
 task: TASK-008
 verdict: passed
