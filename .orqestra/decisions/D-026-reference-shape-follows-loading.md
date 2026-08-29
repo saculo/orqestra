@@ -44,8 +44,12 @@ likeliest maintenance failure.
 - Never write a bare filename to reach another skill's file. It resolves against the containing
   skill's directory, so it silently names a file that does not exist — the exact defect TASK-024
   closed in three index rows and four prose lines.
-- Never put `${CLAUDE_PLUGIN_ROOT}` inside a `step-*.md`. It is read as a file, so the token arrives
-  literal and the path is unusable (D-025).
+- Never write `${CLAUDE_PLUGIN_ROOT}` into a **reference a `step-*.md` resolves itself**. The file is
+  reached by `Read`, so the token arrives literal and the path is unusable (D-025).
+  **This does not forbid the token inside a `step-*.md`** — an envelope's `TEMPLATE:` value is not a
+  reference this file resolves, it is a string handed to a subagent that will *invoke* its skill and
+  expand it there. Ten such lines across nine step files are correct and must not be "fixed". The
+  test is who resolves the path, never which file the characters sit in.
 - A new cross-skill reference must be added in the shape its location dictates, and the reference
   checker in `scripts/` enforces both the existence and the shape. A reference the checker does not
   see is a reference that will rot; if a new reference form is introduced, extend the checker in the
