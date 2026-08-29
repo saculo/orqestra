@@ -7,7 +7,7 @@ task: PHASE-1/TASK-019
 branch: feat/TASK-019-agents-invoke-their-skills
 pr_number: 4
 pr_url: https://github.com/saculo/orqestra/pull/4
-pr_state: open
+pr_state: merged
 ---
 
 ## Summary
@@ -55,7 +55,7 @@ closes at the pipeline level.
 
 ## CI
 
-`gh pr checks 4` at 2026-08-29: **no checks reported** on this branch. The repository has no CI
+`gh pr checks 4` at 2026-08-29: **no checks reported** on this branch. Merged as `86ff9e3`. The repository has no CI
 workflow, so this is absence rather than pending — nothing will arrive later.
 
 The suite is run by hand and passed before push: `check-decisions.py` 25 decisions / 0 findings,
