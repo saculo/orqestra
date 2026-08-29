@@ -29,8 +29,12 @@ COMMON = ["id", "type", "status", "updated"]
 # Catalogue names that do not map 1:1 onto a template filename
 ALIASES = {"decisions/INDEX.md": "DECISIONS_INDEX.md", "decisions/D-NNN-*.md": "DECISION.md"}
 
-# Rows the catalogue declares as having no schema
-FREEFORM = {"PRD.md"}
+# A row whose "Required headings" cell opens with `none` declares NO schema at all: it is
+# free-form and is skipped entirely. That is different from a row declaring headings which are
+# not `##` — the `decisions/D-NNN-*.md` row is an H1 plus bold labels. Such a row HAS a schema;
+# only the `##` comparison has nothing to compare. Both facts are read from the catalogue here
+# and carried on the row, so no loop downstream re-derives them from an artifact's name (AC-4).
+FREEFORM_MARKER = "none"
 
 # A catalogue row may exempt itself from the common frontmatter (§4.4.4) by saying so in
 # its Frontmatter column. config.md is the expected case: it is configuration, not project
@@ -39,7 +43,11 @@ EXEMPT_MARKER = "no common frontmatter"
 
 
 def parse_catalogue():
-    text = SPEC.read_text()
+    try:
+        text = SPEC.read_text()
+    except (OSError, UnicodeDecodeError) as e:
+        print(f"✘ could not read the catalogue at {SPEC}: {e}", file=sys.stderr)
+        sys.exit(2)
     m = re.search(r"#### 4\.8\.1 The catalogue\n(.*?)\n#### 4\.8\.2", text, re.S)
     if not m:
         print("✘ could not locate §4.8.1 in REQUIREMENTS.md", file=sys.stderr)
@@ -59,7 +67,9 @@ def parse_catalogue():
         optional = set(re.findall(r"`([a-z_]+)\?`", cells[2]))
         base = [] if EXEMPT_MARKER in cells[2].lower() else COMMON
         heads = re.findall(r"`(##[^`]+)`", cells[3])
-        rows.append({"name": name, "frontmatter": base + extra, "optional": optional, "headings": heads})
+        freeform = cells[3].lower().startswith(FREEFORM_MARKER)
+        rows.append({"name": name, "frontmatter": base + extra, "optional": optional,
+                     "headings": heads, "freeform": freeform})
     return rows
 
 
@@ -119,7 +129,7 @@ def check_instance(target, rows, verbose):
 
     for name, path in targets:
         row = by_name.get(name)
-        if row is None or not path.exists() or name in FREEFORM or not row["headings"]:
+        if row is None or not path.exists() or row["freeform"]:
             continue
         checked += 1
         fm_keys, headings, has_fm = read_template(path)
@@ -132,7 +142,7 @@ def check_instance(target, rows, verbose):
             if missing:
                 problems.append(f"frontmatter missing: {', '.join(missing)}")
         missing_h = [h for h in row["headings"] if h not in headings]
-        if missing_h:
+        if row["headings"] and missing_h:
             problems.append(f"headings missing: {', '.join(missing_h)}")
         if problems:
             failures.append((str(path.relative_to(ws)), problems))
@@ -168,13 +178,9 @@ def main():
         if not path.exists():
             failures.append((name, [f"no template at templates/{fname}"]))
             continue
-        if name in FREEFORM:
+        if row["freeform"]:
             if verbose:
                 print(f"  · {name}: free-form, no schema — skipped")
-            continue
-        if not row["headings"]:
-            if verbose:
-                print(f"  · {name}: catalogue declares no headings — skipped")
             continue
 
         checked += 1
@@ -190,8 +196,10 @@ def main():
             if extra:
                 problems.append(f"frontmatter not in catalogue: {', '.join(extra)}")
 
+        # A row declaring headings that are not `##` has nothing for this comparison to read.
+        # Skip the COMPARISON only — the frontmatter above was checked either way (AC-1).
         want, got = row["headings"], headings
-        if want != got:
+        if want and want != got:
             missing = [h for h in want if h not in got]
             extra = [h for h in got if h not in want]
             if missing:
