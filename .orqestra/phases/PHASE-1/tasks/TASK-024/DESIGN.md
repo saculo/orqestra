@@ -1,7 +1,7 @@
 ---
 id: TASK-024
 type: design
-status: awaiting-approval
+status: done
 updated: 2026-08-29
 task: TASK-024
 decisions: [D-026]
