@@ -30,10 +30,10 @@ Like every planning workflow, you stop at design (§1.1). The fix is delivered b
 | reproduce | `step-reproduce.md` | the touched module's agent | no |
 | diagnose | `step-diagnose.md` | `analyst` | **yes** |
 | promote | `step-promote.md` | `create-task` | no |
-| plan-design | `step-plan-design.md` | `plan`, then `design` | **yes** |
+| plan-design | `${CLAUDE_PLUGIN_ROOT}/skills/greenfield/step-plan-design.md` | `plan`, then `design` | **yes** |
 | handoff | `step-handoff.md` | — | no |
 
-`step-plan-design.md` is the **shared file** from `greenfield` (D1) — referenced, not
+`skills/greenfield/step-plan-design.md` is the **shared file** (D1) — referenced, not
 copied.
 
 ## Intake

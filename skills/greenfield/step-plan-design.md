@@ -1,6 +1,6 @@
 # Step — Plan and Design
 
-**Shared verbatim by `greenfield` and `add-phase`.** Referenced, never copied.
+**Shared verbatim by `greenfield`, `add-phase` and `bugfix`.** Referenced, never copied.
 
 For every task in the phase, in dependency order: `plan`, then `design`. Both produce artifacts;
 neither writes code.

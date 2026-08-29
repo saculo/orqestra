@@ -43,7 +43,7 @@ not after. They carry this project's conventions, which you cannot infer from th
 - **Template**: `${CLAUDE_PLUGIN_ROOT}/templates/IMPLEMENTATION.md` — copy it, fill it, change nothing structural.
 - Source changes go in the working tree, **inside your module's `paths` only** (§5.2, D3).
   Touching another module is a contract violation, not a convenience.
-- **Do not commit** — `step-push.md` owns git (D1).
+- **Do not commit** — `skills/task/step-push.md` owns git (D1).
 
 ## Procedure
 
@@ -100,7 +100,7 @@ pays for it twice.
 
 1. **Stay inside your module's `paths`** (§5.2, D2, D3). A change genuinely needing another module is a
    second task — block with `needs-splitting`.
-2. **Never commit, branch, or push.** `step-push.md` owns git; a commit here corrupts the task branch.
+2. **Never commit, branch, or push.** `skills/task/step-push.md` owns git; a commit here corrupts the task branch.
 3. **Never mark your own work reviewed.** Verdicts belong to qa and review. Report what you did.
 4. **Never edit `TASK.md` or `DESIGN.md`** (D5) to match what you built. If the design is wrong, block —
    that is what `design-invalid` is for.

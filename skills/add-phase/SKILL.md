@@ -26,11 +26,11 @@ boundary onward — it joins the machine at a different point, it is not a diffe
 |---|---|---|---|
 | preflight | `step-preflight.md` | — | no |
 | define-phase | `step-define-phase.md` | `create-phase` | **yes** |
-| tasks | `step-tasks.md` | `create-tasks` | **yes** |
-| plan-design | `step-plan-design.md` | `plan`, then `design` | **yes** |
+| tasks | `${CLAUDE_PLUGIN_ROOT}/skills/greenfield/step-tasks.md` | `create-tasks` | **yes** |
+| plan-design | `${CLAUDE_PLUGIN_ROOT}/skills/greenfield/step-plan-design.md` | `plan`, then `design` | **yes** |
 | handoff | `step-handoff.md` | — | no |
 
-`step-plan-design.md` and `step-tasks.md` are the **shared files** from `greenfield` (D1) —
+`skills/greenfield/step-plan-design.md` and `skills/greenfield/step-tasks.md` are the **shared files** (D1) —
 referenced, never copied. Two planning tails that drift apart is the likeliest maintenance failure in
 orqestra, precisely because the workflows are similar enough that nobody notices.
 
