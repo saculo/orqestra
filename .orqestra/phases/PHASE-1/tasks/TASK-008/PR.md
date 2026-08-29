@@ -7,7 +7,7 @@ task: TASK-008
 branch: feat/TASK-008-conformance-checker-coverage
 pr_number: 5
 pr_url: https://github.com/saculo/orqestra/pull/5
-pr_state: open
+pr_state: merged
 ---
 
 ## Summary
@@ -44,7 +44,7 @@ Four commits, one per pipeline step, each committed after its artifact passed it
 
 ## CI
 
-`gh pr checks 5` at 2026-08-29: **no checks reported**. The repository has no CI workflow, so this is
+`gh pr checks 5` at 2026-08-29: **no checks reported**. Merged as `ffe59d1`. The repository has no CI workflow, so this is
 absence rather than pending — nothing will arrive later.
 
 The suite was run by hand before push and is recorded in `QA.md`:
