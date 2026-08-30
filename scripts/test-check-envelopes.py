@@ -20,10 +20,18 @@ spec = importlib.util.spec_from_file_location("check_envelopes", SCRIPT)
 ce = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ce)
 
-# §5.5's always class, plus a scope field — the minimum conformant dispatch.
-BASE = ["ROLE", "STEP", "SKILL", "TASK", "READ", "TEMPLATE", "WRITE", "RETURN"]
-# The conditional class is all-or-nothing (§5.5).
+# §5.5's always class, plus a scope field. Conformant on its own only under a scope that
+# forbids the conditional class — PHASE or PROJECT (D-027).
+SCOPED = ["ROLE", "STEP", "SKILL", "TASK", "READ", "TEMPLATE", "WRITE", "RETURN"]
+# The conditional class: all four together, keyed to the scope field (§5.5, D-027).
 CONDITIONAL = ["MODULE", "PATHS", "STACK", "EXPERTISE"]
+# The minimum conformant dispatch under TASK or BUG, which mandate the conditional class.
+BASE = SCOPED + CONDITIONAL
+
+
+def scoped(key):
+    """SCOPED with its scope field swapped for `key` — no conditional class."""
+    return [f if f != "TASK" else key for f in SCOPED]
 
 
 def case(name, step, fields, expect):
@@ -39,7 +47,8 @@ def case(name, step, fields, expect):
 CASES = [
     # --- always class -------------------------------------------------------
     ("minimum conformant dispatch", "implement", BASE, []),
-    ("conformant with full conditional class", "implement", BASE + CONDITIONAL, []),
+    ("missing conditional class under TASK is caught", "implement",
+     SCOPED, ["missing EXPERTISE, MODULE, PATHS, STACK — mandatory under TASK"]),
     ("missing SKILL is caught", "implement",
      [f for f in BASE if f != "SKILL"], ["missing SKILL — always class"]),
     ("missing WRITE is caught", "implement",
@@ -47,29 +56,43 @@ CASES = [
     ("missing RETURN is caught", "implement",
      [f for f in BASE if f != "RETURN"], ["missing RETURN — always class"]),
 
-    # --- scope class: exactly one of TASK/PHASE/BUG -------------------------
-    ("PHASE is an accepted scope", "create-tasks",
-     [f if f != "TASK" else "PHASE" for f in BASE], []),
+    # --- scope class: exactly one of TASK/PHASE/BUG/PROJECT -----------------
+    ("PHASE is an accepted scope", "create-tasks", scoped("PHASE"), []),
+    ("PROJECT is an accepted scope", "create-phases", scoped("PROJECT"), []),
     ("BUG is an accepted scope", "diagnose",
      [f if f != "TASK" else "BUG" for f in BASE], []),
     ("no scope field is caught", "create-phases",
      [f for f in BASE if f != "TASK"], ["0 scope fields"]),
     ("two scope fields are caught", "implement",
      BASE + ["PHASE"], ["2 scope fields"]),
+    ("PROJECT alongside TASK is two scope fields", "implement",
+     BASE + ["PROJECT"], ["2 scope fields"]),
 
-    # --- conditional class is all-or-nothing --------------------------------
+    # --- conditional class: mandatory under TASK/BUG ------------------------
     ("partial conditional class is caught", "implement",
-     BASE + ["MODULE", "PATHS"], ["partial conditional class — missing EXPERTISE, STACK"]),
+     SCOPED + ["MODULE", "PATHS"], ["missing EXPERTISE, STACK — mandatory under TASK"]),
     ("MODULE alone is caught", "implement",
-     BASE + ["MODULE"], ["partial conditional class — missing EXPERTISE, PATHS, STACK"]),
+     SCOPED + ["MODULE"], ["missing EXPERTISE, PATHS, STACK — mandatory under TASK"]),
+    ("missing conditional class under BUG is caught", "diagnose",
+     scoped("BUG"), ["missing EXPERTISE, MODULE, PATHS, STACK — mandatory under BUG"]),
+
+    # --- conditional class: forbidden under PHASE/PROJECT -------------------
+    ("conditional fields under PROJECT are caught", "create-phases",
+     scoped("PROJECT") + CONDITIONAL,
+     ["EXPERTISE, MODULE, PATHS, STACK must be omitted under PROJECT"]),
+    ("conditional fields under PHASE are caught", "create-tasks",
+     scoped("PHASE") + CONDITIONAL,
+     ["EXPERTISE, MODULE, PATHS, STACK must be omitted under PHASE"]),
+    ("a single conditional field under PROJECT is caught", "create-phases",
+     scoped("PROJECT") + ["MODULE"], ["MODULE must be omitted under PROJECT"]),
 
     # --- step-specific: LENSES/ROUND on review, and on no other -------------
     ("review dispatch with LENSES and ROUND is conformant", "review",
-     BASE + CONDITIONAL + ["LENSES", "ROUND"], []),
+     BASE + ["LENSES", "ROUND"], []),
     ("review dispatch missing ROUND is caught", "review",
-     BASE + CONDITIONAL + ["LENSES"], ["review dispatch missing LENSES/ROUND"]),
+     BASE + ["LENSES"], ["review dispatch missing LENSES/ROUND"]),
     ("review dispatch with neither is caught", "review",
-     BASE + CONDITIONAL, ["review dispatch missing LENSES/ROUND"]),
+     BASE, ["review dispatch missing LENSES/ROUND"]),
     ("LENSES outside a review dispatch is caught", "implement",
      BASE + ["LENSES"], ["LENSES outside a review dispatch"]),
     ("ROUND outside a review dispatch is caught", "qa",

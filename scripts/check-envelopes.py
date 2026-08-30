@@ -10,12 +10,27 @@ still looks right (D-025).
 Four obligation classes, mirroring the table:
 
   always        ROLE STEP SKILL READ TEMPLATE WRITE RETURN
-  scope         exactly one of TASK PHASE BUG
-  conditional   MODULE PATHS STACK EXPERTISE — mandatory iff the scope unit has a module,
-                and all four together: a partial set means one was forgotten, not omitted
+  scope         exactly one of TASK PHASE BUG PROJECT
+  conditional   MODULE PATHS STACK EXPERTISE — keyed to the scope field, all four together:
+                mandatory under TASK and BUG, forbidden under PHASE and PROJECT, because
+                those units carry no module: in their frontmatter (D-027). Forbidden, not
+                merely unnecessary — §5.5 calls a present one "a violation, not a harmless
+                extra". With no scope key, or two, the class is undecidable and no
+                conditional verdict is emitted; the scope problem is the whole report.
   step-specific LENSES ROUND — on a review dispatch and no other
 
 The list is closed: a field in no class is a violation the same way an omission is.
+
+DELIBERATELY NOT CHECKED: §5.5 row 4 also omits EXPERTISE when the module row's expertise
+cell is empty. That fact lives in .orqestra/modules.md, not in the envelope, so no check
+reading only the envelope can tell a conformant omission from a forgotten field. Requiring
+all four under TASK/BUG is the least bad of three answers: dropping EXPERTISE to optional
+would leave unchecked the one field that fails invisibly, and cross-checking modules.md
+would need field values and a workspace read, coupling a skills/-shaped checker to
+.orqestra/. Both modules.md rows carry a non-empty expertise cell today, and this script is
+dev-only — it globs skills/ relative to its own repo root and never runs against a consuming
+project — so the false positive cannot occur in the only tree it can run in. Revisit when,
+and only when, a module is registered with an empty expertise cell.
 
 Dev-only. Not shipped behaviour: the plugin has no runtime dependency on it (D-001, D-015).
 
@@ -28,7 +43,9 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "skills"
 
 ALWAYS = ["ROLE", "STEP", "SKILL", "READ", "TEMPLATE", "WRITE", "RETURN"]
-SCOPE = ["TASK", "PHASE", "BUG"]
+SCOPE = ["TASK", "PHASE", "BUG", "PROJECT"]
+MANDATES_CONDITIONAL = {"TASK", "BUG"}     # the scope unit carries a module: (D-027)
+FORBIDS_CONDITIONAL = {"PHASE", "PROJECT"}  # it does not — the four must be omitted
 CONDITIONAL = ["MODULE", "PATHS", "STACK", "EXPERTISE"]
 STEP_SPECIFIC = ["LENSES", "ROUND"]
 OPTIONAL = ["REWORK"]
@@ -64,14 +81,19 @@ def check(step, fields):
         if f not in present:
             problems.append(f"missing {f} — always class")
 
-    n = len(present & set(SCOPE))
-    if n != 1:
-        problems.append(f"{n} scope fields; exactly one of {'/'.join(SCOPE)} required")
-
-    have = present & set(CONDITIONAL)
-    if have and have != set(CONDITIONAL):
-        missing = ", ".join(sorted(set(CONDITIONAL) - have))
-        problems.append(f"partial conditional class — missing {missing}")
+    scopes = present & set(SCOPE)
+    if len(scopes) != 1:
+        problems.append(f"{len(scopes)} scope fields; exactly one of {'/'.join(SCOPE)} required")
+    else:
+        # The scope key alone decides the conditional class (D-027). With no scope key, or
+        # two, the class is undecidable — reporting a derived second problem would be noise.
+        scope = scopes.pop()
+        have = present & set(CONDITIONAL)
+        if scope in MANDATES_CONDITIONAL and have != set(CONDITIONAL):
+            missing = ", ".join(sorted(set(CONDITIONAL) - have))
+            problems.append(f"missing {missing} — mandatory under {scope}")
+        if scope in FORBIDS_CONDITIONAL and have:
+            problems.append(f"{', '.join(sorted(have))} must be omitted under {scope}")
 
     lenses = present & set(STEP_SPECIFIC)
     if step == "review" and lenses != set(STEP_SPECIFIC):
