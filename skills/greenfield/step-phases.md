@@ -13,6 +13,7 @@ directories hang off those ids (D8).
 ROLE:      orqestra:analyst
 STEP:      create-phases
 SKILL:     orqestra:create-phases
+PROJECT:   orqestra
 READ:
   .orqestra/PRD.md
   .orqestra/CLARIFICATIONS.md

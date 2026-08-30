@@ -30,7 +30,7 @@ commit_style: scoped         # <scope>: <subject> — no conventional-commit typ
                              #   3. else — init, workspace config, repo-wide work        → orqestra
 pr_draft: false
 auto_merge: false
-test_command: python3 scripts/check-templates.py
+test_command: python3 scripts/check-templates.py && python3 scripts/test-check-envelopes.py && python3 scripts/check-envelopes.py
 
 ## Version control
 
