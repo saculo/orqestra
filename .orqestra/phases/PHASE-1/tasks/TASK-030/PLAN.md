@@ -1,8 +1,8 @@
 ---
 id: TASK-030
 type: plan
-status: blocked
-blocked_reason: needs-splitting
+status: done
+blocked_reason:
 updated: 2026-08-30
 task: PHASE-1/TASK-030
 ---

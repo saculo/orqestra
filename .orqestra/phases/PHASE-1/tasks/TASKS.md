@@ -4,7 +4,7 @@ type: tasks
 status: in-progress
 updated: 2026-08-27
 phase: PHASE-1
-task_count: 32
+task_count: 34
 ---
 
 ## Tasks
@@ -43,6 +43,8 @@ task_count: 32
 | TASK-030 | Every envelope conforms, and the suite proves it | plugin | TASK-024, TASK-029 | PHASE-3/SC-1 |
 | TASK-031 | Prove EXPERTISE changes what a dispatched agent does | plugin | — | PHASE-3/SC-1 |
 | TASK-032 | qa needs a route for a failure implement cannot fix | docs | — | PHASE-3/SC-1 |
+| TASK-033 | Specification makes room for a diagnose skill | docs | — | PHASE-3/SC-1 |
+| TASK-034 | The diagnose step has a procedure of its own | plugin | TASK-033 | PHASE-3/SC-1 |
 
 ## Dependency Order
 
