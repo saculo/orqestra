@@ -4,120 +4,95 @@ type: qa
 status: done
 updated: 2026-08-30
 task: TASK-033
-result: failed
+result: passed
 test_command: python3 scripts/check-templates.py && python3 scripts/check-decisions.py && python3 scripts/check-step-refs.py && python3 scripts/check-envelopes.py
 ---
 
 ## Test Strategy
 
-There is no behaviour to execute — one commit, `f696c21`, `REQUIREMENTS.md` only. Verification is
-therefore two things: the four repo checks as a regression baseline, and an **independent sweep of the
-merged file** for the amendment's actual risk, which is a site the amendment silently falsified.
+Round 2, against `5ce1077`. Three things: close round 1's findings, re-run the regression baseline,
+and — the actual job — attack what an absence-blind check would *still* miss after round 1's lesson.
 
-Test code was **not** written. The natural regression check for AC-4 is a `scripts/check-*.py`, and
-`scripts/` is the `plugin` module — outside this task's `PATHS` (D14, D2). Stated rather than skipped.
+Test code was **not** written, for the same reason as round 1: the natural regression check for AC-3
+and AC-4 is a `scripts/check-*.py`, and `scripts/` is the `plugin` module, outside this task's `PATHS`
+(D14, D2). Stated rather than skipped. This remains the honest gap in the task — see Issues.
 
-**The sweep, and why these terms.** The engineer's own greps were anchored on the two forms already
-known to be wrong: `bugfix. diagnose` and `\b[0-9]+ skills\b`. Both are list-based — they find sites
-resembling the ones the plan already listed. A partial amendment survives exactly the greps derived
-from the list, so I searched by *defect class* instead, on the merged file:
+**Round 1's insight applied to round 1's own output.** Every defect found so far was an *absence*, and
+both earlier sweeps passed by searching for what was present. So round 2 ran no substring greps for
+`diagnose` at all. It ran **set-difference in both directions** between each enumeration and `ls
+skills/`, and then **between the enumerations themselves**, because three lists that must stay in sync
+is the same defect class as one hard-coded count and nothing in the repo checks it.
 
-| what I searched | why that shape, not a list |
-|---|---|
-| `([0-9]+\|one…twelve\|twenty-*)[^.]{0,40}skills?\b` | a count is a **quantity near the noun**, in any notation. A digit-anchored grep cannot see `Twenty-two skills`. **This is what found F1.** |
-| set-difference: every backticked token in §7.0's class table, and every token in §7.12's grid, against `ls skills/` | an **enumeration** asserts a count without writing one. No substring grep can catch a missing row; only comparing the list to the tree can. **This is what found F2 and F3.** |
-| `names? no skill\|without a skill\|not a skill\|has none\|lacks\|omits.{0,15}SKILL\|last envelope\|cannot pass\|there is no` | the absence claim stated as prose rather than as a table cell. Returned 10 hits, all unrelated senses (`no state.json`, `no commands/ directory`, §9:2063 `No skill edits a done artifact`). Clean. |
-| `grep -in diagnos` — all 15 hits read individually | confirms no *surviving* workflow-plus-step description and no second spelling |
-| `grep -E '^#{1,6} '` diffed against `master`, and again on the numeric prefixes alone | AC-3's renumbering half, diffed rather than eyeballed |
-| `grep -rn '^ROLE:' skills/bugfix/` | D-028's own discriminator, run against the tree rather than quoted |
-
-`§1.3:69 "nit has 21 skills"` — **read, not assumed**. The line is `nit has 21 skills, 8 archetypes, a
-Bun supervisor state machine, 26 JSON schemas…`; the subject is nit, a different frozen project, which
-orqestra adding a skill does not falsify. Correctly kept.
+| what I ran | why that shape | result |
+|---|---|---|
+| §7.0 class table (:1077–1086) ∆ `ls skills/`, **both directions** | a class table with 23 rows can still be wrong two ways: a skill on disk with no class, or a class row with no directory | 23 tokens. `in table, not on disk` = **`diagnose` only**; `on disk, not in table` = **∅**. `diagnose` is the deliberate case — the spec leads (D-019) — and it is the *only* one |
+| §7.12 grid ∆ `ls skills/`, both directions | §7.12 now *claims* completeness in prose, so the claim is checkable | 23 tokens. grid-only = **`diagnose` only**; tree-only = **∅**. `init` is present at :1657. Round 1's F3 is closed and the sentence is now true |
+| **§7.0 class table ∆ §7.12 grid** (symmetric difference) | the cross-list check nothing in the chain had run. Two independent 23-item enumerations that must agree | **∅ — set-identical.** They agree exactly |
+| §5.1.1 routing (7 rows) ⊆ class table, and §7.7 (7 rows) ⊆ class table | routing and §7.7 are subsets by construction, not enumerations of all skills; the checkable property is containment | both **⊆**, no orphans. All four tables agree on the token `diagnose` |
+| every line of `REQUIREMENTS.md` naming ≥3 skill tokens, each read | catches an enumeration in a form neither round's patterns describe — a prose list, a code fence, a milestone roster | 32 lines. Two are exhaustive (§7.0, §7.12, both clean above). §13's M1–M5 rosters (:1917/1931/1947/1974) omit `diagnose` — **and also omit `approve`, `reject`, `unblock`, `create-phase`, `create-task` in `master`**, so they are demonstrably not exhaustive and assert no completeness. Not a defect |
+| `analyst.md`'s `tools:` vs §7.0's `step` row | R2's class choice is a claim about tool permissions, and D-024 says `agents/` `tools:` is the durable allowlist. Checkable against the tree rather than reasoned about | `tools: Skill, Read, Write, Glob, Grep` — exactly `step`'s `allowed-tools` plus `Skill` (D-025), no `Bash`, no `Edit`. `diagnose`'s dispatched agent already **has** the permissions `step` grants and **lacks** the ones it removes. `step` is corroborated by the tree, not just argued |
+| `Twenty-two artifacts` (:553) — counted, not assumed | the prompt's third question. A catalogue is a list that goes stale | §4.8.1 has **exactly 22 rows**. The number is **correct**. Its companion at :294 is not — see Issues |
 
 ## Results
 
 | check | exit | note |
 |---|---|---|
 | `check-templates.py` | 0 | 21 templates conform |
-| `check-decisions.py` | 0 | 28 decisions conform, D-028 included |
+| `check-decisions.py` | 0 | 28 decisions conform |
 | `check-step-refs.py` | 0 | 40 step references resolve |
-| `check-envelopes.py` | **1** | sole failure `skills/bugfix/step-diagnose.md:8 [diagnose] missing SKILL`. **Expected** — TASK-034's, per Out of Scope. `config.md`'s `test_command` exits 1 for this reason and this reason only |
+| `check-envelopes.py` | **1** | sole failure `skills/bugfix/step-diagnose.md:8 [diagnose] missing SKILL — always class`. **Expected**, per Out of Scope; TASK-034's AC-3. `config.md`'s `test_command` exits 1 for this reason and this reason only |
 
-Heading diff vs `master`: **identical**, 108 headings, text and order and numeric prefixes. Tree state:
-`ls skills/` = 22 (`init` present, `diagnose` absent). Working tree carries only `REQUIREMENTS.md`
-modified plus two pre-existing untracked `ORQESTRA_*.md`; nothing committed by me.
+**Byte-identity, diffed not eyeballed.** `master:583` and `HEAD:584` — the `` | `BUG.md` | `bugfix`
+intake | `` row — compare **`True`** on a Python string equality of the whole line. Only the line
+number moved.
 
-Three sweeps returned defects. Two of them are the failure mode this task was named as most at risk
-of, and both live in **§7.0** — a section no artifact in the chain (plan, design, implementation)
-mentions once.
+**No renumbering.** The full heading list (`^#{1,6} `) extracted from `git show master:REQUIREMENTS.md`
+and from `HEAD`: 108 and 108, `a == b` → **`True`**. Text, order, and numeric prefixes all hold. Every
+`§N` citation across the tree survives.
+
+Tree state: `git status` clean apart from two pre-existing untracked `ORQESTRA_*.md`. The rework is
+committed at `5ce1077`; nothing committed by me. `git diff master...HEAD --stat` on `REQUIREMENTS.md`
+is 37 lines touched across 9 hunks.
 
 ## Criteria Coverage
 
 | criterion | covered by | result |
 |---|---|---|
-| AC-1 | §4.8.1:585 reads `` \| `DIAGNOSIS.md` \| `diagnose` \| `` — one backticked token, the shape `plan`/`design`/`qa`/`review-task` use. `grep 'bugfix. diagnose'` returns nothing. §4.8.1:584's `` \| `BUG.md` \| `bugfix` intake \| `` **diffed byte-identical against `master`** — the adjacent-row slip did not happen. Truthful under D-028: `grep -rn '^ROLE:' skills/bugfix/` returns exactly one hit, `step-diagnose.md:8`, so `intake`/`reproduce`/`promote`/`handoff` dispatch nobody. I also applied D-028 to the column's other two workflow-plus-step cells — `push` and `pr-comments` — and neither `skills/task/step-push.md` nor `skills/pr-comments/` carries a `ROLE:`, so the amendment introduces no new contradiction there | **pass** |
-| AC-2 | §5.1.1:786 `` \| diagnose \| `diagnose` \| `analyst` \| module's \| ``. The name is `diagnose` in all three amended sites and nowhere spelled otherwise — `grep -in diagnos` shows no `bugfix-diagnose`, no `root-cause`, no second variant. §5.1.1 is the single authoritative place; §4.8.1 and §7.7 restate it identically. The namespaced form is unambiguously derivable: §5.5:903 says `SKILL` is "namespaced like any other" and gives `STEP: review` → `SKILL: orqestra:review-task` (§5.1.1) as the worked example, so `orqestra:diagnose` is the only spelling TASK-034 can author. `analyst` matches `step-diagnose.md:8`'s `ROLE: orqestra:analyst` (D-014) | **pass** |
-| AC-3 | Renumbering half **passes** (heading diff identical, above). "Every site agrees" half **fails** — §7.0's class table still enumerates 22 skills and `diagnose` is not among them. See F2. §7.3:1209 confirmed already true (names the step *file*) | **fail** |
-| AC-4 | `grep -E '\b[0-9]+ skills\b'` returns only §1.3:69's nit fact — but the count survives in words at §7.0:1072. See F1 | **fail** |
+| AC-1 | §4.8.1:585 is `` \| `DIAGNOSIS.md` \| `diagnose` \| `` — one backticked token, the shape `plan`/`design`/`qa`/`review-task` use. Verified again this round *and* extended: §7.7:1463 now names `templates/DIAGNOSIS.md`, and that file **exists** in `templates/`, so the catalogue row's writer and template both resolve. `check-templates.py` covers it (21 conform). §4.8.1:584 byte-identical to `master` (above); truthful under D-028 — `grep -rn '^ROLE:' skills/bugfix/` returns exactly one hit, `step-diagnose.md:8` | **pass** |
+| AC-2 | §5.1.1:786 `` \| diagnose \| `diagnose` \| `analyst` \| module's \| ``. Resolving the step yields `diagnose`, not nothing. The name is unambiguous: four tables (§4.8.1, §5.1.1, §7.7, §7.12) spell it `diagnose` and `grep -in diagnos` over the whole file shows **no second spelling** — no `bugfix-diagnose`, no `root-cause`. The namespaced form `orqestra:diagnose` is forced, not guessed: D-012 makes the folder name the invocation name, §2:42 shows the `orqestra:` namespace, and §5.5 gives `STEP: review → SKILL: orqestra:review-task` as the worked example. TASK-034's AC-3 has exactly one spelling available to it. `analyst` matches `step-diagnose.md:8`'s `ROLE: orqestra:analyst` (D-014) and `agents/analyst.md` exists | **pass** |
+| AC-3 | **Both halves now pass.** *Every site agrees*: four independent enumerations checked by set-difference against the tree and against each other — §7.0 class table and §7.12 grid are **set-identical at 23**, with `diagnose` the sole spec-leads entry in each and **nothing on disk missing from either**; §5.1.1 and §7.7 both contain `diagnose` and are proper subsets with no orphans. Round 1's F2 (§7.0 omitted `diagnose`) is closed at :1081, and the `step` class is corroborated by `analyst.md`'s actual `tools:` line, not only by argument. Round 1's F3 (`init` absent from the grid) is closed at :1657 under the retitled `UTILITY / SETUP` column, so "the whole inventory" is now true rather than newly false. *No renumbering*: 108 headings, identical to `master`, diffed | **pass** |
+| AC-4 | No skill count survives anywhere. Round 1's F1 is closed — §7.0:1072 now reads `Every skill has to be written consistently`, keeping what the sentence communicated and dropping the quantity. Re-swept this round by **quantity-near-noun** in three notations (digits, number-words `one`–`thirty`/`dozen`, and quantifiers `all`/`every`/`whole`/`none` within 25 chars of `skills?`): the only surviving hit near `skills` is §1.3:69 `nit has 21 skills`, a fact about a different, frozen project that orqestra adding a skill does not falsify — **read, not assumed**, and correctly kept, with §1.3's own orqestra-side clause now saying `a comparable number of skills` instead of `22`. §2:119 and §7.12:1660 assert no number. TASK-034 raising the tree to 23 falsifies nothing in the spec | **pass** |
 
 ## Issues
 
-**F1 — AC-4: a hard-coded orqestra skill count survives, spelled as a number word.**
+No defect against any acceptance criterion. Two items recorded, neither an AC failure.
 
-- **Where**: `REQUIREMENTS.md:1072`, §7.0 Skill anatomy, first line of the section.
-- **Observed**: `Twenty-two skills have to be written consistently, by different hands, months apart.`
-- **Expected**: no assertion of a count. AC-4 states the general rule — *"A number that every new skill
-  invalidates is a defect, not a fact"* — and the engineer applied it correctly to §1.3:69, a site the
-  design had also missed. The same reading reaches this one. TASK-034 makes the number 23.
-- **Why it was missed**: every grep in the chain was digit-anchored. A number word is invisible to
-  `\b[0-9]+ skills\b`, which is the whole reason a class-based sweep is not optional here.
-- **Note**: §7.12's new closing line promises `No count is written here or in §2` — scoped to two
-  sections, so it is not *literally* falsified by §7.0. The count is a defect on AC-4's own terms
-  regardless, and a reader who takes §7.12's sentence as the document's policy is contradicted 590
-  lines earlier.
+**N1 — pre-existing, outside AC-4 as written: `§4.3:294` says "all twenty artifacts" and `§4.8:553`
+says "Twenty-two artifacts", about the same catalogue.**
 
-**F2 — AC-3: §7.0's class table omits `diagnose`, and now contradicts three amended sites.**
+- **Where**: `REQUIREMENTS.md:294` and `:553`. Both **unmodified by this branch** — present verbatim in
+  `master` at `:293`/`:552`, and the diff touches neither.
+- **Observed**: §4.8.1 has exactly **22** rows. `:553`'s `Twenty-two` is therefore **correct**, and the
+  prompt's question is answered: it is right, not stale. `:294`'s `twenty` is **wrong by two**, and the
+  two sentences contradict each other 259 lines apart.
+- **Expected**: one number, or none. This is the same decay class AC-4 names — a count in prose that the
+  next catalogue row invalidates — and the same shape as the two skill counts this task removed, `22`
+  asserted twice, far apart, with the tree disagreeing.
+- **Why not a fail**: AC-4 is scoped to a *skill* count ("A number that every new **skill** invalidates"),
+  and the TASK.md amendment note scopes it the same way. An artifact count is a different noun and a
+  different task. Reporting it rather than widening the criterion, and rather than letting round 2 close
+  without recording what it found. Companion to the already-recorded `§13:1917/1922 "all 20 templates"`
+  against 21 conforming templates. **Recommend one task covering all three prose counts** — it is one
+  edit and one defect class, and filing it now is cheaper than the next task tripping over it.
 
-- **Where**: `REQUIREMENTS.md:1076–1085`, the `Class · Skills · allowed-tools · disallowed-tools`
-  table, introduced by `Every skill declares a class first, and the class fixes everything else`.
-- **Observed**: the `Skills` column enumerates exactly 22 backticked skill names — 5 orchestrator,
-  5 planning, 2 step, 2 step+build, 2 step+review, 1 query, 1 setup, 4 control — set-equal to
-  `ls skills/`. `diagnose` appears nowhere in the section (`grep -c diagnose` over :1076–1086 = 0).
-- **Expected**: `diagnose` carries a class, as every skill must. It is an exhaustive enumeration, so
-  omitting the new skill is still an assertion that the step has none — the precise thing AC-3 widened
-  to cover, and a form no substring grep can detect.
-- **Contradicts, as merged**: §5.1.1:786 (routing row), §7.7:1463 (step-skills row), §7.12:1657 (grid).
-  A `diagnose` that is a dispatched, template-writing step skill in three tables and absent from the
-  fourth is a partial amendment.
-- **Downstream cost — this is the SKILL-name risk repeating one column over**: TASK-034's AC-1 requires
-  `skills/diagnose/SKILL.md` at the same altitude as `plan` and `qa`, and §7.0 obliges it to *declare a
-  class first*. The spec sanctions no class for `diagnose`, so TASK-034 must either invent one — which
-  is `plugin` inventing a `docs` fact, against D-019 — or block. Choosing between `step` (as `plan`,
-  `design`) and `step+build` (as `qa`, if diagnosis needs `Bash` to investigate) is a specification
-  decision and belongs in this commit.
+**N2 — no automated guard exists for what round 1 and round 2 both had to find by hand.**
 
-**F3 — regression: §7.12's replacement sentence asserts a completeness that is false.**
-
-- **Where**: `REQUIREMENTS.md:1659–1660`.
-- **Observed**: `This grid is the whole inventory. The folder name is the invocation name (§2), so it
-  is also the command list.` The grid does not contain `init`. Set-difference of grid tokens against
-  `ls skills/`: grid-only `diagnose` (correct — the spec leads), tree-only **`init`**.
-- **Expected**: either the grid lists `init`, or the sentence does not claim completeness. `init` is a
-  skill and a command — §2:120 shows `skills/init/SKILL.md  #   → /orqestra:init`, and §7.0:1084 gives
-  it its own `setup` class — so "the whole inventory" and "the command list" are both untrue as
-  written.
-- **Attribution, honestly**: the omission of `init` pre-dates this commit. What this commit did was
-  replace a bare number with an **explicit** assertion of completeness, converting a stale count into a
-  false claim, in the one section whose job is to be the inventory. Its own new text — `which is how
-  this line came to say 22 twice, 1500 lines apart, while the tree said otherwise` — names the
-  discrepancy and then does not resolve it. Lower severity than F1 and F2; fixing it is one token in
-  the grid's `UTILITY` or a new `SETUP` cell.
-
-**Not defects, checked and confirmed:**
-
-- `check-envelopes.py` exit 1 on `step-diagnose.md` — TASK-034's, and the reason this task exists.
-- §4.8.1:584 `` `bugfix` intake `` — byte-identical, and truthful under D-028.
-- §1.3:69 `nit has 21 skills` — a fact about nit, correctly retained.
-- §7.3:1209 `step-diagnose.md` — names a step file, already agrees, correctly untouched.
-- `templates/config.md` having no `diagnose` row — the design's reading, `plugin` module either way.
+- **Observed**: the enumeration agreement verified above — §7.0 ∆ §7.12 ∆ `ls skills/` — holds today
+  because I ran it once, by hand, in a scratch script. Nothing in `scripts/` runs it. The next skill
+  added reopens exactly the defect this task spent two rounds closing, silently, because no substring
+  grep can see a missing table row.
+- **Expected**: a `scripts/check-skill-tables.py` in the shape of the four existing checks, asserting
+  set-equality between §7.0's class table, §7.12's grid, and `ls skills/` (allowing a spec-leads
+  entry). **`scripts/` is the `plugin` module** — writing it here would cross a module boundary (D14),
+  so this is a filing, not an omission. It is the cheapest possible check and it would have caught F2,
+  F3, and both of round 2's cross-list questions before a human ever read the file.
