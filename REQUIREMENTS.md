@@ -869,7 +869,7 @@ TASK:      PHASE-1/TASK-007
 MODULE:    api
 PATHS:     services/api
 STACK:     java
-EXPERTISE: java-expertise, test-quality
+EXPERTISE: java-expertise, spring-conventions
 
 READ:
   .orqestra/phases/PHASE-1/tasks/TASK-007/TASK.md
@@ -931,14 +931,22 @@ reviewer who sometimes does not.
 context. Inlining an artifact into the envelope would move it through the orchestrator's context —
 which is the exact cost subagents exist to avoid.
 
+**The scope field.** Every envelope names the unit the step operates on, in one line immediately after
+`SKILL`: `TASK:`, `PHASE:`, `BUG:`, or `PROJECT:`. The first three name an artifact on disk. `PROJECT:`
+exists because some dispatches are composed **before any scope unit does** — `create-phases` runs when
+the project has no phase, no task and no bug to name — and it carries the project name from
+`.orqestra/config.md`. Without it those envelopes could satisfy the row only by inventing a unit that
+does not exist, and a rule no conformant envelope can satisfy is a broken rule, not a strict one
+(D-027).
+
 **Which fields are mandatory.** Four obligation classes, each with a condition decidable by looking at
 exactly one thing:
 
 | Field | Obligation | Condition |
 |---|---|---|
 | `ROLE` `STEP` `SKILL` `READ` `TEMPLATE` `WRITE` `RETURN` | always | — |
-| the scope — exactly one of `TASK` `PHASE` `BUG` | always | the unit of work the step operates on |
-| `MODULE` `PATHS` `STACK` `EXPERTISE` | conditional | mandatory **iff** the scope unit has a module — its `TASK.md`/`BUG.md` frontmatter carries `module:`. `create-phases` and `create-tasks` run before any task has one and omit all four; that is conformant, not an exception |
+| the scope — exactly one of `TASK` `PHASE` `BUG` `PROJECT` | always | which unit of work the step operates on. `PROJECT` is the dispatch composed before any scope unit exists; its value is the project name from `.orqestra/config.md` `project:` (D-027) |
+| `MODULE` `PATHS` `STACK` `EXPERTISE` | conditional | mandatory **iff** the scope key is `TASK` or `BUG` — those units carry `module:` in their frontmatter. **Must be omitted** under `PHASE` and `PROJECT` — carrying them there is a violation, not a harmless extra: `templates/PHASE.md` carries no `module:`, and a `PROJECT` dispatch has no scope unit at all. The scope key decides, never a list of step names (D-027) |
 | `EXPERTISE` | additionally | omitted when the module row's `expertise` cell is empty. The row decides, never the agent: §5.3's warn-once rule covers a *named* skill that is not installed, and does not license dropping the field |
 | `LENSES` `ROUND` | step-specific | mandatory on a `review` dispatch and permitted on no other. `LENSES` is the resolved lens set (§7.8.2); `ROUND` is `1`, or `2` on the re-review of a disputed `failed` (§8.1), and the reviewer writes it to `REVIEW.md.review_round`. Both sit immediately after the scope field |
 | `REWORK` | re-dispatch only | — |
