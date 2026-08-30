@@ -1,7 +1,7 @@
 ---
 id: TASK-030
 type: task
-status: pending
+status: done
 updated: 2026-08-27
 phase: PHASE-1
 module: plugin

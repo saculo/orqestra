@@ -7,7 +7,7 @@ task: TASK-030
 branch: feat/TASK-030-every-envelope-conforms
 pr_number: 8
 pr_url: https://github.com/saculo/orqestra/pull/8
-pr_state: open
+pr_state: merged
 ---
 
 ## Summary
@@ -45,7 +45,7 @@ after qa failed it — which is what TASK-019's AC-5 cost when the same class of
 
 ## CI
 
-`gh pr checks 8` at 2026-08-30: **no checks reported**. The repository has no CI workflow, so this is
+`gh pr checks 8` at 2026-08-30: **no checks reported**. Merged as `814ee0c`. The repository has no CI workflow, so this is
 absence rather than pending. No review threads.
 
 | command | result |
