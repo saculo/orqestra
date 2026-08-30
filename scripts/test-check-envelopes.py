@@ -83,6 +83,8 @@ CASES = [
     ("conditional fields under PHASE are caught", "create-tasks",
      scoped("PHASE") + CONDITIONAL,
      ["EXPERTISE, MODULE, PATHS, STACK must be omitted under PHASE"]),
+    ("a single conditional field under PROJECT is caught", "create-phases",
+     scoped("PROJECT") + ["MODULE"], ["MODULE must be omitted under PROJECT"]),
 
     # --- step-specific: LENSES/ROUND on review, and on no other -------------
     ("review dispatch with LENSES and ROUND is conformant", "review",
