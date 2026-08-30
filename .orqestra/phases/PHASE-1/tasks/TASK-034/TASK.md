@@ -33,6 +33,27 @@ fixed it. This is the last one.
 | AC-2 | Its `## Return` block opens with `SKILLS:`, as every envelope-dispatched skill's does (D-025) |
 | AC-3 | `skills/bugfix/step-diagnose.md` carries `SKILL: orqestra:diagnose`, and `python3 scripts/check-envelopes.py` **exits 0** — all ten envelopes conform |
 | AC-4 | `python3 scripts/check-step-refs.py` still exits 0 — the new skill's references resolve in the shape its location dictates (D-026) |
+| AC-5 | `agents/analyst.md`'s `description` names the steps it is actually dispatched at, not one of them |
+
+<!-- AMENDED 2026-08-30, by human decision (§8.2), after plan raised it as an open question.
+
+     AC-5 ADDED. agents/analyst.md's description says "Dispatched at the plan step". The
+     analyst is dispatched at FIVE — create-phase, create-phases, create-tasks, diagnose,
+     plan — so it is already false by four, and this task makes it five. In module, one
+     line, and the same defect class as the `implement` skill's description corrected
+     during TASK-019: a description is what the harness reads when selecting an agent, so
+     a false one misroutes work rather than merely reading oddly.
+
+     Checked across all eight personas before scoping this. analyst is the only genuine
+     outlier. The engineers showing no dispatches are a measurement artifact — the example
+     envelopes in skills/ demonstrate backend-engineer only — and are correctly described
+     for the modules that route to them.
+
+     NOT included, noted for a future task: `architect`'s description says design only,
+     but modules.md also routes the `docs` module's implement step to it — the fact
+     TASK-029 blocked twice on. 81d4139 added a persona note explaining the dual role; the
+     description itself still understates it. Left out to keep this task's diff to its
+     criteria, and recorded here so it is a decision rather than an oversight. -->
 
 ## Out of Scope
 
