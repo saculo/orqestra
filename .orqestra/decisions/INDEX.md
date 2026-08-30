@@ -3,8 +3,8 @@ id: DECISIONS
 type: decisions-index
 status: done
 updated: 2026-08-30
-count: 27
-next_id: 28
+count: 28
+next_id: 29
 ---
 
 ## Decisions
@@ -38,3 +38,4 @@ next_id: 28
 | D-025 | Agents hold `Skill`; the triple composes by invocation | structure | active | `Skill` in every `agents/` `tools:`; `SKILL`/`EXPERTISE` invoked not read; `SKILLS:` in every return |
 | D-026 | Reference shape follows how the file is loaded | structure | active | Index cells carry `${CLAUDE_PLUGIN_ROOT}`; prose and `step-*.md` use plugin-relative — the variable is inert under `Read` |
 | D-027 | `PROJECT` is the fourth scope value | structure | active | Scope is one of `TASK` `PHASE` `BUG` `PROJECT`; the scope key alone decides whether `MODULE`/`PATHS`/`STACK`/`EXPERTISE` are mandatory |
+| D-028 | A catalogue writer cell names a skill iff the step dispatches | schemas | active | §4.8.1's `Written by` names a skill when the step composes an envelope, workflow-plus-step when it runs inline; `grep ROLE:` is the test |
