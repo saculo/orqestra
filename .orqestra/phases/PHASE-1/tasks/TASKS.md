@@ -4,7 +4,7 @@ type: tasks
 status: in-progress
 updated: 2026-08-27
 phase: PHASE-1
-task_count: 36
+task_count: 38
 ---
 
 ## Tasks
@@ -47,6 +47,8 @@ task_count: 36
 | TASK-034 | The diagnose step has a procedure of its own | plugin | TASK-033 | PHASE-3/SC-1 |
 | TASK-035 | Routing names an agent that can do the work | plugin | — | PHASE-3/SC-1 |
 | TASK-036 | The reference checker enforces D-026's third position | plugin | — | PHASE-3/SC-1 |
+| TASK-037 | The spec and BUG.md agree about a bug's module | docs | — | PHASE-3/SC-1 |
+| TASK-038 | The three skill enumerations are checked against each other | plugin | — | PHASE-3/SC-1 |
 
 ## Dependency Order
 
