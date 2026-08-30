@@ -7,7 +7,7 @@ task: TASK-033
 branch: feat/TASK-033-spec-makes-room-for-diagnose
 pr_number: 9
 pr_url: https://github.com/saculo/orqestra/pull/9
-pr_state: open
+pr_state: merged
 ---
 
 ## Summary
@@ -46,7 +46,7 @@ sweeps missed, and the reason the method changed.
 
 ## CI
 
-`gh pr checks 9` at 2026-08-30: **no checks reported**. The repository has no CI workflow, so this is
+`gh pr checks 9` at 2026-08-30: **no checks reported**. Merged as `e6be0f4`. The repository has no CI workflow, so this is
 absence rather than pending. No review threads.
 
 | command | result |
