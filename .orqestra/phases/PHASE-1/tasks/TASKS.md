@@ -4,7 +4,7 @@ type: tasks
 status: in-progress
 updated: 2026-08-27
 phase: PHASE-1
-task_count: 34
+task_count: 36
 ---
 
 ## Tasks
@@ -45,6 +45,8 @@ task_count: 34
 | TASK-032 | qa needs a route for a failure implement cannot fix | docs | — | PHASE-3/SC-1 |
 | TASK-033 | Specification makes room for a diagnose skill | docs | — | PHASE-3/SC-1 |
 | TASK-034 | The diagnose step has a procedure of its own | plugin | TASK-033 | PHASE-3/SC-1 |
+| TASK-035 | Routing names an agent that can do the work | plugin | — | PHASE-3/SC-1 |
+| TASK-036 | The reference checker enforces D-026's third position | plugin | — | PHASE-3/SC-1 |
 
 ## Dependency Order
 
