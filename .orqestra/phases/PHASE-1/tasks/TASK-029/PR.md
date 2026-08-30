@@ -7,7 +7,7 @@ task: TASK-029
 branch: feat/TASK-029-project-wide-dispatch-scope
 pr_number: 7
 pr_url: https://github.com/saculo/orqestra/pull/7
-pr_state: open
+pr_state: merged
 ---
 
 ## Summary
@@ -51,7 +51,7 @@ outside the `docs` module's paths.
 
 ## CI
 
-`gh pr checks 7` at 2026-08-30: **no checks reported**. The repository has no CI workflow, so this is
+`gh pr checks 7` at 2026-08-30: **no checks reported**. Merged as `b809ccf`. The repository has no CI workflow, so this is
 absence rather than pending. No review threads on the PR.
 
 | command | result |
