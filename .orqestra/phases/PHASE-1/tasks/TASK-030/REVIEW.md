@@ -1,7 +1,7 @@
 ---
 id: TASK-030
 type: review
-status: awaiting-approval
+status: done
 updated: 2026-08-30
 task: PHASE-1/TASK-030
 verdict: passed
