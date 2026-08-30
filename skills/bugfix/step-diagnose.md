@@ -7,6 +7,7 @@ Dispatch `analyst` to find the **root cause with evidence**, then **gate**.
 ```
 ROLE:      orqestra:analyst
 STEP:      diagnose
+SKILL:     orqestra:diagnose
 BUG:       BUG-003
 MODULE:    api
 PATHS:     services/api
