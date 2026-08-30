@@ -67,8 +67,9 @@ merged PR. Phase close (`review-phase`) runs once all tasks in the phase are mer
    `.orqestra/` exists and is populated; `PROJECT.md`, phases, and tasks are readable context. There is
    no brownfield adoption path in v1 (§10).
 7. **Simpler than nit, on purpose.** nit has 21 skills, 8 archetypes, a Bun supervisor state machine,
-   26 JSON schemas, and a repair/rework/escalate protocol. orqestra has 22 skills, no archetypes, no
-   state machine, no schemas, and one rework rule.
+   26 JSON schemas, and a repair/rework/escalate protocol. orqestra has a comparable number of skills
+   and none of the rest — no archetypes, no state machine, no schemas, and one rework rule. The
+   simplification is not a smaller skill count; it is the machinery underneath them.
 
 ### 1.4 Lineage — what is taken and what is dropped
 
@@ -115,7 +116,7 @@ orqestra ships as a **Claude Code plugin**.
 orqestra/
 ├── .claude-plugin/
 │   └── plugin.json            # name, description, version, author — `name` is the skill namespace
-├── skills/                    # 22 skills — the folder name IS the invocation name
+├── skills/                    # one directory per skill — the folder name IS the invocation name
 │   ├── init/SKILL.md          #   → /orqestra:init
 │   ├── task/SKILL.md          #   → /orqestra:task    (+ step-*.md shards)
 │   └── …
@@ -581,7 +582,7 @@ Only `config.md` takes the exemption, and it earns it: it is *configuration*, no
 | `RESOLUTION.md` | `pr-comments` reply | `pr_number` `accepted` `rejected` `discussing` | `## Resolutions` · `## Replies Sent` |
 | `PHASE_SUMMARY.md` | `review-phase` | `phase` `criteria_met` | `## Criteria` · `## Deviations` · `## Tech Debt` · `## Verdict` |
 | `BUG.md` | `bugfix` intake | `bug` `severity` | `## Report` · `## Reproduction` · `## Expected vs Actual` · `## Scope` |
-| `DIAGNOSIS.md` | `bugfix` diagnose | `bug` `root_cause_found` `task` | `## Root Cause` · `## Evidence` · `## Fix Direction` · `## Regression Risk` |
+| `DIAGNOSIS.md` | `diagnose` | `bug` `root_cause_found` `task` | `## Root Cause` · `## Evidence` · `## Fix Direction` · `## Regression Risk` |
 
 #### 4.8.2 Section shapes
 
@@ -782,10 +783,17 @@ changes per step; the module's expertise travels with the task throughout.
 | qa | `qa` | `qa-engineer` | module's |
 | review | `review-task` | `reviewer` | module's |
 | pr-comments | `pr-comments` | **the module's `agent`** | module's |
+| diagnose | `diagnose` | `analyst` | module's |
 
 Only `implement` and `pr-comments` vary by module — they write the code, so they need the module's
-persona. The other four are fixed roles that do the same job everywhere; what changes for them is the
-expertise they load, not who they are.
+persona. Every other row is a fixed role that does the same job everywhere; what changes for them is
+the expertise they load, not who they are. No count is given, because the next row added would
+falsify it.
+
+`diagnose` is the one row that is not a step of the task pipeline — it runs in the `bugfix` workflow,
+against a `BUG.md` rather than a `TASK.md`. It belongs in this table anyway, because the module's
+expertise reaches it in exactly the same way: a `BUG` carries `module:` too, so §5.5's conditional
+class is mandatory there as well and the lookup is identical.
 
 ### 5.2 One task, one module
 
@@ -1452,6 +1460,7 @@ heading list written in two places is a heading list that will disagree with its
 | `qa` | `TASK.md`, `DESIGN.md`, `IMPLEMENTATION.md` | `QA.md` | `templates/QA.md` |
 | `review-task` | all of the above + the diff | `REVIEW.md` | `templates/REVIEW.md` |
 | `review-phase` | every task in the phase | `PHASE_SUMMARY.md` | `templates/PHASE_SUMMARY.md` |
+| `diagnose` | `BUG.md`, `PROJECT.md` | `DIAGNOSIS.md` | `templates/DIAGNOSIS.md` |
 
 **`implement` deviation policy** (from nit; it prevents silent scope drift):
 
@@ -1645,12 +1654,14 @@ bugfix                                              create-tasks       implement
                                                     create-task        qa
 GATE CONTROL              UTILITY                   clarify            review-task
 approve · reject          status · close-phase                         review-phase
-unblock
+unblock                                                                diagnose
 ```
 
-22 skills. The folder name is the invocation name (§2), so this table is also the command list.
-Expertise skills are pluggable, live in the project's own `.claude/skills/`, and are not part of the
-core count (§5.3).
+This grid is the whole inventory. The folder name is the invocation name (§2), so it is also the
+command list. No count is written here or in §2: `ls skills/` is the count, and a number stated in
+prose is falsified by the next skill added — which is how this line came to say 22 twice, 1500 lines
+apart, while the tree said otherwise. Expertise skills are pluggable, live in the project's own
+`.claude/skills/`, and are not part of this inventory (§5.3).
 
 ---
 
