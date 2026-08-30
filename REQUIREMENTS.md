@@ -1069,7 +1069,7 @@ step re-run. (nit's rule; kept verbatim because it is the one that decays fastes
 
 ### 7.0 Skill anatomy
 
-Twenty-two skills have to be written consistently, by different hands, months apart. The authoring
+Every skill has to be written consistently, by different hands, months apart. The authoring
 contract lives in **`templates/SKILL.template.md`** — copy it, fill the blanks, delete the comments.
 
 Every skill declares a **class** first, and the class fixes everything else:
@@ -1078,7 +1078,7 @@ Every skill declares a **class** first, and the class fixes everything else:
 |---|---|---|---|
 | orchestrator | `greenfield`, `add-phase`, `bugfix`, `task`, `close-phase` | Read, Glob, Grep, Skill, Agent, AskUserQuestion (+Bash for `task`, `bugfix`, `close-phase`) | Write, Edit, NotebookEdit |
 | planning | `create-phases`, `create-phase`, `create-tasks`, `create-task`, `clarify` | Read, Write, Glob, Grep, AskUserQuestion | Agent, Edit, NotebookEdit |
-| step | `plan`, `design` | Read, Write, Glob, Grep | Agent, Edit, NotebookEdit, Bash |
+| step | `plan`, `design`, `diagnose` | Read, Write, Glob, Grep | Agent, Edit, NotebookEdit, Bash |
 | step+build | `implement`, `qa` | Read, Write, Edit, Glob, Grep, Bash | Agent |
 | step+review | `review-task`, `review-phase` | Read, Write, Glob, Grep, Bash | Agent, Edit, NotebookEdit |
 | query | `status` | Read, Glob, Grep | Agent, Write, Edit, NotebookEdit, Bash |
@@ -1652,9 +1652,9 @@ greenfield                task                      create-phases      plan
 add-phase                 pr-comments               create-phase       design
 bugfix                                              create-tasks       implement
                                                     create-task        qa
-GATE CONTROL              UTILITY                   clarify            review-task
+GATE CONTROL              UTILITY / SETUP           clarify            review-task
 approve · reject          status · close-phase                         review-phase
-unblock                                                                diagnose
+unblock                   init                                         diagnose
 ```
 
 This grid is the whole inventory. The folder name is the invocation name (§2), so it is also the
