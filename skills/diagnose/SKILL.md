@@ -54,8 +54,8 @@ need to execute something is a step you cannot take — say what you could not e
 4. **Try to disprove it.** Name at least one thing that would have to be true if the candidate were
    the cause, and check it in the code. Look for the case the candidate does not explain: a path that
    would fail the same way without it, or a condition in the reproduction it leaves unaccounted for.
-   The bar is `skills/bugfix/step-diagnose.md`'s and rule 3 of `skills/bugfix/SKILL.md`'s — it is
-   stated there, and this step meets it rather than restating it.
+   The bar is `skills/bugfix/step-diagnose.md`'s "## The bar" — stated there, met here, not restated.
+   What follows when nothing survives is this skill's own: the outcome contract below.
 5. Survived? Write it as the root cause, with the evidence that survived as `## Evidence` — file,
    symbol, and the reasoning that ties it to the recorded reproduction. Did not survive? Return to
    step 3 with what you learned.
@@ -125,8 +125,9 @@ a task — a bug has no criteria to satisfy and nothing to split.
 
 ## Rules
 
-1. **Never diagnose past the first plausible cause.** The first plausible line is usually where the
-   symptom became visible, not where it came from. Evidence, or `root_cause_found: false`.
+1. **Never diagnose past the first plausible cause.** The bar is `skills/bugfix/step-diagnose.md`'s
+   "## The bar"; step 4 is how this step meets it. Out of candidates? `root_cause_found: false` per
+   the outcome contract — never a block.
 2. **Never run anything.** You hold no `Bash` (§7.0, `step` class). Attribution, timings and test
    outcomes are available only where the reproduce step already recorded them.
 3. **Do not design the fix.** `## Fix Direction` is a direction — a boundary and a shape, not
