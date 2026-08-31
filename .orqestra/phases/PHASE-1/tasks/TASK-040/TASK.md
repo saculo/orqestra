@@ -40,7 +40,7 @@ because resolution (a) answers it: a bug whose module is unknown cannot produce 
 | id | criterion |
 |---|---|
 | AC-1 | `templates/BUG.md` carries `module:` in its frontmatter, and **both** `python3 scripts/check-templates.py` **and** `python3 scripts/test-check-templates.py` exit 0 against §4.8.1's amended row — the harness is red in the same window and a literal reading of the checker alone would leave it failing |
-| AC-2 | `skills/bugfix/step-intake.md` establishes the module rather than inviting it — a bug cannot be created without one, and the skill says what to do when the reporter does not know |
+| AC-2 | `skills/bugfix/step-intake.md` establishes the module rather than inviting it — a bug cannot be created without one. When the reporter does not know, intake **resolves it with the human who is there**, and does not block: a block would have no artifact to be recorded in |
 | AC-3 | The `## Scope` prose and the new key do not disagree: whatever intake writes in one is consistent with the other, or the prose stops carrying the module |
 | AC-4 | `python3 scripts/check-envelopes.py` and the `config.md` `test_command` chain still exit 0, and `step-diagnose.md`'s `MODULE:` now has a frontmatter key behind it rather than a convention |
 | AC-5 | `.orqestra/config.md`'s `test_command` comment is true when this lands — it currently names a window TASK-034 already closed, while a different check is red. Correct it or delete it as its own text instructs; do not leave it describing a failure that is not the one occurring |
@@ -52,6 +52,35 @@ that is a finding to report, not an edit to make.
 
 `scripts/check-envelopes.py`. Its docstring restates the warrant that was false; once this lands the
 warrant is true and the docstring needs no change.
+
+<!-- AMENDED 2026-08-31 by human decision (§8.2), after plan found OQ-1 had no vocabulary.
+
+     AC-2: INTAKE NEVER BLOCKS. D-029 says "established by the workflow, or intake blocks
+     (D11)" — but §4.4.3's closed list has no value that fits an incomplete input:
+     contradictory-input needs a conflict, no-reproduction is reproduce's, and §4.4.5
+     defines contract as a schema that failed twice after re-dispatch. Inventing one is
+     forbidden (D11, D7).
+
+     And a block would have nowhere to live. BUG.md is the only artifact intake produces
+     and is precisely the file that cannot be written; writing it with an empty `module:`
+     to hold status: blocked would pass check-templates.py AND violate D-029 in one stroke.
+
+     So the resolution is the one that matches how intake actually runs: a HUMAN IS PRESENT
+     at intake by construction, and an unanswerable module question is settled with them
+     rather than parked in an artifact. D-029's "or intake blocks" is dead prose — worth a
+     docs follow-up, not a reason to stall this task.
+
+     step-reproduce.md:7 IS IN SCOPE. D-029's Why names reproduce among the four
+     re-derivers even though its Constrains lists only diagnose and promote. Leaving it
+     would have the workflow both establish the module and re-derive it, which is the state
+     D-029 exists to end.
+
+     .orqestra/config.md MAY BE EDITED for AC-5. It is outside this task's declared PATHS
+     but belongs to NO module (modules.md:45-47), so the edit crosses no other module's
+     boundary and the §8.2 decision that folded AC-5 here stands.
+
+     CORRECTION to the comment below: it says "config.md is `plugin`". That is wrong —
+     .orqestra/ is deliberately in no module. The conclusion held; the premise did not. -->
 
 <!-- AC-5 ADDED 2026-08-31 by human decision (§8.2), found while implementing TASK-037.
 
