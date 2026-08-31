@@ -38,10 +38,40 @@ qa and review in between passed. A false premise stated once becomes a rule, the
 
 | id | criterion |
 |---|---|
-| AC-1 | The specification and `templates/BUG.md` agree about whether a bug carries a module — whichever way that is resolved, one of them changes and the other is verified against it |
-| AC-2 | `skills/bugfix/step-diagnose.md`'s four module fields have a stated source: either a frontmatter key that exists, or a rule saying where else they come from for a `BUG` |
-| AC-3 | Whatever `check-envelopes.py` enforces matches what the spec says after AC-1, verified by running it rather than by reading |
+| AC-1 | §4.8.1's `BUG.md` row lists `module` among its frontmatter additions, so the specification says a bug carries its module — the claim at §5.5:957 and §5.1.1:795 becomes true rather than being softened |
+| AC-2 | A decision records that a bug carries its module in frontmatter, and why — so the next reader finds the reason rather than inferring it from a catalogue cell |
+| AC-3 | The specification is internally consistent afterwards: §4.8.1, §5.5:957, §5.1.1:795 and §7.3 agree, checked by reading the workflow end to end rather than by grepping one phrase |
 | AC-4 | No other place in `REQUIREMENTS.md` still asserts the version that turns out to be wrong — checked by search, and by set-difference where the claim is an enumeration |
+
+<!-- AMENDED 2026-08-31, by human decision (§8.2), after plan traced the module's real source.
+
+     THE FINDING PLAN RETURNED, and it is finer than the task was written for: the
+     OBLIGATION is right and satisfiable — MODULE/PATHS/STACK/EXPERTISE are mandatory for a
+     BUG dispatch and the value exists. What was false is the WARRANT under it. `MODULE: api`
+     comes from a human typing it at step-intake ("which module, if known"), lives as PROSE in
+     BUG.md's `## Scope`, and becomes a `module:` KEY only at step-promote — on the TASK.
+     check-envelopes.py keys on the scope key and never reads frontmatter, so step-diagnose.md
+     passes today by unchecked convention rather than by meeting a rule.
+
+     RESOLUTION (a) CHOSEN: make the specification TRUE rather than softening it. A bug is
+     diagnosed against a module; the frontmatter is where that belongs. So the claim stays and
+     BUG.md changes to match it — which also means nothing in §5.5, §5.1.1 or D-027 needs
+     correcting, because the warrant becomes true.
+
+     SPLIT, docs leading. `orqestra-conventions` says a schema change is three edits always
+     together — §4.8's catalogue row, the templates/ file, and the skill that writes it. Here
+     they span two modules and D14 forbids one task doing both. The two rules cannot both be
+     honoured, and this is the project's first schema change to span modules. Chosen: docs
+     leads (D-019), TASK-040 follows, and the schema is briefly inconsistent between the two
+     merges. That window is accepted deliberately, not overlooked.
+
+     Q3 FOLDS INTO TASK-040 rather than being filed separately. Once `module` is a schema key,
+     intake MUST populate it — "if known" stops being available — so the question answers
+     itself under (a) and a separate task would overlap.
+
+     ALSO CORRECTED, from plan: this premise predates TASK-029. TASK-015/DESIGN.md:52 already
+     asserted it, so the orchestrator's "TASK-029 wrote it, TASK-030 encoded it, TASK-033
+     repeated it" was three links of four. -->
 
 ## Out of Scope
 
@@ -49,5 +79,8 @@ Deciding by fiat. Both resolutions are defensible — a bug is diagnosed *agains
 `module:` may belong in `BUG.md`; or a bug's module is genuinely resolved elsewhere and the spec
 should say where. The design step chooses, with the reason recorded.
 
-`skills/` and `scripts/` if AC-1 resolves toward the spec — docs leads (D-019). If it resolves toward
-`templates/BUG.md`, that file is `plugin` and this task splits.
+`templates/BUG.md` and `skills/bugfix/step-intake.md` — both `plugin`, both **TASK-040's**, which
+depends on this. Docs leads (D-019).
+
+`scripts/check-envelopes.py`'s docstring, which restates the warrant. `plugin`, and it becomes true
+rather than wrong once TASK-040 lands, so it needs no edit at all.
