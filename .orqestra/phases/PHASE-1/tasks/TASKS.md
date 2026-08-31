@@ -4,7 +4,7 @@ type: tasks
 status: in-progress
 updated: 2026-08-27
 phase: PHASE-1
-task_count: 38
+task_count: 39
 ---
 
 ## Tasks
@@ -49,6 +49,7 @@ task_count: 38
 | TASK-036 | The reference checker enforces D-026's third position | plugin | — | PHASE-3/SC-1 |
 | TASK-037 | The spec and BUG.md agree about a bug's module | docs | — | PHASE-3/SC-1 |
 | TASK-038 | The three skill enumerations are checked against each other | plugin | — | PHASE-3/SC-1 |
+| TASK-039 | bugfix rule 3 agrees with its own step file | plugin | — | PHASE-3/SC-1 |
 
 ## Dependency Order
 

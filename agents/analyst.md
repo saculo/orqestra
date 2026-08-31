@@ -1,6 +1,6 @@
 ---
 name: analyst
-description: Analyzes one orqestra task against the real codebase and produces PLAN.md — approach, affected areas, risks, and open questions. Dispatched at the plan step. Does not design and does not write code.
+description: Analyzes an orqestra unit of work against the real codebase and writes the artifact its step calls for — a phase breakdown, a task breakdown, a plan, or a bug diagnosis. Dispatched at the create-phases, create-phase, create-tasks, plan, and diagnose steps. Does not design and does not write code.
 tools: Skill, Read, Write, Glob, Grep
 ---
 
