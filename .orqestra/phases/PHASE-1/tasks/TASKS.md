@@ -4,7 +4,7 @@ type: tasks
 status: in-progress
 updated: 2026-08-27
 phase: PHASE-1
-task_count: 41
+task_count: 42
 ---
 
 ## Tasks
@@ -52,6 +52,7 @@ task_count: 41
 | TASK-039 | bugfix rule 3 agrees with its own step file | plugin | — | PHASE-3/SC-1 |
 | TASK-040 | BUG.md carries the module the spec says it carries | plugin | TASK-037 | PHASE-3/SC-1 |
 | TASK-041 | A recorded decision reaches the index | plugin | — | PHASE-3/SC-1 |
+| TASK-042 | §5 names the right file for the routing table | docs | — | PHASE-3/SC-1 |
 
 ## Dependency Order
 

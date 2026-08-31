@@ -39,7 +39,7 @@ because resolution (a) answers it: a bug whose module is unknown cannot produce 
 
 | id | criterion |
 |---|---|
-| AC-1 | `templates/BUG.md` carries `module:` in its frontmatter, and `python3 scripts/check-templates.py` exits 0 against §4.8.1's amended row |
+| AC-1 | `templates/BUG.md` carries `module:` in its frontmatter, and **both** `python3 scripts/check-templates.py` **and** `python3 scripts/test-check-templates.py` exit 0 against §4.8.1's amended row — the harness is red in the same window and a literal reading of the checker alone would leave it failing |
 | AC-2 | `skills/bugfix/step-intake.md` establishes the module rather than inviting it — a bug cannot be created without one, and the skill says what to do when the reporter does not know |
 | AC-3 | The `## Scope` prose and the new key do not disagree: whatever intake writes in one is consistent with the other, or the prose stops carrying the module |
 | AC-4 | `python3 scripts/check-envelopes.py` and the `config.md` `test_command` chain still exit 0, and `step-diagnose.md`'s `MODULE:` now has a frontmatter key behind it rather than a convention |
