@@ -7,7 +7,7 @@ task: TASK-034
 branch: feat/TASK-034-diagnose-has-a-procedure
 pr_number: 10
 pr_url: https://github.com/saculo/orqestra/pull/10
-pr_state: open
+pr_state: merged
 ---
 
 ## Summary
@@ -48,7 +48,7 @@ Ten commits, `attempts: 1 of 3`.
 
 ## CI
 
-`gh pr checks 10` at 2026-08-31: **no checks reported**. The repository has no CI workflow, so this is
+`gh pr checks 10` at 2026-08-31: **no checks reported**. Merged as `c1d386d`. The repository has no CI workflow, so this is
 absence rather than pending. No review threads.
 
 | command | result |
