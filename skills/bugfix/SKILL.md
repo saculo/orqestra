@@ -38,8 +38,12 @@ copied.
 
 ## Intake
 
-Write `work/BUG-NNN/BUG.md`: the report, reproduction steps as given, expected vs actual, and scope.
-Id is `max(existing) + 1` (D8).
+Write `work/BUG-NNN/BUG.md`: the report, reproduction steps as given, expected vs actual, scope, and
+the **module**. Id is `max(existing) + 1` (D8).
+
+Intake **establishes** `module:` rather than inviting it — a bug without one is not creatable (D-029).
+The question is re-asked until answered, and **intake never blocks**: `BUG.md` is the only artifact it
+produces, so a `blocked_reason` would have nowhere to live. `step-intake.md` holds the procedure.
 
 ## Reproduce
 
@@ -64,7 +68,7 @@ to catch a wrong theory, and the most expensive one to skip.
 Invoke `create-task` to write a normal task under the current phase:
 
 ```yaml
-module: api               # routing — where the fix lands; its row names the agent
+module: api               # carried from the BUG's `module:` — never re-derived (D-029)
 origin: bug               # provenance
 bug: BUG-001              # backlink
 serves: [SC-N]            # the criterion the bug violates
@@ -101,5 +105,6 @@ The shared step, for the one promoted task.
 1. **Never fix anything.** Stop at design (D3).
 2. **Never skip reproduction.** No repro, no fix.
 3. **Never diagnose past the first plausible cause.** Evidence, or block.
-4. **Route by the module the fix lands in**, never by the fact that it is a bug.
+4. **Route by the BUG's `module:`**, never by the fact that it is a bug and never by re-reading the
+   symptom. Intake establishes it; reproduce, diagnose and promote read it (D-029).
 5. Never write artifacts yourself — dispatch (D1).
