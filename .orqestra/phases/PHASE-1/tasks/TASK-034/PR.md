@@ -42,7 +42,7 @@ further* branch.
 | `042aa98` | TASK-034: review — changes-requested, F-1 on a false citation |
 | `6c77089` | TASK-034: rework — the citation points at authority that agrees |
 | `6681746` | TASK-034: review round 2 — passed, 0 required |
-| `e4a2c4f` | TASK-034: review gate approved, and rule 3 filed as TASK-039 |
+| `5062fa5` | TASK-034: review gate approved, and rule 3 filed as TASK-039 |
 
 Ten commits, `attempts: 1 of 3`.
 
