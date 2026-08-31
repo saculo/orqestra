@@ -927,13 +927,16 @@ procedure and no project conventions, and returns plausible work that follows no
 rules. That is the worst failure shape available, which is why the requirement is stated here rather
 than left to be discovered.
 
-**`MODULE` and `PATHS` carry the row the routing came from.** `MODULE` is the task's `module:` — the
-single key that resolved `ROLE`, `STACK`, `EXPERTISE`, and `PATHS` from one `modules.md` row (§5.1,
-D-004); the agent cites it, and `review-task` looks the row up by it. `PATHS` is that row's `paths`,
-and it is a boundary rather than a hint: the agent writes nothing outside it, and `review-task` flags
-any changed file that falls outside as a `major` finding (§5.2, §7.8.1, D2). Both travel in the
-envelope because that check has to be mechanical — a reviewer who must go and find the row itself is a
-reviewer who sometimes does not.
+**`MODULE` and `PATHS` carry the row the routing came from.** `MODULE` is the **scope unit's**
+`module:` — the task's under `TASK:`, the bug's under `BUG:` — the single key that resolved `ROLE`,
+`STACK`, `EXPERTISE`, and `PATHS` from one `modules.md` row (§5.1, §5.1.1, D-004); the agent cites it,
+and `review-task` looks the row up by it. Either way it is **read from the unit's frontmatter, never
+derived by the dispatching agent**: a `BUG` dispatch is composed before promote, so there is no task to
+read from, and `step-diagnose` takes `BUG-NNN/BUG.md`'s own `module:` (§7.3, D-029). `PATHS` is that
+row's `paths`, and it is a boundary rather than a hint: the agent writes nothing outside it, and
+`review-task` flags any changed file that falls outside as a `major` finding (§5.2, §7.8.1, D2). Both
+travel in the envelope because that check has to be mechanical — a reviewer who must go and find the
+row itself is a reviewer who sometimes does not.
 
 **Paths, never contents.** The orchestrator names the files; the agent reads them itself, in its own
 context. Inlining an artifact into the envelope would move it through the orchestrator's context —
