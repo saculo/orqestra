@@ -581,7 +581,7 @@ Only `config.md` takes the exemption, and it earns it: it is *configuration*, no
 | `COMMENTS.md` | `pr-comments` triage | `pr_number` `comment_count` `unresolved` | `## Comments` |
 | `RESOLUTION.md` | `pr-comments` reply | `pr_number` `accepted` `rejected` `discussing` | `## Resolutions` · `## Replies Sent` |
 | `PHASE_SUMMARY.md` | `review-phase` | `phase` `criteria_met` | `## Criteria` · `## Deviations` · `## Tech Debt` · `## Verdict` |
-| `BUG.md` | `bugfix` intake | `bug` `severity` | `## Report` · `## Reproduction` · `## Expected vs Actual` · `## Scope` |
+| `BUG.md` | `bugfix` intake | `module` `bug` `severity` | `## Report` · `## Reproduction` · `## Expected vs Actual` · `## Scope` |
 | `DIAGNOSIS.md` | `diagnose` | `bug` `root_cause_found` `task` | `## Root Cause` · `## Evidence` · `## Fix Direction` · `## Regression Risk` |
 
 #### 4.8.2 Section shapes
@@ -927,13 +927,16 @@ procedure and no project conventions, and returns plausible work that follows no
 rules. That is the worst failure shape available, which is why the requirement is stated here rather
 than left to be discovered.
 
-**`MODULE` and `PATHS` carry the row the routing came from.** `MODULE` is the task's `module:` — the
-single key that resolved `ROLE`, `STACK`, `EXPERTISE`, and `PATHS` from one `modules.md` row (§5.1,
-D-004); the agent cites it, and `review-task` looks the row up by it. `PATHS` is that row's `paths`,
-and it is a boundary rather than a hint: the agent writes nothing outside it, and `review-task` flags
-any changed file that falls outside as a `major` finding (§5.2, §7.8.1, D2). Both travel in the
-envelope because that check has to be mechanical — a reviewer who must go and find the row itself is a
-reviewer who sometimes does not.
+**`MODULE` and `PATHS` carry the row the routing came from.** `MODULE` is the **scope unit's**
+`module:` — the task's under `TASK:`, the bug's under `BUG:` — the single key that resolved `ROLE`,
+`STACK`, `EXPERTISE`, and `PATHS` from one `modules.md` row (§5.1, §5.1.1, D-004); the agent cites it,
+and `review-task` looks the row up by it. Either way it is **read from the unit's frontmatter, never
+derived by the dispatching agent**: a `BUG` dispatch is composed before promote, so there is no task to
+read from, and `step-diagnose` takes `BUG-NNN/BUG.md`'s own `module:` (§7.3, D-029). `PATHS` is that
+row's `paths`, and it is a boundary rather than a hint: the agent writes nothing outside it, and
+`review-task` flags any changed file that falls outside as a `major` finding (§5.2, §7.8.1, D2). Both
+travel in the envelope because that check has to be mechanical — a reviewer who must go and find the
+row itself is a reviewer who sometimes does not.
 
 **Paths, never contents.** The orchestrator names the files; the agent reads them itself, in its own
 context. Inlining an artifact into the envelope would move it through the orchestrator's context —
@@ -1207,8 +1210,8 @@ the two planning tails is the most likely maintenance failure, so they must shar
 step-intake.md         bug report from args or interactive → work/BUG-NNN/BUG.md
 step-reproduce.md      establish a failing reproduction against the current build
 step-diagnose.md       root cause + evidence → DIAGNOSIS.md                [GATE: diagnosis]
-step-promote.md        → create-task: a TASK-NNN under the current phase, module from the
-                            touched area, linked back to BUG-NNN
+step-promote.md        → create-task: a TASK-NNN under the current phase, module carried from
+                            BUG-NNN's frontmatter, linked back to BUG-NNN
 step-plan-design.md    → plan → design for that task                       [GATE: design]
 step-handoff.md        report the /orqestra:task command to run
 ```
