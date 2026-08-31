@@ -1,7 +1,7 @@
 ---
 id: TASK-040
 type: design
-status: awaiting-approval
+status: done
 updated: 2026-08-31
 task: TASK-040
 decisions: []
