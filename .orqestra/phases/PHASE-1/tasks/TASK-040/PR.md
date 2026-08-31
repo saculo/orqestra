@@ -7,7 +7,7 @@ task: TASK-040
 branch: feat/TASK-040-bug-carries-its-module
 pr_number: 12
 pr_url: https://github.com/saculo/orqestra/pull/12
-pr_state: open
+pr_state: merged
 ---
 
 ## Summary
@@ -44,7 +44,7 @@ Eight commits, `attempts: 0` — nothing was reworked.
 
 ## CI
 
-`gh pr checks 12` at 2026-08-31: **no checks reported**. The repository has no CI workflow. No review
+`gh pr checks 12` at 2026-08-31: **no checks reported**. Merged as `8ad520a`. The repository has no CI workflow. No review
 threads.
 
 Every checker was run **standalone**, because `test_command` chains with `&&` and this task's headline
