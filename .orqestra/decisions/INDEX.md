@@ -3,8 +3,8 @@ id: DECISIONS
 type: decisions-index
 status: done
 updated: 2026-08-31
-count: 30
-next_id: 31
+count: 31
+next_id: 32
 ---
 
 ## Decisions
@@ -41,3 +41,4 @@ next_id: 31
 | D-028 | A catalogue writer cell names a skill iff the step dispatches | schemas | active | §4.8.1's `Written by` names a skill when the step composes an envelope, workflow-plus-step when it runs inline; `grep ROLE:` is the test |
 | D-029 | A `BUG` carries `module:` in its frontmatter | schemas | active | §4.8.1 lists `module` on `BUG.md`; intake establishes it, `## Scope` stops carrying it, diagnose and promote read it |
 | D-030 | Historical artifacts are not migrated | schemas | active | An artifact that conformed when written is not amended for a later rule; `--target .orqestra` is a diagnostic with 19 known failures, never a gate |
+| D-031 | What a skill's tool fields actually do, probed | structure | active | `disallowed-tools` reaches subagents; `allowed-tools` never restores; `Bash` routes around both |
