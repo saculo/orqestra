@@ -43,6 +43,7 @@ because resolution (a) answers it: a bug whose module is unknown cannot produce 
 | AC-2 | `skills/bugfix/step-intake.md` establishes the module rather than inviting it — a bug cannot be created without one, and the skill says what to do when the reporter does not know |
 | AC-3 | The `## Scope` prose and the new key do not disagree: whatever intake writes in one is consistent with the other, or the prose stops carrying the module |
 | AC-4 | `python3 scripts/check-envelopes.py` and the `config.md` `test_command` chain still exit 0, and `step-diagnose.md`'s `MODULE:` now has a frontmatter key behind it rather than a convention |
+| AC-5 | `.orqestra/config.md`'s `test_command` comment is true when this lands — it currently names a window TASK-034 already closed, while a different check is red. Correct it or delete it as its own text instructs; do not leave it describing a failure that is not the one occurring |
 
 ## Out of Scope
 
@@ -51,6 +52,21 @@ that is a finding to report, not an edit to make.
 
 `scripts/check-envelopes.py`. Its docstring restates the warrant that was false; once this lands the
 warrant is true and the docstring needs no change.
+
+<!-- AC-5 ADDED 2026-08-31 by human decision (§8.2), found while implementing TASK-037.
+
+     `.orqestra/config.md:34-40` says check-envelopes.py is "red BY DESIGN" on
+     step-diagnose.md. TASK-034 closed that; run directly the checker exits 0. The comment
+     also instructs "DELETE THESE LINES when the scan goes green" — it did, and nobody did.
+
+     What makes it worth an AC rather than a note: the comment exists to stop a second
+     failure hiding inside a familiar one, and right now the suite IS red for a different
+     reason — the BUG.md window this task closes. It became the thing it was written to
+     prevent.
+
+     Folded here because config.md is `plugin`, TASK-037 is `docs`, and this task closes
+     the window the comment should describe. The correction lands exactly when its
+     condition is met. -->
 
 Widening the change to other artifacts. `TASK.md` already carries `module:`; `PHASE.md` deliberately
 does not (D-027).
