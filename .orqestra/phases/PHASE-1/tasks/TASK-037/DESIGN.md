@@ -1,7 +1,7 @@
 ---
 id: TASK-037
 type: design
-status: awaiting-approval
+status: done
 updated: 2026-08-31
 task: TASK-037
 decisions: [D-029]

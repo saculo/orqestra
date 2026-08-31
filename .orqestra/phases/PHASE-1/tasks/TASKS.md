@@ -4,7 +4,7 @@ type: tasks
 status: in-progress
 updated: 2026-08-27
 phase: PHASE-1
-task_count: 40
+task_count: 41
 ---
 
 ## Tasks
@@ -51,6 +51,7 @@ task_count: 40
 | TASK-038 | The three skill enumerations are checked against each other | plugin | — | PHASE-3/SC-1 |
 | TASK-039 | bugfix rule 3 agrees with its own step file | plugin | — | PHASE-3/SC-1 |
 | TASK-040 | BUG.md carries the module the spec says it carries | plugin | TASK-037 | PHASE-3/SC-1 |
+| TASK-041 | A recorded decision reaches the index | plugin | — | PHASE-3/SC-1 |
 
 ## Dependency Order
 
