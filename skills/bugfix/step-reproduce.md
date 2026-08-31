@@ -4,7 +4,9 @@
 
 ## Procedure
 
-1. Identify the module from the symptom, and load its expertise skills.
+1. Read `module:` from `BUG.md` and load the expertise skills its `modules.md` row names. **Do not
+   re-derive the module from the symptom** — intake established it (D-029), and a second derivation
+   is a second source of truth however right its answer.
 2. Follow the reported steps exactly, against the **current build**.
 3. Reproduced → capture it as an **automated failing test** wherever possible. That test becomes qa's
    evidence later, and for an `origin: bug` task qa requires a test that fails against the pre-fix code

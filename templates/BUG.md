@@ -3,6 +3,8 @@ id:
 type: bug
 status: in-progress
 updated:
+module:                # THE routing key (D-029). agent/stack/expertise all come from its row.
+                       # Established at intake, never "if known" — a bug without one is not creatable
 bug:
 severity:              # blocker | major | minor
 ---
@@ -19,4 +21,6 @@ severity:              # blocker | major | minor
 <!-- What should happen, what does happen. -->
 
 ## Scope
-<!-- Who and what is affected; which module the symptom surfaces in. -->
+<!-- Who and what is affected — users, data, environments, blast radius.
+     NOT the module: that is `module:` in the frontmatter, and only there (D-029).
+     A rule written in two places is one that will disagree with itself. -->

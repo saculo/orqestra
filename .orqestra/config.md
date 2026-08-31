@@ -31,13 +31,6 @@ commit_style: scoped         # <scope>: <subject> — no conventional-commit typ
 pr_draft: false
 auto_merge: false
 test_command: python3 scripts/check-templates.py && python3 scripts/test-check-envelopes.py && python3 scripts/check-envelopes.py
-                             # check-envelopes.py exits 1 today, on skills/bugfix/step-diagnose.md
-                             # alone: it needs a SKILL naming skills/diagnose/, which TASK-034 authors
-                             # after TASK-033 makes room in the spec. The suite is red BY DESIGN until
-                             # then — a skip-list would be the fabrication TASK-030's Out of Scope
-                             # forbids, and would outlive the reason for it. DELETE THESE LINES when
-                             # the scan goes green, so a second failure cannot hide inside a familiar
-                             # one.
 
 ## Version control
 
