@@ -7,7 +7,7 @@ task: TASK-037
 branch: feat/TASK-037-bug-module-provenance
 pr_number: 11
 pr_url: https://github.com/saculo/orqestra/pull/11
-pr_state: open
+pr_state: merged
 ---
 
 ## Summary
@@ -46,7 +46,7 @@ introduced on its own subject, and the sweep that missed it is why the rework re
 
 ## CI
 
-`gh pr checks 11` at 2026-08-31: **no checks reported**. The repository has no CI workflow. No review
+`gh pr checks 11` at 2026-08-31: **no checks reported**. Merged as `316bdd3`. The repository has no CI workflow. No review
 threads.
 
 Every checker was run **directly**, because `config.md`'s `test_command` chains with `&&` and a failing
