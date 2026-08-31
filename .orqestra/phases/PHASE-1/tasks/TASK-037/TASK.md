@@ -10,7 +10,7 @@ origin: feature
 bug:
 depends_on: []
 serves: [PHASE-3/SC-1]
-attempts: 0
+attempts: 1
 ---
 
 ## Goal
