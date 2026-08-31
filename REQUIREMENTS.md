@@ -581,7 +581,7 @@ Only `config.md` takes the exemption, and it earns it: it is *configuration*, no
 | `COMMENTS.md` | `pr-comments` triage | `pr_number` `comment_count` `unresolved` | `## Comments` |
 | `RESOLUTION.md` | `pr-comments` reply | `pr_number` `accepted` `rejected` `discussing` | `## Resolutions` · `## Replies Sent` |
 | `PHASE_SUMMARY.md` | `review-phase` | `phase` `criteria_met` | `## Criteria` · `## Deviations` · `## Tech Debt` · `## Verdict` |
-| `BUG.md` | `bugfix` intake | `bug` `severity` | `## Report` · `## Reproduction` · `## Expected vs Actual` · `## Scope` |
+| `BUG.md` | `bugfix` intake | `module` `bug` `severity` | `## Report` · `## Reproduction` · `## Expected vs Actual` · `## Scope` |
 | `DIAGNOSIS.md` | `diagnose` | `bug` `root_cause_found` `task` | `## Root Cause` · `## Evidence` · `## Fix Direction` · `## Regression Risk` |
 
 #### 4.8.2 Section shapes
@@ -1207,8 +1207,8 @@ the two planning tails is the most likely maintenance failure, so they must shar
 step-intake.md         bug report from args or interactive → work/BUG-NNN/BUG.md
 step-reproduce.md      establish a failing reproduction against the current build
 step-diagnose.md       root cause + evidence → DIAGNOSIS.md                [GATE: diagnosis]
-step-promote.md        → create-task: a TASK-NNN under the current phase, module from the
-                            touched area, linked back to BUG-NNN
+step-promote.md        → create-task: a TASK-NNN under the current phase, module carried from
+                            BUG-NNN's frontmatter, linked back to BUG-NNN
 step-plan-design.md    → plan → design for that task                       [GATE: design]
 step-handoff.md        report the /orqestra:task command to run
 ```
