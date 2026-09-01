@@ -1,6 +1,7 @@
 # Orqestra workflow audit — 2026-09-01
 
-Snapshot reviewed: commit `7c8041a` on branch `feat/TASK-043-bugfix-can-write-bug`.
+Snapshot reviewed: commit `7c8041a` on branch `orqestra/audit-backlog` — named
+`feat/TASK-043-bugfix-can-write-bug` when this audit was written.
 
 This is a fresh audit of the current repository. It replaces the deleted audit files; it is not a
 copy of their findings. The focus is whether the documented workflows can execute, resume after an

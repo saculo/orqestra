@@ -22,7 +22,7 @@ open a second PR for a branch that already has one.**
 `git rev-list --count @..@{u}`. Three defects in one line:
 
 1. **`@{u}` is undefined when the branch has no upstream** — which is the normal state of a freshly
-   created local task branch, and the state of `feat/TASK-043-bugfix-can-write-bug` as this is written.
+   created local task branch, and the state of `orqestra/audit-backlog` as this is written.
    The command errors rather than reporting a count.
 2. **It counts one direction only.** A base that has diverged — local commits *and* remote commits —
    passes an ahead-only count, and the `git pull --ff-only` that follows then fails for a reason the
