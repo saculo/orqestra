@@ -22,13 +22,18 @@ session rather than reasoned about. Four results:
 | probe | result |
 |---|---|
 | Invoke `orqestra:status` (`disallowed-tools: Write, Edit, NotebookEdit`), then `Write` | **`Write` removed.** Error: *"disabled for this session, in subagents as well as here"* |
+| Then **dispatch a subagent** whose persona declares `tools: … Write, Edit …` and have it try `Write` | **removed there too**, and `Edit` with it. `Bash` survives |
 | Then invoke `orqestra:create-task` (`allowed-tools: … Write …`), then `Write` | **still removed.** `allowed-tools` does not restore |
 | Then write a file with a **`Bash` heredoc** | **succeeds** |
 | `create-task` also declares `disallowed-tools: Agent` | `Agent` removed the same way |
 
 **Three consequences, none of them in D-024.**
 
-**1. The removal reaches subagents.** The error says so in as many words. So an orchestrator that
+**1. The removal reaches subagents, and overrides their persona's `tools:`.** Not read off the error
+string — dispatched and measured. `agents/agentic-engineer.md` declares `Write` and `Edit`; a subagent
+dispatched under a `status`-restricted parent held **neither**, while `Bash` survived. So D-024's
+"`agents/*.md` `tools:` is a true allowlist for the whole subagent run" is a **ceiling, not a floor**:
+the persona cannot grant what the caller removed. So an orchestrator that
 invokes a `Write`-denying skill cannot dispatch an agent that writes, for the rest of the turn —
 and `skills/task/SKILL.md` rule 2 *requires* calling `orqestra:status`. Every `/orqestra:task` run
 invokes it at preflight and then dispatches `implement`, which must write `IMPLEMENTATION.md`. The
