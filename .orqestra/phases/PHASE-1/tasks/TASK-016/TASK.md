@@ -2,13 +2,13 @@
 id: TASK-016
 type: task
 status: pending
-updated: 2026-08-26
+updated: 2026-09-01
 phase: PHASE-1
 module: docs
 stack: markdown
 origin: feature
 bug:
-depends_on: [TASK-011]
+depends_on: [TASK-046, TASK-011]
 serves: [SC-7]
 attempts: 0
 ---
@@ -47,3 +47,8 @@ for the write to be correct. They are separable and both are needed.
 
 Moving `attempts` out of `TASK.md`. Same carve-out TASK-011 made: it changes stage derivation, so it is
 a `D-NNN` if this task concludes it should move.
+
+**Defining an approval transition before TASK-046 lands.** Every transition here is a write performed
+by some actor, and D-031 measured that an orchestrator's `disallowed-tools` removes `Write` from its
+dispatched agents as well as itself. Until that clears, "the owning skill writes it" names an actor
+that cannot. Hence `depends_on: [TASK-046]`.

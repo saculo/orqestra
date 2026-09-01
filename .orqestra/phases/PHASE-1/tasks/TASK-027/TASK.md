@@ -2,13 +2,13 @@
 id: TASK-027
 type: task
 status: pending
-updated: 2026-08-26
+updated: 2026-09-01
 phase: PHASE-1
 module: plugin
 stack: markdown
 origin: feature
 bug:
-depends_on: [TASK-011, TASK-016]
+depends_on: [TASK-046, TASK-011, TASK-016]
 serves: [SC-7]
 attempts: 0
 ---
@@ -34,3 +34,8 @@ the skills cite those sections rather than restating them (D-019).
 ## Out of Scope
 
 §6.1, D1, and D-008 — `docs`, TASK-011 and TASK-016, both of which land first.
+
+**Implementing before TASK-046 lands.** AC-3 has `approve`, `reject` and `unblock` dispatching the
+owning skill instead of editing artifacts directly, and AC-1 has the orchestrators instructing no
+writes. D-031 measured that dispatch does not confer `Write` when the caller denied it, so both
+remedies are inert until the tool fields are fixed. Hence `depends_on: [TASK-046]`.

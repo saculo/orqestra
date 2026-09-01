@@ -2,13 +2,13 @@
 id: TASK-028
 type: task
 status: pending
-updated: 2026-08-27
+updated: 2026-09-01
 phase: PHASE-1
 module: docs
 stack: markdown
 origin: feature
 bug:
-depends_on: [TASK-011]
+depends_on: [TASK-046, TASK-011]
 serves: [SC-7]
 attempts: 0
 ---
@@ -64,7 +64,10 @@ restating them (D-019).
 
 **TASK-011's four gate-write sites and its `attempts` instructions.** Same root cause, already filed,
 and the two tasks must not both amend D1's writer table. Hence `depends_on: [TASK-011]` — not because
-this work needs that work, but because they collide textually.
+this work needs that work, but because they collide textually. `TASK-046` joins the list for a
+different reason: AC-1's check compares what a step wrote against its `WRITE:` path, and D-031 measured
+that a step under a `Write`-denying caller writes nothing at all — which that check would read as
+clean. It must not ship against a tool pool that makes every step look compliant.
 
 **Whether `attempts++` belongs to the task orchestrator.** TASK-011's table lists four sites where an
 orchestrator is told to write and cannot; `step-review.md:48`, `step-qa.md:37` and `step-merge.md:42`

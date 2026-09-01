@@ -4,7 +4,7 @@ type: tasks
 status: in-progress
 updated: 2026-09-01
 phase: PHASE-1
-task_count: 46
+task_count: 47
 ---
 
 ## Tasks
@@ -21,12 +21,12 @@ task_count: 46
 | TASK-008 | Fix the checker coverage hole and exit codes | plugin | — | SC-5 |
 | TASK-010 | Specification records the commit convention | docs | — | SC-2 |
 | TASK-009 | Commits are identified by task id, not commit type | plugin | TASK-010 | SC-2 |
-| TASK-011 | Orchestrators must not write artifacts | docs | — | SC-7 |
+| TASK-011 | Orchestrators must not write artifacts | docs | TASK-046 | SC-7 |
 | TASK-012 | Branch created at preflight, not at push | docs | — | PHASE-3/SC-1 |
 | TASK-013 | `blocked_reason` and the status vocabulary in the catalogue | docs | — | SC-5 |
 | TASK-014 | `status` may read configuration, not only frontmatter | docs | — | SC-4 |
 | TASK-015 | The dispatch envelope delivers the layers it advertises | docs | — | PHASE-3/SC-1 |
-| TASK-016 | A parked gate records enough to be resumed | docs | TASK-011 | SC-7 |
+| TASK-016 | A parked gate records enough to be resumed | docs | TASK-046, TASK-011 | SC-7 |
 | TASK-017 | An accepted phase gap must not wedge planning | docs | — | PHASE-5/SC-1 |
 | TASK-018 | `PROJECT.md` has an owner that populates it | docs | — | SC-5 |
 | TASK-019 | Dispatched agents can reach their step and expertise skills | plugin | TASK-015 | PHASE-3/SC-1 |
@@ -37,8 +37,8 @@ task_count: 46
 | TASK-024 | Every referenced step file exists | plugin | — | SC-1 |
 | TASK-025 | Split mode and gap mode stop contradicting themselves | plugin | TASK-017 | PHASE-5/SC-1 |
 | TASK-026 | `bugfix` leaves a tree its own task can be delivered from | plugin | TASK-020 | PHASE-5/SC-1 |
-| TASK-027 | Skills implement writer discipline and gate state | plugin | TASK-011, TASK-016 | SC-7 |
-| TASK-028 | Detect a write outside the dispatch contract | docs | TASK-011 | SC-7 |
+| TASK-027 | Skills implement writer discipline and gate state | plugin | TASK-046, TASK-011, TASK-016 | SC-7 |
+| TASK-028 | Detect a write outside the dispatch contract | docs | TASK-046, TASK-011 | SC-7 |
 | TASK-029 | §5.5's always-class reaches a scope-less dispatch | docs | — | PHASE-3/SC-1 |
 | TASK-030 | Every envelope conforms, and the suite proves it | plugin | TASK-024, TASK-029 | PHASE-3/SC-1 |
 | TASK-031 | Prove EXPERTISE changes what a dispatched agent does | plugin | — | PHASE-3/SC-1 |
@@ -57,6 +57,7 @@ task_count: 46
 | TASK-044 | A stale template count and a dead block path | docs | — | PHASE-3/SC-1 |
 | TASK-045 | Templates and instances agree with the spec | plugin | — | PHASE-3/SC-1 |
 | TASK-046 | Orchestrator tool fields block every downstream write | plugin | — | SC-7 |
+| TASK-047 | Phase amendment has no section governing it | docs | — | SC-5 |
 
 ## Dependency Order
 

@@ -2,7 +2,7 @@
 id: PHASE-1
 type: phase
 status: pending
-updated: 2026-08-26
+updated: 2026-09-01
 phase: PHASE-1
 criteria_count: 7
 ---
@@ -25,7 +25,7 @@ because a schema without a template is an unfinished schema (D-003).
 | SC-4 | `/orqestra:status` derives the correct stage for every row of the §4.3 table, **including both traps**: an `IMPLEMENTATION.md` with `status: changes-requested` reports `implemented`-in-rework, and a `QA.md` with `result: failed` does not advance the stage | a hand-built fixture tree covering all 8 stages plus both traps |
 | SC-5 | Every artifact in the §4.8 catalogue has a template whose frontmatter keys and heading order match the catalogue exactly | a conformance check of `templates/` against §4.8, run as the project's first test |
 | SC-6 | `/orqestra:status` on an uninitialized repo says so plainly and suggests `/orqestra:init` rather than erroring | run in a repo with no `.orqestra/` |
-| SC-7 | **No orchestrator writes an artifact.** Every artifact in the §4.8 catalogue names a sole writer that holds `Write` and is reached by dispatch, and no skill writes an artifact D1 does not assign it — including `status` and `attempts` | a check over `skills/` frontmatter and write instructions against D1, run alongside the template conformance check |
+| SC-7 | **No orchestrator writes an artifact.** Every artifact in the §4.8 catalogue names a sole writer that holds `Write`, **and no skill in that writer's call chain denies it** — a denial anywhere above removes the tool from the writer too (D-031). And no skill writes an artifact D1 does not assign it — including `status` and `attempts` | a check over `skills/` frontmatter and write instructions against D1, run alongside the template conformance check |
 
 <!-- SC-2 AMENDED 2026-08-25, by human decision (§8.2).
 
@@ -68,6 +68,36 @@ because a schema without a template is an unfinished schema (D-003).
      became test_command and is the reason schema drift now surfaces at all; writer
      discipline earns the same treatment, because the failure mode is identical — a rule
      everyone believes is enforced, enforced nowhere. -->
+
+<!-- SC-7 AMENDED 2026-09-01, by human decision.
+
+     It read "names a sole writer that holds `Write` and is reached by dispatch". D-031
+     probed the tool fields live and measured that dispatch does NOT confer `Write`: a
+     caller's `disallowed-tools` reaches its subagents and overrides the persona's own
+     `tools:`, and a nested skill's `allowed-tools` never restores it. So the criterion
+     named a mechanism that does not do what it was assumed to do, and a tree could satisfy
+     it exactly as written while no writer could actually write.
+
+     This is SC-2's lesson one level up. SC-2 expired because it pinned a FORMAT STRING that
+     the next convention change silently invalidated. SC-7 expired because it pinned a
+     MECHANISM that had never been measured — and unlike SC-2's, this one was wrong from the
+     day it was written rather than going stale later. Both were invisible for the same
+     reason: nothing points at a criterion when the thing it assumed stops being true.
+
+     The amended clause names the PROPERTY (nothing in the chain denies the tool) rather
+     than the mechanism that was believed to provide it. A future change to how tools are
+     bound then leaves the criterion still correct.
+
+     TASK-046 is the task that makes this satisfiable, and TASK-011, TASK-016, TASK-027 and
+     TASK-028 — the rest of this criterion's cluster — now depend on it, because every one
+     of them had routed its remedy through dispatch.
+
+     THE CITATION IN THE TWO COMMENTS ABOVE IS WRONG and is left standing rather than
+     quietly corrected. Both say "by human decision (§8.2)". §8.2 is "Recovery — un-wedging
+     a run", and its safe-to-hand-edit table covers task artifacts only; nothing in it
+     governs phase criteria. There is no section for phase-definition changes at all. Filed
+     as a `docs` task rather than fixed here, since inventing a section in a phase file is
+     the same move this project keeps finding and filing. -->
 
 ## Scope
 

@@ -2,13 +2,13 @@
 id: TASK-011
 type: task
 status: pending
-updated: 2026-08-26
+updated: 2026-09-01
 phase: PHASE-1
 module: docs
 stack: markdown
 origin: feature
 bug:
-depends_on: []
+depends_on: [TASK-046]
 serves: [SC-7, SC-5]
 attempts: 0
 ---
@@ -84,3 +84,14 @@ not of this one.
 **The `attempts` location question.** Whether the rework counter belongs in `TASK.md` at all is a
 design question worth asking, but moving it changes `status` derivation and the rework loop. If this
 task concludes it should move, that is a `D-NNN` and a task, not an edit made in passing.
+
+**Stating how a write is performed before TASK-046 lands.** AC-3 requires D-008 to name *which skill*
+performs the `awaiting-approval` write, and AC-5 requires §7.0.1 to state the rule generally. Neither
+can be written truthfully today: D-031 measured that an orchestrator's `disallowed-tools` removes
+`Write` from its dispatched agents as well as from itself, so "dispatch the owning skill" is not yet a
+true answer. Hence `depends_on: [TASK-046]`.
+
+**§4.4.5 rung 3 belongs to this task.** It justifies the never-patch rule by the very
+`disallowed-tools` TASK-046 removes, so the sentence goes false the moment that lands. The rule itself
+survives; only its stated mechanism dies. The `across a gate the rule is behavioural` clause already in
+that rung is the form the whole rung should take.
