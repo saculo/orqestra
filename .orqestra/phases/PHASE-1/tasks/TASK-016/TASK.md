@@ -52,3 +52,16 @@ a `D-NNN` if this task concludes it should move.
 by some actor, and D-031 measured that an orchestrator's `disallowed-tools` removes `Write` from its
 dispatched agents as well as itself. Until that clears, "the owning skill writes it" names an actor
 that cannot. Hence `depends_on: [TASK-046]`.
+
+**WIDENED BY AUDIT 2026-09-01 — findings 5 and 11.** Two gaps this task's ACs do not yet reach:
+
+- **A gate has no artifact of its own.** Every gate parks an ordinary output artifact, and `approve`
+  expects to find exactly one parked. The greenfield design gate covers *every* task after all designs
+  are written, so it must either park several artifacts (which `approve` rejects) or park one
+  arbitrarily. AC-1 asks what must be recorded; it does not ask *where*. A dedicated gate record with
+  its own id, owning workflow, scope, target artifacts, choices and resume action is the audit's
+  proposal and should be considered against extending the parked artifact.
+- **`reject` assumes every gate owns a `TASK.md`.** It always increments `attempts` there
+  (`skills/reject/SKILL.md:19-24`), but phase, task-decomposition, phase-close and PR-triage gates have
+  no task owner. AC-4 covers where `attempts` is incremented and must also cover gates where there is
+  nothing to increment — a phase gate must not invent a task owner to hold its retry count.

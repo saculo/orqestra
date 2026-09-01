@@ -50,13 +50,21 @@ own Risk 1 that the approach dies if `Write` does not survive. It does not survi
 sufficient and invocation is not sufficient. This task establishes the premise those three rest on, so
 it lands first — it is not their duplicate, it is what makes their remedies executable.
 
-**The remedy is prose, decided by a human on 2026-09-01 and not to be re-opened at design.** The six
-skills drop `disallowed-tools: Write, Edit, NotebookEdit`; the never-write obligation rests on the rule
-each orchestrator already states (`skills/task/SKILL.md:107` rule 1, `skills/bugfix/SKILL.md:110` rule
-5) plus review. The probe shows no skill-level tooling can enforce it — `allowed-tools` never restricts
-and `Bash` routes around any denial — so a stronger claim would be false. Narrowing `allowed-tools`
-instead was rejected as documentation shaped like a control; stripping `Bash` was rejected as needing
-its own investigation, since those three use it for `git` and `gh`.
+**The remedy, decided by a human on 2026-09-01 and not to be re-opened at design.** The six skills
+drop `disallowed-tools: Write, Edit, NotebookEdit`. Narrowing `allowed-tools` instead was rejected as
+documentation shaped like a control; stripping `Bash` was rejected as needing its own investigation,
+since those three use it for `git` and `gh`.
+
+**What replaces the guarantee — amended 2026-09-01, same day.** This task was filed saying prose was
+the only available answer, on the argument that no skill-level tooling can enforce writer discipline:
+`allowed-tools` never restricts and `Bash` routes around any denial. A human then set a standing
+architectural rule — **every step is dispatched to a subagent** — which makes a *mechanical* answer
+available after all. If no step runs inline, a checker can assert that every step file carries exactly
+one `ROLE:` envelope with exactly one `WRITE:` path, which is the property `disallowed-tools` was
+believed to provide and never did. That checker ships with **TASK-048**, alongside the conversion of
+the 19 step files that do not dispatch today — it cannot be green before them. So prose is this task's
+interim answer and TASK-048 is the enforcement, and the prose must say so rather than presenting
+itself as the end state.
 
 ## Acceptance Criteria
 
@@ -64,7 +72,7 @@ its own investigation, since those three use it for `git` and `gh`.
 |---|---|
 | AC-1 | No skill under `skills/` denies `Write`, `Edit` or `NotebookEdit` to a caller that must reach a writer — grepping the frontmatter of `add-phase`, `bugfix`, `close-phase`, `greenfield`, `task` and `status` returns no such field |
 | AC-2 | **Demonstrated by run, not asserted.** One turn, no intervening human message: a workflow calls `orqestra:status` and then reaches a writer, and the artifact exists on disk afterwards. This defect was invisible to reading; a walkthrough on paper does not satisfy this |
-| AC-3 | Every affected orchestrator states the never-write obligation as a rule **and says it is a rule rather than a tooling guarantee**, so no later reader re-adds `disallowed-tools` believing it enforces something |
+| AC-3 | Every affected orchestrator states the never-write obligation as a rule, **says it is a rule rather than a tooling guarantee**, and names TASK-048 as where enforcement lands — so no later reader re-adds `disallowed-tools` believing it enforces something, and nobody mistakes the interim answer for the final one |
 | AC-4 | `REQUIREMENTS.md` §4.4.5 and §7.0.1 are **reported, not touched** — §4.4.5 cites the missing `Write`/`Edit` as the guarantee that an orchestrator does not patch an artifact, and that claim is now false in both directions |
 | AC-5 | `check-envelopes.py`, `check-templates.py` and the `config.md` `test_command` chain still exit 0 |
 
@@ -74,6 +82,9 @@ its own investigation, since those three use it for `git` and `gh`.
 docs leads (D-019). AC-4 reports it; TASK-011 owns the correction. Whether that ordering makes TASK-011
 a dependency of this task rather than a consequence of it is a sequencing call a human should make —
 flagged, not assumed.
+
+**Converting the 19 inline step files to dispatches, and the checker that enforces it.** TASK-048.
+This task only makes the tool pool reach a dispatched writer; it does not change who is dispatched.
 
 **Removing `Bash` from `bugfix`, `task` and `close-phase`.** It would close the heredoc route and it is
 the only thing that would, but those three use `Bash` for `git` and `gh`. Its own investigation.

@@ -51,3 +51,11 @@ holding `Write` a real loss — §4.4.5 cites it as the guarantee that no orches
 Dispatching a step that holds `Write` may be the better answer; the design chooses.
 
 `REQUIREMENTS.md` — if §7.3's walkthrough carries the same assumption, report it (D14, D-019).
+
+**WIDENED BY AUDIT 2026-09-01 — finding 2.** The audit reaches the same conclusion this task's Open
+Question 3 did, from the other side: `step-reproduce.md` has no dispatch envelope while `SKILL.md:30`
+claims it dispatches, and beyond the `BUG.md` write it has no actor with a declared source boundary at
+all. It must also create a failing test, which dirties the base working tree that task preflight then
+rejects — TASK-026's subject. The audit's annotated preference for intake is **the analyst**, dispatched;
+TASK-048 establishes the orchestrator-asks/subagent-writes split that makes that work with intake's
+re-ask loop. Re-plan against those two rather than against the deleted PLAN.md's approach.

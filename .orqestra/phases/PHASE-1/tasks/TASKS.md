@@ -4,7 +4,7 @@ type: tasks
 status: in-progress
 updated: 2026-09-01
 phase: PHASE-1
-task_count: 47
+task_count: 55
 ---
 
 ## Tasks
@@ -58,6 +58,14 @@ task_count: 47
 | TASK-045 | Templates and instances agree with the spec | plugin | — | PHASE-3/SC-1 |
 | TASK-046 | Orchestrator tool fields block every downstream write | plugin | — | SC-7 |
 | TASK-047 | Phase amendment has no section governing it | docs | — | SC-5 |
+| TASK-048 | Every step is dispatched to a subagent | plugin | TASK-046 | SC-7 |
+| TASK-049 | An artifact records what source generation it judged | docs | — | SC-4 |
+| TASK-050 | PR comment resolution is dispatched and verified | plugin | TASK-048 | PHASE-4/SC-1 |
+| TASK-051 | review-phase can execute the behaviour it verifies | plugin | — | PHASE-5/SC-1 |
+| TASK-052 | The attempt budget has one definition | docs | — | PHASE-3/SC-1 |
+| TASK-053 | Backfilled planning marks the code it followed stale | docs | — | PHASE-3/SC-1 |
+| TASK-054 | Base discovery, divergence and PR adoption | plugin | TASK-020 | PHASE-4/SC-1 |
+| TASK-055 | One runner executes every check | plugin | — | SC-5 |
 
 ## Dependency Order
 

@@ -50,3 +50,12 @@ whose *obligation* it is, not in widening a tool grant.
 
 `REQUIREMENTS.md` §4.7 itself, unless AC-3 finds it wrong — that is `docs` (D14, D-019). Report rather
 than cross.
+
+**WIDENED BY AUDIT 2026-09-01 — finding 21.** This task fixes one instance of a general problem, and
+should say which it is fixing. `design` and `clarify` both write a decision file *and* regenerate
+`INDEX.md` alongside their main artifact, while the envelope exposes one `WRITE:` path and D2 permits
+one; `create-tasks` writes `TASKS.md` plus many `TASK.md` files. So either these writers exceed their
+envelope or the index update does not happen. Whether the answer is a declared write *set*, an explicit
+transaction, or one dispatch per artifact followed by a deterministic index generator is a design
+question larger than this task. Fixing the decision path without naming the pattern leaves
+`create-tasks` in the same state.
