@@ -40,6 +40,8 @@ for the write to be correct. They are separable and both are needed.
 | AC-2 | §6.1 defines each gate's approval transition explicitly, per gate, rather than as one global "set `done`" |
 | AC-3 | The fields are added to the §4.8.1 catalogue for every artifact that can park, so a parked artifact still conforms (with TASK-013's `blocked_reason` work) |
 | AC-4 | `reject` and `unblock` transitions are defined the same way, including where `attempts` is incremented and by whom |
+| AC-5 | A gate covering **several** artifacts is representable — the greenfield design gate covers every task at once, and `approve` expects exactly one parked artifact. Either a gate gets a record of its own, or parking is defined for the many-artifact case; arbitrarily parking one is not an answer (audit finding 5) |
+| AC-6 | A gate with **no** `TASK.md` is representable — phase, task-decomposition, phase-close and PR-triage gates have no task owner, and `reject` increments `attempts` in a `TASK.md` unconditionally. A phase gate must not invent a task owner to hold its retry count (audit finding 11) |
 
 ## Out of Scope
 
@@ -53,15 +55,9 @@ by some actor, and D-031 measured that an orchestrator's `disallowed-tools` remo
 dispatched agents as well as itself. Until that clears, "the owning skill writes it" names an actor
 that cannot. Hence `depends_on: [TASK-046]`.
 
-**WIDENED BY AUDIT 2026-09-01 — findings 5 and 11.** Two gaps this task's ACs do not yet reach:
-
-- **A gate has no artifact of its own.** Every gate parks an ordinary output artifact, and `approve`
-  expects to find exactly one parked. The greenfield design gate covers *every* task after all designs
-  are written, so it must either park several artifacts (which `approve` rejects) or park one
-  arbitrarily. AC-1 asks what must be recorded; it does not ask *where*. A dedicated gate record with
-  its own id, owning workflow, scope, target artifacts, choices and resume action is the audit's
-  proposal and should be considered against extending the parked artifact.
-- **`reject` assumes every gate owns a `TASK.md`.** It always increments `attempts` there
-  (`skills/reject/SKILL.md:19-24`), but phase, task-decomposition, phase-close and PR-triage gates have
-  no task owner. AC-4 covers where `attempts` is incremented and must also cover gates where there is
-  nothing to increment — a phase gate must not invent a task owner to hold its retry count.
+<!-- WIDENED BY AUDIT 2026-09-01. Findings 5 and 11 became AC-5 and AC-6 rather than a
+     note, because both change what the task must produce rather than adding context.
+     The audit proposes a dedicated gate record (id, owning workflow, step, scope, target
+     artifacts, summary, choices, approval note, resume action) and typed approve/reject
+     handlers. That is one candidate answer to AC-5 and AC-6, not the required one — the
+     alternative is extending the parked artifact, and choosing is this task's work. -->

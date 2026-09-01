@@ -4,7 +4,7 @@ type: tasks
 status: in-progress
 updated: 2026-09-01
 phase: PHASE-1
-task_count: 55
+task_count: 57
 ---
 
 ## Tasks
@@ -66,6 +66,8 @@ task_count: 55
 | TASK-053 | Backfilled planning marks the code it followed stale | docs | — | PHASE-3/SC-1 |
 | TASK-054 | Base discovery, divergence and PR adoption | plugin | TASK-020 | PHASE-4/SC-1 |
 | TASK-055 | One runner executes every check | plugin | — | SC-5 |
+| TASK-056 | The dispatched envelope is validated, not just the example | plugin | TASK-048 | PHASE-3/SC-1 |
+| TASK-057 | A step that must write several artifacts has a contract | docs | — | SC-7 |
 
 ## Dependency Order
 
