@@ -2,13 +2,13 @@
 id: TASK-043
 type: task
 status: pending
-updated: 2026-08-31
+updated: 2026-09-01
 phase: PHASE-1
 module: plugin
 stack: markdown
 origin: feature
 bug:
-depends_on: []
+depends_on: [TASK-046]
 serves: [PHASE-3/SC-1]
 attempts: 0
 ---

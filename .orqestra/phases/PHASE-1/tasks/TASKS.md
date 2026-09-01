@@ -2,9 +2,9 @@
 id: TASKS-PHASE-1
 type: tasks
 status: in-progress
-updated: 2026-08-27
+updated: 2026-09-01
 phase: PHASE-1
-task_count: 45
+task_count: 46
 ---
 
 ## Tasks
@@ -53,9 +53,10 @@ task_count: 45
 | TASK-040 | BUG.md carries the module the spec says it carries | plugin | TASK-037 | PHASE-3/SC-1 |
 | TASK-041 | A recorded decision reaches the index | plugin | — | PHASE-3/SC-1 |
 | TASK-042 | §5 names the right file for the routing table | docs | — | PHASE-3/SC-1 |
-| TASK-043 | The bugfix workflow can write BUG.md | plugin | — | PHASE-3/SC-1 |
+| TASK-043 | The bugfix workflow can write BUG.md | plugin | TASK-046 | PHASE-3/SC-1 |
 | TASK-044 | A stale template count and a dead block path | docs | — | PHASE-3/SC-1 |
 | TASK-045 | Templates and instances agree with the spec | plugin | — | PHASE-3/SC-1 |
+| TASK-046 | Orchestrator tool fields block every downstream write | plugin | — | SC-7 |
 
 ## Dependency Order
 
